@@ -9,22 +9,14 @@ Group:		Applications
 Source0:	http://dl.sourceforge.net/mpeg4ip/%{name}-%{version}.tar.gz
 # Source0-md5:	fef0224a45485653a8db87bdd5c9e745
 # Source0-size:	4351378
-Patch0:		%{name}-system-SDL.patch
-# don't use non-standard SDL_HasAudioDelayMsec() and SDL_AudioDelayMsec()
-# an alternative is to patch system SDL adding those functions ???
-Patch1:		%{name}-nosdlaudiodelay.patch
-Patch2:		%{name}-xvid1.patch
-Patch3:		%{name}-link.patch
-Patch4:		%{name}-fmt.patch
-Patch5:		%{name}-libsdp.patch
-Patch6:		%{name}-types.patch
-Patch7:		%{name}-pic.patch
-#Patch8:		%{name}-system-rtp.patch
-Patch9:		%{name}-gcc34.patch
-Patch10:	%{name}-gtk.patch
-Patch11:	%{name}-abort.patch
+Patch0:		%{name}-link.patch
+Patch1:		%{name}-types.patch
+Patch2:		%{name}-gcc34.patch
+Patch3:		%{name}-gtk.patch
+Patch4:		%{name}-abort.patch
 URL:		http://www.mpeg4ip.net/
 BuildRequires:	SDL-devel
+BuildRequires:	alsa-lib-devel >= 0.9.0
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	faac-devel >= 1.20
@@ -35,8 +27,6 @@ BuildRequires:	libtool >= 2:1.4d
 BuildRequires:	libvorbis-devel >= 1:1.0
 BuildRequires:	pkgconfig
 BuildRequires:	libid3tag-devel
-# uses included ucl-common 1.2.8 with some modifications :/
-#BuildRequires:	ucl-common-devel >= 1.2.8
 BuildRequires:	xvid-devel >= 1:1.0.0
 BuildConflicts:	faad2 < 2.0-3
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
@@ -92,19 +82,11 @@ Statyczne wersje podstawowych bibliotek MPEG4IP.
 
 %prep
 %setup -q
-#%patch0 -p1
-#%patch1 -p1
-#%patch2 -p1
-#%patch3 -p1
-#%patch4 -p1
-#%patch5 -p1
-#%patch6 -p1
-#%patch7 -p1
-# won't work yet...
-#%patch8 -p1
-#%patch9 -p1
-#%patch10 -p1
-%patch11 -p0
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p0
 
 %build
 cd lib/rtp
@@ -169,7 +151,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files libs
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/lib*.so.*
+%attr(755,root,root) %{_libdir}/lib*.so.*.*.*
 
 %files devel
 %defattr(644,root,root,755)
@@ -177,7 +159,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/*.so
 %{_libdir}/*.la
 %{_includedir}/*.h
-%{_mandir}/man3/*.3.gz
+%{_mandir}/man3/*.3*
 
 %files static
 %defattr(644,root,root,755)
