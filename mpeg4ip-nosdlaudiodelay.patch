@@ -1,0 +1,29 @@
+--- mpeg4ip-0.9.8/player/src/audio_sdl.cpp.orig	2003-02-11 23:59:28.000000000 +0100
++++ mpeg4ip-0.9.8/player/src/audio_sdl.cpp	2003-04-16 22:26:00.000000000 +0200
+@@ -460,7 +460,7 @@
+ #endif
+ 
+       m_audio_initialized = 1;
+-      m_use_SDL_delay = SDL_HasAudioDelayMsec();
++      m_use_SDL_delay = 0;
+       if (m_use_SDL_delay)
+ 	audio_message(LOG_NOTICE, "Using delay measurement from SDL");
+     } else {
+@@ -493,7 +493,7 @@
+       // Calculate the current time based on the latency
+       SDL_LockAudio();
+       if (m_use_SDL_delay) {
+-	current_time +=SDL_AudioDelayMsec();
++	current_time += 0;
+       } else {
+ 	current_time += m_buffer_latency;
+       }
+@@ -567,7 +567,7 @@
+ 
+   m_play_time = m_psptr->get_current_time();
+   if (m_use_SDL_delay != 0) {
+-    delay = SDL_AudioDelayMsec();
++    delay = 0;
+     if (delay < 0) delay = 0;
+ #ifdef DEBUG_DELAY
+     audio_message(LOG_DEBUG, "Audio delay is %d %llu", delay, m_play_time);

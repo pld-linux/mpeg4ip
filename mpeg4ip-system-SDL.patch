@@ -1,0 +1,319 @@
+--- mpeg4ip-0.9.8/lib/Makefile.am.orig	2002-11-14 21:30:19.000000000 +0100
++++ mpeg4ip-0.9.8/lib/Makefile.am	2003-04-16 00:32:48.000000000 +0200
+@@ -1 +1 @@
+-SUBDIRS = avi bitstream config_file fposrec gnu mp4 mp4v2 mp4av msg_queue rtp sdp SDL xvid mpeg2t SDL_VisualC
++SUBDIRS = avi bitstream config_file fposrec gnu mp4 mp4v2 mp4av msg_queue rtp sdp xvid mpeg2t
+--- mpeg4ip-0.9.8/player/src/Makefile.am.orig	2003-02-04 00:39:39.000000000 +0100
++++ mpeg4ip-0.9.8/player/src/Makefile.am	2003-04-16 00:37:45.000000000 +0200
+@@ -125,7 +125,7 @@
+ movplayer_SOURCES = \
+ 	movplayer.cpp
+ 
+-INCLUDES = -I. -I$(top_srcdir)/common/video/mpeg4 -I./codec -I./codec/mpeg4 -I../lib -I../lib/audio -I$(top_srcdir)/lib/SDL/include -I$(top_srcdir)/lib/mp4 -I$(top_srcdir)/lib/mp4v2 -I$(top_srcdir)/include -I$(top_srcdir)/include -I$(top_srcdir)/lib/avi -I$(top_srcdir)/lib -I$(top_srcdir)/common/video/libmpeg32 @GLIB_CFLAGS@ @GTK_CFLAGS@ @X_CFLAGS@
++INCLUDES = -I. -I$(top_srcdir)/common/video/mpeg4 -I./codec -I./codec/mpeg4 -I../lib -I../lib/audio -I$(top_srcdir)/lib/mp4 -I$(top_srcdir)/lib/mp4v2 -I$(top_srcdir)/include -I$(top_srcdir)/include -I$(top_srcdir)/lib/avi -I$(top_srcdir)/lib -I$(top_srcdir)/common/video/libmpeg32 @GLIB_CFLAGS@ @GTK_CFLAGS@ @X_CFLAGS@ @SDL_CFLAGS@
+ 
+ AM_CFLAGS= -D_REENTRANT @BILLS_CWARNINGS@ -DPLAYER_PLUGIN_DIR=\"@PLAYER_PLUGIN_DIR@\"
+ 
+@@ -156,8 +156,7 @@
+ 	libmp4syncsdl.la \
+ 	libmp4syncbase.la \
+ 	libmp4playerutils.la \
+-	@SDL_LIBS@ \
+-	$(top_builddir)/lib/SDL/src/main/libSDLmain.a
++	@SDL_LIBS@
+ 
+ gmp4player_LDADD = $(mp4player_LDADD) \
+ 	@GTK_LIBS@ @GLIB_LIBS@
+--- mpeg4ip-0.9.8/configure.in.orig	2003-03-05 19:20:00.000000000 +0100
++++ mpeg4ip-0.9.8/configure.in	2003-04-16 00:44:01.000000000 +0200
+@@ -11,9 +11,14 @@
+ AC_CONFIG_SUBDIRS(lib/rtp)
+ 
+ dnl Checks for programs.
+-AC_CHECK_FILE(lib/SDL/sdl-config,,
+-	      AC_MSG_ERROR([Configure for SDL needs to run first - either run bootstrap or run lib/SDL/configure]))
+-
++AC_CHECK_PROG(SDL_CONFIG, sdl-config, sdl-config, none)
++if test "$SDL_CONFIG" = "none"; then
++	AC_MSG_ERROR([sdl-config not found])
++fi
++SDL_CFLAGS=`$SDL_CONFIG --cflags`
++SDL_LIBS=`$SDL_CONFIG --libs`
++AC_SUBST(SDL_CFLAGS)
++AC_SUBST(SDL_LIBS)
+ 
+ AC_LIBTOOL_DLOPEN
+ AM_PROG_LIBTOOL
+@@ -311,10 +316,6 @@
+     AM_CONDITIONAL(USE_MMX, false)
+ fi
+ 
+-dnl Get SDL cflags and SDL libraries to include
+-SDL_LIBS="`lib/SDL/sdl-config --libs | sed 's,-L.* -lSDL,\$(top_builddir)/lib/SDL/src/libSDL.la,'`"
+-AC_SUBST(SDL_LIBS)
+-
+ dnl
+ BILLS_CWARNINGS="-Wall -Werror -Wmissing-prototypes -Wmissing-declarations -Wno-char-subscripts -Wno-unknown-pragmas"
+ BILLS_CPPWARNINGS="-Wall -Werror -Wmissing-prototypes -Wmissing-declarations -Wno-char-subscripts -Woverloaded-virtual -Wno-unknown-pragmas -Wno-deprecated"
+--- mpeg4ip-0.9.8/player/src/codec/aa/Makefile.am.orig	2002-07-10 19:00:16.000000000 +0200
++++ mpeg4ip-0.9.8/player/src/codec/aa/Makefile.am	2003-04-16 00:46:46.000000000 +0200
+@@ -18,7 +18,7 @@
+ 	isma_rtp_bytestream.cpp \
+ 	isma_rtp_bytestream.h
+ 
+-INCLUDES = -I../.. -I../../../lib -I../../../lib/audio -I$(top_srcdir)/include -I$(top_srcdir)/lib/SDL/include -I../../../../lib
++INCLUDES = -I../.. -I../../../lib -I../../../lib/audio -I$(top_srcdir)/include @SDL_CFLAGS@ -I../../../../lib
+ 
+ AM_CFLAGS = -D_REENTRANT -fexceptions @BILLS_CWARNINGS@
+ 
+--- mpeg4ip-0.9.8/player/src/codec/mp3/Makefile.am.orig	2002-07-10 19:00:16.000000000 +0200
++++ mpeg4ip-0.9.8/player/src/codec/mp3/Makefile.am	2003-04-16 00:47:06.000000000 +0200
+@@ -21,7 +21,7 @@
+ 	mp3_rtp_bytestream.cpp \
+ 	mp3_rtp_bytestream.h
+ 
+-INCLUDES = -I.. -I../..  -I../../../lib -I../../../lib/audio -I$(top_srcdir)/lib/SDL/include -I../../../../common/video/mpeg4 -I../../../../include -I../../../../lib -I$(top_builddir)/lib/mp4v2
++INCLUDES = -I.. -I../..  -I../../../lib -I../../../lib/audio @SDL_CFLAGS@ -I../../../../common/video/mpeg4 -I../../../../include -I../../../../lib -I$(top_builddir)/lib/mp4v2
+ 
+ AM_CFLAGS = -D_REENTRANT -fexceptions @BILLS_CWARNINGS@
+ 
+--- mpeg4ip-0.9.8/player/src/codec/mpeg4/Makefile.am.orig	2002-07-10 19:00:16.000000000 +0200
++++ mpeg4ip-0.9.8/player/src/codec/mpeg4/Makefile.am	2003-04-16 00:47:18.000000000 +0200
+@@ -25,7 +25,7 @@
+ 	$(top_builddir)/common/video/mpeg4/tools/entropy/libobj_tools_entropy.la \
+ 	$(top_builddir)/lib/mp4av/libmp4av.la
+ 
+-INCLUDES = -I.. -I../.. -I../../../lib -I$(top_srcdir)/lib/SDL/include -I../../../../common/video/mpeg4 -I../../../../include -I../../../../lib -I$(top_srcdir)/lib/mp4v2
++INCLUDES = -I.. -I../.. -I../../../lib @SDL_CFLAGS@ -I../../../../common/video/mpeg4 -I../../../../include -I../../../../lib -I$(top_srcdir)/lib/mp4v2
+ 
+ AM_CFLAGS = -D_REENTRANT -fexceptions @BILLS_CWARNINGS@
+ 
+--- mpeg4ip-0.9.8/player/src/codec/wav/Makefile.am.orig	2002-06-21 02:09:54.000000000 +0200
++++ mpeg4ip-0.9.8/player/src/codec/wav/Makefile.am	2003-04-16 00:46:23.000000000 +0200
+@@ -8,7 +8,7 @@
+ 
+ libdir = @PLAYER_PLUGIN_DIR@
+ 
+-INCLUDES = -I.. -I../..  -I../../../lib -I../../../lib/audio -I$(top_srcdir)/lib/SDL/include -I../../../../common/video/mpeg4 -I../../../../include -I../../../../lib
++INCLUDES = -I.. -I../..  -I../../../lib -I../../../lib/audio @SDL_CFLAGS@ -I../../../../common/video/mpeg4 -I../../../../include -I../../../../lib
+ 
+ AM_CFLAGS = -D_REENTRANT -fexceptions @BILLS_CWARNINGS@
+ 
+--- mpeg4ip-0.9.8/player/plugin/audio/celp/Makefile.am.orig	2002-07-10 19:00:16.000000000 +0200
++++ mpeg4ip-0.9.8/player/plugin/audio/celp/Makefile.am	2003-04-16 00:49:50.000000000 +0200
+@@ -9,7 +9,7 @@
+ 	$(top_srcdir)/player/lib/audio/celp/BS/libcelpbs.la \
+ 	$(top_srcdir)/player/lib/audio/celp/dec/libcelp.la 
+ 
+-INCLUDES = -I$(top_srcdir)/player/src -I$(top_srcdir)/player/lib -I$(top_srcdir)/lib/SDL/include -I$(top_srcdir)/include -I$(top_srcdir)/lib -I$(top_srcdir)/player/lib/audio/celp -I$(top_srcdir)/player/lib/audio/celp/BS -I$(top_srcdir)/player/lib/audio/celp/dec -I$(top_srcdir)/player/lib/audio/celp/include -I$(top_srcdir)/lib/mp4av
++INCLUDES = -I$(top_srcdir)/player/src -I$(top_srcdir)/player/lib @SDL_CFLAGS@ -I$(top_srcdir)/include -I$(top_srcdir)/lib -I$(top_srcdir)/player/lib/audio/celp -I$(top_srcdir)/player/lib/audio/celp/BS -I$(top_srcdir)/player/lib/audio/celp/dec -I$(top_srcdir)/player/lib/audio/celp/include -I$(top_srcdir)/lib/mp4av
+ 
+ AM_CFLAGS = -D_REENTRANT -fexceptions @BILLS_CWARNINGS@
+ 
+--- mpeg4ip-0.9.8/player/plugin/audio/raw/Makefile.am.orig	2002-06-14 00:50:35.000000000 +0200
++++ mpeg4ip-0.9.8/player/plugin/audio/raw/Makefile.am	2003-04-16 00:50:05.000000000 +0200
+@@ -7,7 +7,7 @@
+ raw_audio_plugin_la_LIBADD = \
+ 	-lm 
+ 
+-INCLUDES = -I$(top_srcdir)/player/src -I$(top_src_dir)/player/lib -I$(top_srcdir)/lib/SDL/include -I$(top_srcdir)/include -I$(top_srcdir)/lib
++INCLUDES = -I$(top_srcdir)/player/src -I$(top_src_dir)/player/lib @SDL_CFLAGS@ -I$(top_srcdir)/include -I$(top_srcdir)/lib
+ 
+ AM_CFLAGS = -D_REENTRANT -fexceptions @BILLS_CWARNINGS@
+ 
+--- mpeg4ip-0.9.8/player/plugin/rtp/h261/Makefile.am.orig	2002-11-07 19:16:03.000000000 +0100
++++ mpeg4ip-0.9.8/player/plugin/rtp/h261/Makefile.am	2003-04-16 00:49:17.000000000 +0200
+@@ -11,7 +11,7 @@
+ 
+ INCLUDES = -I$(top_srcdir)/player/src \
+ 	   -I$(top_srcdir)/player/lib \
+-	   -I$(top_srcdir)/lib/SDL/include \
++	   @SDL_CFLAGS@ \
+ 	   -I$(top_srcdir)/include \
+            -I$(top_srcdir)/lib
+ 
+--- mpeg4ip-0.9.8/player/plugin/rtp/isma_audio/Makefile.am.orig	2002-09-12 22:05:54.000000000 +0200
++++ mpeg4ip-0.9.8/player/plugin/rtp/isma_audio/Makefile.am	2003-04-16 00:49:29.000000000 +0200
+@@ -9,7 +9,7 @@
+ 
+ INCLUDES = -I$(top_srcdir)/player/src \
+ 	   -I$(top_srcdir)/player/lib \
+-	   -I$(top_srcdir)/lib/SDL/include \
++	   @SDL_CFLAGS@ \
+ 	   -I$(top_srcdir)/include \
+            -I$(top_srcdir)/lib
+ 
+--- mpeg4ip-0.9.8/player/plugin/video/h261/Makefile.am.orig	2003-01-18 00:34:27.000000000 +0100
++++ mpeg4ip-0.9.8/player/plugin/video/h261/Makefile.am	2003-04-16 00:50:25.000000000 +0200
+@@ -20,7 +20,7 @@
+ 	-lm \
+ 	$(top_builddir)/lib/gnu/libmpeg4ip_gnu.la 
+ 
+-INCLUDES = -I.. -I../.. -I../../../lib -I$(top_srcdir)/lib/SDL/include -I../../../../include -I../../../../lib -I$(top_srcdir)/player/src -I$(top_srcdir)/lib/mp4v2 -I$(top_srcdir)/player/plugin/rtp/h261
++INCLUDES = -I.. -I../.. -I../../../lib @SDL_CFLAGS@ -I../../../../include -I../../../../lib -I$(top_srcdir)/player/src -I$(top_srcdir)/lib/mp4v2 -I$(top_srcdir)/player/plugin/rtp/h261
+ 
+ AM_CFLAGS = -D_REENTRANT -fexceptions @BILLS_CWARNINGS@ -DINT64=uint64_t
+ 
+--- mpeg4ip-0.9.8/player/plugin/video/mpeg3/Makefile.am.orig	2002-07-25 19:05:23.000000000 +0200
++++ mpeg4ip-0.9.8/player/plugin/video/mpeg3/Makefile.am	2003-04-16 00:50:44.000000000 +0200
+@@ -10,7 +10,7 @@
+ 	$(top_builddir)/common/video/libmpeg32/libmpeg3util.la \
+ 	@SDL_LIBS@
+ 
+-INCLUDES = -I$(top_srcdir)/player/src -I$(top_srcdir)/player/lib -I$(top_srcdir)/lib/SDL/include -I$(top_srcdir)/include -I$(top_srcdir)/lib -I$(top_srcdir)/common/video/libmpeg32 -I$(top_srcdir)/common/video/libmpeg32/video -I$(top_srcdir)/lib/mp4av -I$(top_srcdir)/lib/mp4v2
++INCLUDES = -I$(top_srcdir)/player/src -I$(top_srcdir)/player/lib @SDL_CFLAGS@ -I$(top_srcdir)/include -I$(top_srcdir)/lib -I$(top_srcdir)/common/video/libmpeg32 -I$(top_srcdir)/common/video/libmpeg32/video -I$(top_srcdir)/lib/mp4av -I$(top_srcdir)/lib/mp4v2
+ 
+ AM_CFLAGS = -D_REENTRANT -fexceptions @BILLS_CWARNINGS@
+ 
+--- mpeg4ip-0.9.8/player/plugin/video/raw/Makefile.am.orig	2002-06-14 00:50:35.000000000 +0200
++++ mpeg4ip-0.9.8/player/plugin/video/raw/Makefile.am	2003-04-16 00:50:57.000000000 +0200
+@@ -7,7 +7,7 @@
+ raw_video_plugin_la_LIBADD = \
+ 	-lm 
+ 
+-INCLUDES = -I$(top_srcdir)/player/src -I$(top_src_dir)/player/lib -I$(top_srcdir)/lib/SDL/include -I$(top_srcdir)/include -I$(top_srcdir)/lib
++INCLUDES = -I$(top_srcdir)/player/src -I$(top_src_dir)/player/lib @SDL_CFLAGS@ -I$(top_srcdir)/include -I$(top_srcdir)/lib
+ 
+ AM_CFLAGS = -D_REENTRANT -fexceptions @BILLS_CWARNINGS@
+ 
+--- mpeg4ip-0.9.8/player/plugin/video/xvid/Makefile.am.orig	2002-06-27 01:44:18.000000000 +0200
++++ mpeg4ip-0.9.8/player/plugin/video/xvid/Makefile.am	2003-04-16 00:51:51.000000000 +0200
+@@ -14,7 +14,7 @@
+ 	$(top_builddir)/lib/fposrec/libfposrec.la \
+ 	$(top_builddir)/lib/mp4av/libmp4av.la
+ 
+-INCLUDES = -I.. -I../.. -I../../../lib -I$(top_srcdir)/lib/SDL/include -I$(top_srcdir)/lib/xvid -I../../../../include -I../../../../lib -I$(top_srcdir)/player/src -I$(top_srcdir)/lib/mp4v2
++INCLUDES = -I.. -I../.. -I../../../lib @SDL_CFLAGS@ -I$(top_srcdir)/lib/xvid -I../../../../include -I../../../../lib -I$(top_srcdir)/player/src -I$(top_srcdir)/lib/mp4v2
+ 
+ AM_CFLAGS = -D_REENTRANT -fexceptions @BILLS_CWARNINGS@
+ 
+--- mpeg4ip-0.9.8/player/lib/audio/mp3/Makefile.am.orig	2002-06-14 00:50:35.000000000 +0200
++++ mpeg4ip-0.9.8/player/lib/audio/mp3/Makefile.am	2003-04-16 00:54:00.000000000 +0200
+@@ -26,4 +26,4 @@
+ 	README.LIB 		\
+ 	libmp360.dsp 
+ 
+-AM_CXXFLAGS = -D_REENTRANT -Werror -Wall -fexceptions -I$(top_srcdir)/lib/SDL/include -I../../../../include
++AM_CXXFLAGS = -D_REENTRANT -Werror -Wall -fexceptions @SDL_CFLAGS@ -I../../../../include
+--- mpeg4ip-0.9.8/player/lib/rtsp/Makefile.am.orig	2002-06-17 19:35:12.000000000 +0200
++++ mpeg4ip-0.9.8/player/lib/rtsp/Makefile.am	2003-04-16 00:54:23.000000000 +0200
+@@ -13,7 +13,7 @@
+ 	rtsp_thread_nx.h \
+ 	rtsp_util.c 
+ 
+-INCLUDES = -I$(top_builddir)/lib/sdp -I$(top_builddir)/include -I$(top_builddir)/lib/SDL/include -I$(top_builddir)/lib
++INCLUDES = -I$(top_builddir)/lib/sdp -I$(top_builddir)/include @SDL_CFLAGS@ -I$(top_builddir)/lib
+ AM_CFLAGS = -DIPTV_COMPATIBLE -D_REENTRANT @BILLS_CWARNINGS@ 
+ 
+ check_PROGRAMS = test test_thread
+--- mpeg4ip-0.9.8/util/iptv/Makefile.am.orig	2003-01-23 21:47:28.000000000 +0100
++++ mpeg4ip-0.9.8/util/iptv/Makefile.am	2003-04-16 00:55:33.000000000 +0200
+@@ -2,7 +2,7 @@
+ 
+ iptv_prog_SOURCES = iptv_prog.cpp
+ 
+-INCLUDES = -I. -I../../include -I../../lib/SDL/include \
++INCLUDES = -I. -I../../include @SDL_CFLAGS@ \
+ 	-I$(top_builddir)/player/lib/libhttp \
+ 	-I$(top_builddir)/lib/sdp
+ 
+@@ -12,7 +12,6 @@
+ 
+ iptv_prog_LDADD = \
+ 	@SDL_LIBS@ \
+-	$(top_builddir)/lib/SDL/src/main/libSDLmain.a \
+ 	$(top_builddir)/player/lib/libhttp/libhttp.la \
+ 	$(top_builddir)/lib/sdp/libsdp.la \
+ 	$(top_builddir)/lib/gnu/libmpeg4ip_gnu.la \
+--- mpeg4ip-0.9.8/util/yuv/Makefile.am.orig	2002-07-10 19:00:16.000000000 +0200
++++ mpeg4ip-0.9.8/util/yuv/Makefile.am	2003-04-16 00:56:05.000000000 +0200
+@@ -8,7 +8,7 @@
+ 
+ yuvdisp_SOURCES = yuvdisp.cpp
+ 
+-INCLUDES = -I. -I../../include -I../../lib/SDL/include
++INCLUDES = -I. -I../../include @SDL_CFLAGS@
+ 
+ AM_CFLAGS= -D_REENTRANT @BILLS_CWARNINGS@
+ 
+@@ -16,7 +16,6 @@
+ 
+ LDADD = \
+ 	@SDL_LIBS@ \
+-	$(top_builddir)/lib/SDL/src/main/libSDLmain.a \
+-        -lm
++	-lm
+ 
+ EXTRA_DIST=yuvdump60.dsp
+--- mpeg4ip-0.9.8/server/mp4live/Makefile.am.orig	2002-11-15 00:42:03.000000000 +0100
++++ mpeg4ip-0.9.8/server/mp4live/Makefile.am	2003-04-16 00:57:44.000000000 +0200
+@@ -84,7 +84,7 @@
+ INCLUDES=\
+ 	@GLIB_CFLAGS@ @GTK_CFLAGS@ \
+ 	-I$(top_srcdir)/include \
+-	-I$(top_srcdir)/lib/SDL/include \
++	@SDL_CFLAGS@ \
+ 	-I$(top_srcdir)/lib/mp4v2 \
+ 	-I$(top_srcdir)/lib/mp4av \
+ 	-I$(top_srcdir)/lib/msg_queue \
+@@ -119,7 +118,6 @@
+ 	$(top_builddir)/lib/gnu/libmpeg4ip_gnu.la \
+ 	-lpthread \
+ 	@SDL_LIBS@ \
+-	$(top_builddir)/lib/SDL/src/main/libSDLmain.a \
+ 	$(GUILIBS)
+ 
+ EXTRA_DIST = INTERNALS
+--- mpeg4ip-0.9.8/server/mp4live/gui/Makefile.am.orig	2002-10-07 19:38:50.000000000 +0200
++++ mpeg4ip-0.9.8/server/mp4live/gui/Makefile.am	2003-04-16 00:58:00.000000000 +0200
+@@ -18,7 +18,7 @@
+ INCLUDES=@GLIB_CFLAGS@ @GTK_CFLAGS@ \
+ 	-I.. \
+ 	-I$(top_srcdir)/include \
+-	-I$(top_srcdir)/lib/SDL/include \
++	@SDL_CFLAGS@ \
+ 	-I$(top_srcdir)/lib/mp4v2 \
+ 	-I$(top_srcdir)/lib/mp4av \
+ 	-I$(top_srcdir)/lib/msg_queue \
+--- mpeg4ip-0.9.8/common/video/libmpeg32/Makefile.am.orig	2002-09-24 20:08:00.000000000 +0200
++++ mpeg4ip-0.9.8/common/video/libmpeg32/Makefile.am	2003-04-16 00:59:06.000000000 +0200
+@@ -2,7 +2,7 @@
+ 
+ noinst_LTLIBRARIES = libmpeg3.la libmpeg3util.la
+ 
+-INCLUDES= -I$(top_srcdir)/include -I$(top_srcdir)/lib/mp4av -I$(top_srcdir)/lib/mp4v2 -I$(top_srcdir)/lib/SDL/include
++INCLUDES= -I$(top_srcdir)/include -I$(top_srcdir)/lib/mp4av -I$(top_srcdir)/lib/mp4v2 @SDL_CFLAGS@
+ AM_CFLAGS= -DHAVE_CSS
+ libmpeg3util_la_LDFLAGS = -static 
+ libmpeg3util_la_SOURCES = \
+--- mpeg4ip-0.9.8/common/video/libmpeg32/video/Makefile.am.orig	2002-10-14 22:04:18.000000000 +0200
++++ mpeg4ip-0.9.8/common/video/libmpeg32/video/Makefile.am	2003-04-16 00:59:18.000000000 +0200
+@@ -14,7 +14,7 @@
+ noinst_LTLIBRARIES = libmpeg3video.la
+ libmpeg3video_la_LDFLAGS = -static
+ 
+-INCLUDES=-I$(top_srcdir)/include -I$(top_srcdir)/lib/SDL/include
++INCLUDES=-I$(top_srcdir)/include @SDL_CFLAGS@
+ if HAVE_ALIGN_LOOPS
+    OUR_ALIGN_LOOPS=@ALIGN_LOOPS@=2
+ else
+--- mpeg4ip-0.9.8/lib/mpeg2t/Makefile.am.orig	2002-08-13 18:21:23.000000000 +0200
++++ mpeg4ip-0.9.8/lib/mpeg2t/Makefile.am	2003-04-16 01:00:09.000000000 +0200
+@@ -8,7 +8,7 @@
+ 	mpeg2t_video.c \
+ 	mpeg2t_util.c 
+ 
+-INCLUDES = -I$(top_builddir)/include -I$(top_builddir)/lib -I$(top_builddir)/lib/mp4av -I$(top_builddir)/lib/mp4v2 -I$(top_builddir)/lib/SDL/include
++INCLUDES = -I$(top_builddir)/include -I$(top_builddir)/lib -I$(top_builddir)/lib/mp4av -I$(top_builddir)/lib/mp4v2 @SDL_CFLAGS@
+ AM_CFLAGS = -DIPTV_COMPATIBLE -D_REENTRANT @BILLS_CWARNINGS@
+ AM_CXXFLAGS = -D_REENTRANT @BILLS_CPPWARNINGS@
+ 
+--- mpeg4ip-0.9.8/lib/msg_queue/Makefile.am.orig	2002-06-12 19:37:25.000000000 +0200
++++ mpeg4ip-0.9.8/lib/msg_queue/Makefile.am	2003-04-16 01:01:08.000000000 +0200
+@@ -7,5 +7,5 @@
+ 
+ EXTRA_DIST = \
+ 	libmsg_queue60.dsp
+-INCLUDES = -I$(top_srcdir)/lib/SDL/include -I$(top_srcdir)/include
++INCLUDES = @SDL_CFLAGS@ -I$(top_srcdir)/include
+ AM_CXXFLAGS = -D_REENTRANT -DNOCONTROLS -Wall -Werror
