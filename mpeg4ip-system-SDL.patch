@@ -80,11 +80,11 @@
 --- mpeg4ip-0.9.8/player/src/codec/mpeg4/Makefile.am.orig	2002-07-10 19:00:16.000000000 +0200
 +++ mpeg4ip-0.9.8/player/src/codec/mpeg4/Makefile.am	2003-04-16 00:47:18.000000000 +0200
 @@ -25,7 +25,7 @@
- 	$(top_builddir)/common/video/mpeg4/tools/entropy/libobj_tools_entropy.la \
+ 	$(top_builddir)/$(mpeg4_dir)/tools/entropy/libobj_tools_entropy.la \
  	$(top_builddir)/lib/mp4av/libmp4av.la
  
--INCLUDES = -I.. -I../.. -I../../../lib -I$(top_srcdir)/lib/SDL/include -I../../../../common/video/mpeg4 -I../../../../include -I../../../../lib -I$(top_srcdir)/lib/mp4v2
-+INCLUDES = -I.. -I../.. -I../../../lib @SDL_CFLAGS@ -I../../../../common/video/mpeg4 -I../../../../include -I../../../../lib -I$(top_srcdir)/lib/mp4v2
+-INCLUDES = -I.. -I../.. -I../../../lib -I$(top_srcdir)/lib/SDL/include -I$(top_builddir)/$(mpeg4_dir) -I$(top_builddir)/include -I$(top_builddir)/lib -I$(top_srcdir)/lib/mp4v2
++INCLUDES = -I.. -I../.. -I../../../lib @SDL_CFLAGS@ -I$(top_builddir)/$(mpeg4_dir) -I$(top_builddir)/include -I$(top_builddir)/lib -I$(top_srcdir)/lib/mp4v2
  
  AM_CFLAGS = -D_REENTRANT -fexceptions @BILLS_CWARNINGS@
  

@@ -1,12 +1,12 @@
 Summary:	MPEG4IP - system for encoding, streaming and playing MPEG-4 audio/video
 Summary(pl):	MPEG4IP - sytem kodowania, streamingu i odtwarzania d¼wiêku i obrazu MPEG-4
 Name:		mpeg4ip
-Version:	0.9.8
+Version:	0.9.9
 Release:	0.1
 License:	MPL v1.1 (original code) and other licenses (included libraries)
 Group:		Applications
 Source0:	http://dl.sourceforge.net/sourceforge/mpeg4ip/%{name}-%{version}.tar.gz
-# Source0-md5:	076ee64f2d5cec82bc391485f2b6a251
+# Source0-md5:	d0d189ecbece96fc8b487f9bd67ff388
 Patch0:		%{name}-system-SDL.patch
 # don't use non-standard SDL_HasAudioDelayMsec() and SDL_AudioDelayMsec()
 # an alternative is to patch system SDL adding those functions ???
@@ -17,13 +17,14 @@ Patch3:		%{name}-system-rtp.patch
 Patch4:		%{name}-lt-tag.patch
 # libtool bug: static convenience C++ libraries require --tag=CXX as workaround
 Patch5:		%{name}-lt-tag-cxx.patch
+Patch6:		%{name}-gcc.patch
 URL:		http://www.xmms.org/
 BuildRequires:	SDL-devel
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:  gtk+2-devel
 BuildRequires:  lame-libs-devel
-BuildRequires:	libtool
+BuildRequires:	libtool >= 2:1.4d
 # uses included ucl-common 1.2.8 with some modifications :/
 #BuildRequires:	ucl-common-devel >= 1.2.8
 # uses included xvid 20020412 with some modifications :/
@@ -87,6 +88,7 @@ Statyczne wersje podstawowych bibliotek MPEG4IP.
 #%patch3 -p1
 %patch4 -p1
 %patch5 -p1
+%patch6 -p1
 
 %build
 %{__libtoolize}
