@@ -105,3 +105,23 @@
    
    // check on-demand first
    sdp = find_sdp_for_program(cm, "iptvfiles/guide.sdf",
+--- mpeg4ip-1.0/server/mp4live/util.cpp.orig	Mon Aug  4 22:44:06 2003
++++ mpeg4ip-1.0/server/mp4live/util.cpp	Wed Feb 25 13:24:57 2004
+@@ -36,7 +36,7 @@
+   gettimeofday(&thistime, NULL);
+   // To add date, add %a %b %d to strftime
+   strftime(buffer, sizeof(buffer), "%T", localtime(&thistime.tv_sec));
+-  printf("%s.%03ld-mp4live-3: ", buffer, thistime.tv_usec / 1000);
++  printf("%s.%03ld-mp4live-3: ", buffer, (long)(thistime.tv_usec / 1000));
+   va_start(ap, fmt);
+   vprintf(fmt, ap);
+   va_end(ap);
+@@ -58,7 +58,7 @@
+   gettimeofday(&thistime, NULL);
+   // To add date, add %a %b %d to strftime
+   strftime(buffer, sizeof(buffer), "%T", localtime(&thistime.tv_sec));
+-  printf("%s.%03ld-mp4live-7: ", buffer, thistime.tv_usec / 1000);
++  printf("%s.%03ld-mp4live-7: ", buffer, (long)(thistime.tv_usec / 1000));
+   va_start(ap, fmt);
+   vprintf(fmt, ap);
+   va_end(ap);
