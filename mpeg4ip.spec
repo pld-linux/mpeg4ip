@@ -4,11 +4,11 @@
 Summary:	a
 Name:		mpeg4ip
 Version:	0.9.7
-Release:	0.1
+Release:	0.2
 License:	GPL
 Group:		Applications
 Source0:	http://unc.dl.sourceforge.net/sourceforge/mpeg4ip/%{name}-%{version}.tar.gz
-Patch0:		%{name}-ac.patch
+#Patch0:		%{name}-externSDL.patch
 URL:		http://www.xmms.org/
 BuildRequires:  gtk+2-devel
 BuildRequires:  lame-libs-devel
@@ -19,7 +19,10 @@ empty
 
 %prep
 %setup -q
-#%patch0 -p0 
+#using system SDL
+#%patch0 -p1 
+#rm -Rf lib/SDL
+
 %build
 rm -f missing
 %{__aclocal}
