@@ -53,3 +53,16 @@
  
  	// read tag and length
  	u_int8_t tag = pFile->ReadUInt8();
+--- mpeg4ip-1.0/lib/mp4v2/mp4track.cpp.orig	Thu Dec  4 23:51:05 2003
++++ mpeg4ip-1.0/lib/mp4v2/mp4track.cpp	Tue Feb 24 15:17:38 2004
+@@ -1607,8 +1607,8 @@
+ 			VERBOSE_EDIT(m_pFile->GetVerbosity(),
+ 				printf("GetSampleIdFromEditTime: when %llu "
+ 					"sampleId %u start %llu duration %lld\n", 
+-					editWhen, sampleId, 
+-					editSampleStartTime, editSampleDuration));
++					(unsigned long long)editWhen, sampleId, 
++					(unsigned long long)editSampleStartTime, (long long)editSampleDuration));
+ 
+ 			return sampleId;
+ 		}
