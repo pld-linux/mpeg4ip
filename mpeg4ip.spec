@@ -1,13 +1,14 @@
 Summary:	MPEG4IP - system for encoding, streaming and playing MPEG-4 audio/video
 Summary(pl):	MPEG4IP - sytem kodowania, streamingu i odtwarzania d¼wiêku i obrazu MPEG-4
 Name:		mpeg4ip
-Version:	1.0
-Release:	5
+Version:	1.1
+Release:	1
 Epoch:		1
 License:	MPL v1.1 (original code) and other licenses (included libraries)
 Group:		Applications
 Source0:	http://dl.sourceforge.net/mpeg4ip/%{name}-%{version}.tar.gz
-# Source0-md5:	6ac635a1dd02d874054d6092f350157c
+# Source0-md5:	fef0224a45485653a8db87bdd5c9e745
+# Source0-size:	4351378
 Patch0:		%{name}-system-SDL.patch
 # don't use non-standard SDL_HasAudioDelayMsec() and SDL_AudioDelayMsec()
 # an alternative is to patch system SDL adding those functions ???
@@ -21,6 +22,7 @@ Patch7:		%{name}-pic.patch
 #Patch8:		%{name}-system-rtp.patch
 Patch9:		%{name}-gcc34.patch
 Patch10:	%{name}-gtk.patch
+Patch11:	%{name}-abort.patch
 URL:		http://www.mpeg4ip.net/
 BuildRequires:	SDL-devel
 BuildRequires:	autoconf
@@ -32,6 +34,7 @@ BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:1.4d
 BuildRequires:	libvorbis-devel >= 1:1.0
 BuildRequires:	pkgconfig
+BuildRequires:	libid3tag-devel
 # uses included ucl-common 1.2.8 with some modifications :/
 #BuildRequires:	ucl-common-devel >= 1.2.8
 BuildRequires:	xvid-devel >= 1:1.0.0
@@ -89,18 +92,19 @@ Statyczne wersje podstawowych bibliotek MPEG4IP.
 
 %prep
 %setup -q
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1
+#%patch0 -p1
+#%patch1 -p1
+#%patch2 -p1
+#%patch3 -p1
+#%patch4 -p1
+#%patch5 -p1
+#%patch6 -p1
+#%patch7 -p1
 # won't work yet...
 #%patch8 -p1
-%patch9 -p1
-%patch10 -p1
+#%patch9 -p1
+#%patch10 -p1
+%patch11 -p0
 
 %build
 cd lib/rtp
@@ -138,63 +142,43 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS COPYING NEWS README* TODO doc/{*.pdf,*.txt}
-%doc doc/encoding/*.htm doc/ietf/draft*.txt doc/mcast/{mcast.txt,*_example}
+%doc AUTHORS COPYING ChangeLog encoding60.dsw FEATURES.html index.html README* NEWS TODO 
+%doc doc/{*.pdf,*.txt,*.html,*.jpg} doc/ietf/rfc*.txt doc/mcast/{mcast.txt,*_example}
+%attr(755,root,root) %{_bindir}/rgb2yuv
+%attr(755,root,root) %{_bindir}/mp4encode
+%attr(755,root,root) %{_bindir}/mp4player
+%attr(755,root,root) %{_bindir}/mp4creator
+%attr(755,root,root) %{_bindir}/yuvdump
+%attr(755,root,root) %{_bindir}/gmp4player
+%attr(755,root,root) %{_bindir}/mp4dump
+%attr(755,root,root) %{_bindir}/mp4info
+%attr(755,root,root) %{_bindir}/mp4live
+%attr(755,root,root) %{_bindir}/mp4tags
+%attr(755,root,root) %{_bindir}/mpeg4vol
+%attr(755,root,root) %{_bindir}/h264_parse
+%attr(755,root,root) %{_bindir}/mp4extract
+%attr(755,root,root) %{_bindir}/mp4trackdump
 %attr(755,root,root) %{_bindir}/avi2raw
 %attr(755,root,root) %{_bindir}/avidump
-%attr(755,root,root) %{_bindir}/gmp4player
+%attr(755,root,root) %{_bindir}/mpeg2video_parse
 %attr(755,root,root) %{_bindir}/lboxcrop
-%attr(755,root,root) %{_bindir}/mp4*
-%attr(755,root,root) %{_bindir}/rgb2yuv
-%attr(755,root,root) %{_bindir}/xvidenc
-%attr(755,root,root) %{_bindir}/yuvdump
 %dir %{_libdir}/mp4player_plugin
 %attr(755,root,root) %{_libdir}/mp4player_plugin/*.so*
-%{_mandir}/man1/gmp4player.1*
-%{_mandir}/man1/mp4*.1*
+%{_datadir}/mp4venc_template.par
+%{_mandir}/man1/*.1.gz
 
 %files libs
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libconfig_file.so.*.*.*
-%attr(755,root,root) %{_libdir}/libmp4.so.*.*.*
-%attr(755,root,root) %{_libdir}/libmp4av.so.*.*.*
-%attr(755,root,root) %{_libdir}/libmp4util.so.*.*.*
-%attr(755,root,root) %{_libdir}/libmp4v2.so.*.*.*
-%attr(755,root,root) %{_libdir}/libmsg_queue.so.*.*.*
-%attr(755,root,root) %{_libdir}/libmpeg4ip_sdp.so.*.*.*
+%attr(755,root,root) %{_libdir}/lib*.so.*
 
 %files devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/mpeg4ip-config
-%attr(755,root,root) %{_libdir}/libconfig_file.so
-%attr(755,root,root) %{_libdir}/libmp4.so
-%attr(755,root,root) %{_libdir}/libmp4av.so
-%attr(755,root,root) %{_libdir}/libmp4util.so
-%attr(755,root,root) %{_libdir}/libmp4v2.so
-%attr(755,root,root) %{_libdir}/libmsg_queue.so
-%attr(755,root,root) %{_libdir}/libmpeg4ip_sdp.so
-%{_libdir}/libconfig_file.la
-%{_libdir}/libmp4.la
-%{_libdir}/libmp4av.la
-%{_libdir}/libmp4util.la
-%{_libdir}/libmp4v2.la
-%{_libdir}/libmsg_queue.la
-%{_libdir}/libmpeg4ip_sdp.la
-# static-only lib - private mpeg4ip use only?
-#%{_libdir}/libhttp.*a
-%{_includedir}/codec_plugin.h
-%{_includedir}/mp4*.h
-%{_includedir}/mpeg4*.h
-%{_includedir}/rtp_plugin.h
-%{_includedir}/sdp*.h
-%{_mandir}/man3/*
+%attr(755,root,root) %{_libdir}/*.so
+%{_libdir}/*.la
+%{_includedir}/*.h
+%{_mandir}/man3/*.3.gz
 
 %files static
 %defattr(644,root,root,755)
-%{_libdir}/libconfig_file.a
-%{_libdir}/libmp4.a
-%{_libdir}/libmp4av.a
-%{_libdir}/libmp4util.a
-%{_libdir}/libmp4v2.a
-%{_libdir}/libmsg_queue.a
-%{_libdir}/libmpeg4ip_sdp.a
+%{_libdir}/*.a
