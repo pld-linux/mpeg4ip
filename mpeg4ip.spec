@@ -1,3 +1,19 @@
+# TODO:
+# - link libmpeg4ipSDL with -lSDL
+# - link both player/plugin/rtp/isma_audio/ plugins with -lSDL
+# - check player/plugin/rtp/isma_video/
+#   isma_enc_video_rtp_plugin.so.0.0.0: undefined reference to `parse_fmtp_for_mpeg4'
+# - check player/plugin/video/mpeg3/
+#   mpeg3_video_plugin.so.0.0.0: undefined reference to `MP4AV_Mpeg3FindPictHdr'
+# - check player/src/codec/mp3/
+#   mp3_plugin.so.0.0.0: undefined reference to `MP4AV_Mp3HeaderFromBytes'
+#   mp3_plugin.so.0.0.0: undefined reference to `MP4AV_Mp3GetHdrLayer'
+#   mp3_plugin.so.0.0.0: undefined reference to `MP4AV_Mp3GetHdrSamplingWindow'
+#   mp3_plugin.so.0.0.0: undefined reference to `MP4AV_Mp3GetBitRate'
+# - check player/src/codec/wav/
+#   wav_plugin.so.0.0.0: undefined reference to `SDL_FreeWAV'
+#   wav_plugin.so.0.0.0: undefined reference to `SDL_RWFromFile'
+#   wav_plugin.so.0.0.0: undefined reference to `SDL_LoadWAV_RW'
 Summary:	MPEG4IP - system for encoding, streaming and playing MPEG-4 audio/video
 Summary(pl):	MPEG4IP - sytem kodowania, streamingu i odtwarzania d¼wiêku i obrazu MPEG-4
 Name:		mpeg4ip
