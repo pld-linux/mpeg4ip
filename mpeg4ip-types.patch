@@ -33,3 +33,12 @@
  
  	char* odCmdBase64 = MP4ToBase64(pBytes, numBytes);
  
+@@ -748,7 +748,7 @@
+ 	CreateIsmaODUpdateCommandForStream(
+ 		pAudioEsd, pVideoEsd, ppBytes, pNumBytes);
+ 	VERBOSE_ISMA(GetVerbosity(),
+-		printf("After CreateImsaODUpdateCommandForStream len %llu =\n", *pNumBytes); MP4HexDump(*ppBytes, *pNumBytes));
++		printf("After CreateImsaODUpdateCommandForStream len %llu =\n", (long long)*pNumBytes); MP4HexDump(*ppBytes, *pNumBytes));
+ 	// return SL config values to 2 (file)
+ 	// return ESID values to 0
+ 	if (pAudioSLConfigPredef) {
