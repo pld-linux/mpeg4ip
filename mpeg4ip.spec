@@ -3,7 +3,7 @@
 %bcond_without	alsa	# build without ALSA support in SDLAudio
 #
 Summary:	MPEG4IP - system for encoding, streaming and playing MPEG-4 audio/video
-Summary(pl):	MPEG4IP - sytem kodowania, streamingu i odtwarzania d¼wiêku i obrazu MPEG-4
+Summary(pl):	MPEG4IP - system kodowania, streamingu i odtwarzania d¼wiêku i obrazu MPEG-4
 Name:		mpeg4ip
 Version:	1.1
 Release:	1
