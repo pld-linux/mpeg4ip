@@ -6,6 +6,7 @@ Release:	0.1
 License:	MPL v1.1 (original code) and other licenses (included libraries)
 Group:		Applications
 Source0:	http://dl.sourceforge.net/sourceforge/mpeg4ip/%{name}-%{version}.tar.gz
+# Source0-md5:	076ee64f2d5cec82bc391485f2b6a251
 Patch0:		%{name}-system-SDL.patch
 # don't use non-standard SDL_HasAudioDelayMsec() and SDL_AudioDelayMsec()
 # an alternative is to patch system SDL adding those functions ???
