@@ -27,3 +27,14 @@
  libfaad_la_SOURCES = \
  	bits.c \
  	block.c \
+--- mpeg4ip-1.0/player/lib/audio/celp/BS/Makefile.am.orig	Wed Jun  5 21:15:05 2002
++++ mpeg4ip-1.0/player/lib/audio/celp/BS/Makefile.am	Mon Feb 23 15:47:12 2004
+@@ -1,8 +1,6 @@
+ 
+ noinst_LTLIBRARIES = libcelpbs.la
+ 
+-libcelpbs_la_LDFLAGS = -static
+-
+ libcelpbs_la_SOURCES = \
+ 	adif.c \
+ 	adif.h \
