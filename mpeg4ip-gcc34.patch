@@ -134,3 +134,32 @@ diff -urN aa/mpeg4ip-1.0/server/mp4live/media_source.h mpeg4ip-1.0/server/mp4liv
  	virtual media_free_f GetMediaFreeFunction(void) { return NULL; };
  
  	virtual bool CanGetEsConfig (void) { return false; };
+--- mpeg4ip-1.1/server/mp4live/video_util_filter.cpp.orig	2004-01-23 23:21:58.000000000 +0100
++++ mpeg4ip-1.1/server/mp4live/video_util_filter.cpp	2004-10-22 09:31:05.865371744 +0200
+@@ -82,6 +82,9 @@
+ #define PAVGB(a,b)  "pavgb " #a ", " #b " \n\t"
+ // error_message("mmx");
+   asm volatile(
++#ifdef __PIC__
++       "push %%ebx                                     \n\t"
++#endif
+        "leal (%0, %1), %%eax                           \n\t"
+        "leal (%%eax, %1, 4), %%ebx                     \n\t"
+ 
+@@ -121,9 +124,16 @@
+        PAVGB(%%mm0, %%mm2)                                   // L7+L9
+        PAVGB(%%mm1, %%mm2)                                   // 2L8 + L7 + L9
+        "movq %%mm2, (%%ebx, %1, 2)                     \n\t"
++#ifdef __PIC__
++       "pop %%ebx                                      \n\t"
++#endif
+ 
+        : : "r" (src), "r" (stride)
++#ifndef __PIC__
+        : "%eax", "%ebx"
++#else
++       : "%eax"
++#endif
+   );
+   emms();
+ #else
