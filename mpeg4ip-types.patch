@@ -22,3 +22,14 @@
  	} while (ts_diff > 0);
  	locked = 0;
  	if (m_audio_initialized != 0) {
+--- mpeg4ip-1.0/lib/mp4v2/isma.cpp.orig	Tue May 27 23:30:45 2003
++++ mpeg4ip-1.0/lib/mp4v2/isma.cpp	Tue Feb 24 11:19:22 2004
+@@ -485,7 +485,7 @@
+     delete pVideoEsdProperty;
+ 
+ 	VERBOSE_ISMA(GetVerbosity(),
+-		printf("OD data = %llu bytes\n", numBytes); MP4HexDump(pBytes, numBytes));
++		printf("OD data = %llu bytes\n", (long long)numBytes); MP4HexDump(pBytes, numBytes));
+ 
+ 	char* odCmdBase64 = MP4ToBase64(pBytes, numBytes);
+ 
