@@ -82,3 +82,26 @@
  	       bs_[-4], bs_[-3], bs_[-2], bs_[-1], bs_[0]);
  }
  
+--- mpeg4ip-1.0/player/src/media_utils.cpp.orig	Mon Oct 20 21:14:13 2003
++++ mpeg4ip-1.0/player/src/media_utils.cpp	Wed Feb 25 09:28:29 2004
+@@ -544,6 +544,7 @@
+ {
+   char *slash, *cm;
+   uint64_t prog;
++  unsigned long long progtmp;
+   session_desc_t *sdp;
+ 
+   name += strlen("iptv://");
+@@ -556,10 +557,11 @@
+   memcpy(cm, name, slash - name);
+   cm[slash - name] = '\0';
+   slash++;
+-  if (sscanf(slash, "%llu", &prog) != 1) {
++  if (sscanf(slash, "%llu", &progtmp) != 1) {
+     snprintf(errmsg, errlen, "Invalid iptv program");
+     return -1;
+   }
++  prog = progtmp;
+   
+   // check on-demand first
+   sdp = find_sdp_for_program(cm, "iptvfiles/guide.sdf",
