@@ -1,0 +1,31 @@
+--- mpeg4ip-1.0/lib/mp4av/Makefile.am.orig	2003-08-06 00:26:21.000000000 +0200
++++ mpeg4ip-1.0/lib/mp4av/Makefile.am	2004-02-10 00:47:26.325614360 +0100
+@@ -35,6 +35,7 @@
+ 	rfc3016.cpp \
+ 	rfc3119.cpp \
+ 	rfcisma.cpp
++libmp4av_la_LIBADD = ../mp4v2/libmp4v2.la
+ 
+ EXTRA_DIST = libmp4av.dsp libmp4av_st.dsp
+ 
+--- mpeg4ip-1.0/lib/msg_queue/Makefile.am.orig	2004-02-10 08:14:36.000000000 +0100
++++ mpeg4ip-1.0/lib/msg_queue/Makefile.am	2004-02-10 08:55:26.209395440 +0100
+@@ -3,6 +3,7 @@
+ libmsg_queue_la_SOURCES = \
+ 	msg_queue.cpp \
+ 	msg_queue.h
++libmsg_queue_la_LIBADD = @SDL_LIBS@
+ 
+ EXTRA_DIST = \
+ 	libmsg_queue60.dsp
+--- mpeg4ip-1.0/configure.in.orig	2004-02-10 20:45:34.000000000 +0100
++++ mpeg4ip-1.0/configure.in	2004-02-10 21:55:22.936211608 +0100
+@@ -76,7 +76,7 @@
+ saved_LIBS="$LIBS"
+ LIBS="$LIBS -lm"
+ AC_CHECK_LIB(vorbis, vorbis_bitrate_init, [LIBVORBIS_LIB="-lvorbis"])
+-AC_CHECK_LIB(faad, faacDecOpen, [LIBVORBIS_LIB="$LIBVORBIS_LIB -lfaad"])
++dnl AC_CHECK_LIB(faad, faacDecOpen, [LIBVORBIS_LIB="$LIBVORBIS_LIB -lfaad"])  -- not used now
+ LIBS=$saved_LIBS
+ AC_SUBST(LIBVORBIS_LIB)
+ dnl Checks for typedefs, structures, and compiler characteristics.
