@@ -12,12 +12,17 @@ Patch0:		%{name}-system-SDL.patch
 Patch1:		%{name}-nosdlaudiodelay.patch
 Patch2:		%{name}-system-xvid.patch
 Patch3:		%{name}-system-rtp.patch
+# use --tag=NASM for nasm assembler sources
+Patch4:		%{name}-lt-tag.patch
+# libtool bug: static convenience C++ libraries require --tag=CXX as workaround
+Patch5:		%{name}-lt-tag-cxx.patch
 URL:		http://www.xmms.org/
 BuildRequires:	SDL-devel
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:  gtk+2-devel
 BuildRequires:  lame-libs-devel
+BuildRequires:	libtool
 # uses included ucl-common 1.2.8 with some modifications :/
 #BuildRequires:	ucl-common-devel >= 1.2.8
 # uses included xvid 20020412 with some modifications :/
@@ -79,15 +84,18 @@ Statyczne wersje podstawowych bibliotek MPEG4IP.
 # won't work yet...
 #%patch2 -p1
 #%patch3 -p1
+%patch4 -p1
+%patch5 -p1
 
 %build
-rm -f missing
+%{__libtoolize}
 %{__aclocal}
 %{__autoconf}
 %{__automake}
 %configure
 
-%{__make}
+%{__make} \
+	CCAS="%{__cc}"
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -101,13 +109,13 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/mp4player_plugin/*.{a,la}
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post	-p /sbin/ldconfig
-%postun -p /sbin/ldconfig
+%post	libs -p /sbin/ldconfig
+%postun libs -p /sbin/ldconfig
 
 %files
 %defattr(644,root,root,755)
 %doc AUTHORS COPYING NEWS README* TODO doc/{*.pdf,*.txt}
-%doc doc/encoding.htm doc/ietf/draft*.txt doc/mcast/{mcast.txt,*_example}
+%doc doc/encoding/*.htm doc/ietf/draft*.txt doc/mcast/{mcast.txt,*_example}
 #%attr(755,root,root) %{_bindir}/{avi2raw,avidump,faac,gmp4player,ipvt_prog}
 #%attr(755,root,root) %{_bindir}/{lboxcrop,mp4creator,mp4dump,mp4encode}
 #%attr(755,root,root) %{_bindir}/{mp4extract,mp4info,mp4live,mp4player}

@@ -1,0 +1,243 @@
+diff -Nur mpeg4ip-0.9.8.orig/common/video/mpeg4/vtc/pezw/Makefile.am mpeg4ip-0.9.8/common/video/mpeg4/vtc/pezw/Makefile.am
+--- mpeg4ip-0.9.8.orig/common/video/mpeg4/vtc/pezw/Makefile.am	2002-06-14 00:54:06.000000000 +0200
++++ mpeg4ip-0.9.8/common/video/mpeg4/vtc/pezw/Makefile.am	2003-04-17 22:54:22.000000000 +0200
+@@ -2,6 +2,8 @@
+ 
+ AM_CXXFLAGS = -D__TRACE_AND_STATS_ -D__DOUBLE_PRECISION_ -D_REENTRANT -DNOCONTROLS -fexceptions @BILLS_CPPWARNINGS@
+ 
++LIBTOOL=@LIBTOOL@ --tag=CXX
++
+ INCLUDES = -I../include -I../main -I../pezw -I../wavelet -I../zte -I../ztq -I../../type
+ noinst_LTLIBRARIES = libobj_vtc_pezw.la
+ libobj_vtc_pezw_la_LDFLAGS = -static
+diff -Nur mpeg4ip-0.9.8.orig/common/video/mpeg4/vtc/wavelet/Makefile.am mpeg4ip-0.9.8/common/video/mpeg4/vtc/wavelet/Makefile.am
+--- mpeg4ip-0.9.8.orig/common/video/mpeg4/vtc/wavelet/Makefile.am	2002-06-21 02:09:54.000000000 +0200
++++ mpeg4ip-0.9.8/common/video/mpeg4/vtc/wavelet/Makefile.am	2003-04-17 22:54:52.000000000 +0200
+@@ -2,6 +2,8 @@
+ 
+ AM_CXXFLAGS = -D__TRACE_AND_STATS_ -D__DOUBLE_PRECISION_ -D_REENTRANT -DNOCONTROLS -fexceptions @BILLS_CPPWARNINGS@
+ 
++LIBTOOL=@LIBTOOL@ --tag=CXX
++
+ INCLUDES = -I../include -I../main -I../pezw -I../wavelet -I../zte -I../ztq -I../../type
+ noinst_LTLIBRARIES = libobj_vtc_wavelet.la
+ libobj_vtc_wavelet_la_LDFLAGS = -static
+diff -Nur mpeg4ip-0.9.8.orig/common/video/mpeg4/vtc/zte/Makefile.am mpeg4ip-0.9.8/common/video/mpeg4/vtc/zte/Makefile.am
+--- mpeg4ip-0.9.8.orig/common/video/mpeg4/vtc/zte/Makefile.am	2002-06-14 00:54:06.000000000 +0200
++++ mpeg4ip-0.9.8/common/video/mpeg4/vtc/zte/Makefile.am	2003-04-17 22:55:00.000000000 +0200
+@@ -2,6 +2,8 @@
+ 
+ AM_CXXFLAGS = -D__TRACE_AND_STATS_ -D__DOUBLE_PRECISION_ -D_REENTRANT -DNOCONTROLS -fexceptions @BILLS_CPPWARNINGS@
+ 
++LIBTOOL=@LIBTOOL@ --tag=CXX
++
+ INCLUDES = -I../include -I../main -I../pezw -I../wavelet -I../zte -I../ztq -I../../type
+ noinst_LTLIBRARIES = libobj_vtc_zte.la
+ libobj_vtc_zte_la_LDFLAGS = -static
+diff -Nur mpeg4ip-0.9.8.orig/common/video/mpeg4/vtc/ztq/Makefile.am mpeg4ip-0.9.8/common/video/mpeg4/vtc/ztq/Makefile.am
+--- mpeg4ip-0.9.8.orig/common/video/mpeg4/vtc/ztq/Makefile.am	2002-06-14 00:54:06.000000000 +0200
++++ mpeg4ip-0.9.8/common/video/mpeg4/vtc/ztq/Makefile.am	2003-04-17 22:55:09.000000000 +0200
+@@ -2,6 +2,8 @@
+ 
+ AM_CXXFLAGS = -D__TRACE_AND_STATS -D__DOUBLE_PRECISION_ -D_REENTRANT -DNOCONTROLS -fexceptions @BILLS_CPPWARNINGS@
+ 
++LIBTOOL=@LIBTOOL@ --tag=CXX
++
+ INCLUDES = -I../include -I../main -I../pezw -I../wavelet -I../zte -I../ztq -I../../type
+ noinst_LTLIBRARIES = libobj_vtc_ztq.la
+ libobj_vtc_ztq_la_LDFLAGS = -static
+diff -Nur mpeg4ip-0.9.8.orig/lib/bitstream/Makefile.am mpeg4ip-0.9.8/lib/bitstream/Makefile.am
+--- mpeg4ip-0.9.8.orig/lib/bitstream/Makefile.am	2002-06-12 19:37:25.000000000 +0200
++++ mpeg4ip-0.9.8/lib/bitstream/Makefile.am	2003-04-17 22:55:22.000000000 +0200
+@@ -6,6 +6,8 @@
+ 
+ EXTRA_DIST = bitstream60.dsp 
+ 
++LIBTOOL=@LIBTOOL@ --tag=CXX
++
+ INCLUDES = -I../../include
+ 
+ AM_CFLAGS = -D_REENTRANT -fexceptions @BILLS_CWARNINGS@
+diff -Nur mpeg4ip-0.9.8.orig/lib/config_file/Makefile.am mpeg4ip-0.9.8/lib/config_file/Makefile.am
+--- mpeg4ip-0.9.8.orig/lib/config_file/Makefile.am	2002-06-12 19:37:25.000000000 +0200
++++ mpeg4ip-0.9.8/lib/config_file/Makefile.am	2003-04-17 22:55:34.000000000 +0200
+@@ -7,5 +7,7 @@
+ 
+ EXTRA_DIST = libconfig_file60.dsp
+ 
++LIBTOOL=@LIBTOOL@ --tag=CXX
++
+ INCLUDES = -I$(top_srcdir)/include
+ AM_CXXFLAGS = -D_REENTRANT -DNOCONTROLS -Wall -Werror
+diff -Nur mpeg4ip-0.9.8.orig/lib/fposrec/Makefile.am mpeg4ip-0.9.8/lib/fposrec/Makefile.am
+--- mpeg4ip-0.9.8.orig/lib/fposrec/Makefile.am	2002-06-12 19:39:47.000000000 +0200
++++ mpeg4ip-0.9.8/lib/fposrec/Makefile.am	2003-04-17 22:55:46.000000000 +0200
+@@ -6,6 +6,8 @@
+ 
+ EXTRA_DIST = libfileposrec60.dsp
+ 
++LIBTOOL=@LIBTOOL@ --tag=CXX
++
+ INCLUDES = -I../../include
+ 
+ AM_CFLAGS = -D_REENTRANT -fexceptions @BILLS_CWARNINGS@
+diff -Nur mpeg4ip-0.9.8.orig/lib/msg_queue/Makefile.am mpeg4ip-0.9.8/lib/msg_queue/Makefile.am
+--- mpeg4ip-0.9.8.orig/lib/msg_queue/Makefile.am	2003-04-17 22:53:08.000000000 +0200
++++ mpeg4ip-0.9.8/lib/msg_queue/Makefile.am	2003-04-17 22:56:16.000000000 +0200
+@@ -7,5 +7,8 @@
+ 
+ EXTRA_DIST = \
+ 	libmsg_queue60.dsp
++
++LIBTOOL=@LIBTOOL@ --tag=CXX
++
+ INCLUDES = @SDL_CFLAGS@ -I$(top_srcdir)/include
+ AM_CXXFLAGS = -D_REENTRANT -DNOCONTROLS -Wall -Werror
+diff -Nur mpeg4ip-0.9.8.orig/player/lib/audio/mp3/Makefile.am mpeg4ip-0.9.8/player/lib/audio/mp3/Makefile.am
+--- mpeg4ip-0.9.8.orig/player/lib/audio/mp3/Makefile.am	2003-04-17 22:53:08.000000000 +0200
++++ mpeg4ip-0.9.8/player/lib/audio/mp3/Makefile.am	2003-04-17 22:57:59.000000000 +0200
+@@ -26,4 +26,6 @@
+ 	README.LIB 		\
+ 	libmp360.dsp 
+ 
++LIBTOOL=@LIBTOOL@ --tag=CXX
++
+ AM_CXXFLAGS = -D_REENTRANT -Werror -Wall -fexceptions @SDL_CFLAGS@ -I../../../../include
+diff -Nur mpeg4ip-0.9.8.orig/player/lib/audio/mp3util/Makefile.am mpeg4ip-0.9.8/player/lib/audio/mp3util/Makefile.am
+--- mpeg4ip-0.9.8.orig/player/lib/audio/mp3util/Makefile.am	2002-06-14 00:50:35.000000000 +0200
++++ mpeg4ip-0.9.8/player/lib/audio/mp3util/Makefile.am	2003-04-17 22:58:13.000000000 +0200
+@@ -12,6 +12,8 @@
+ 
+ EXTRA_DIST = libmp3util60.dsp
+ 
++LIBTOOL=@LIBTOOL@ --tag=CXX
++
+ AM_CFLAGS = @BILLS_CWARNINGS@
+ 
+ AM_CXXFLAGS = @BILLS_CPPWARNINGS@
+diff -Nur mpeg4ip-0.9.8.orig/player/src/codec/aa/Makefile.am mpeg4ip-0.9.8/player/src/codec/aa/Makefile.am
+--- mpeg4ip-0.9.8.orig/player/src/codec/aa/Makefile.am	2003-04-17 22:53:08.000000000 +0200
++++ mpeg4ip-0.9.8/player/src/codec/aa/Makefile.am	2003-04-17 22:59:07.000000000 +0200
+@@ -18,6 +18,8 @@
+ 	isma_rtp_bytestream.cpp \
+ 	isma_rtp_bytestream.h
+ 
++LIBTOOL=@LIBTOOL@ --tag=CXX
++
+ INCLUDES = -I../.. -I../../../lib -I../../../lib/audio -I$(top_srcdir)/include @SDL_CFLAGS@ -I../../../../lib
+ 
+ AM_CFLAGS = -D_REENTRANT -fexceptions @BILLS_CWARNINGS@
+diff -Nur mpeg4ip-0.9.8.orig/player/src/codec/mp3/Makefile.am mpeg4ip-0.9.8/player/src/codec/mp3/Makefile.am
+--- mpeg4ip-0.9.8.orig/player/src/codec/mp3/Makefile.am	2003-04-17 22:53:08.000000000 +0200
++++ mpeg4ip-0.9.8/player/src/codec/mp3/Makefile.am	2003-04-17 22:59:15.000000000 +0200
+@@ -21,6 +21,8 @@
+ 	mp3_rtp_bytestream.cpp \
+ 	mp3_rtp_bytestream.h
+ 
++LIBTOOL=@LIBTOOL@ --tag=CXX
++
+ INCLUDES = -I.. -I../..  -I../../../lib -I../../../lib/audio @SDL_CFLAGS@ -I../../../../common/video/mpeg4 -I../../../../include -I../../../../lib -I$(top_builddir)/lib/mp4v2
+ 
+ AM_CFLAGS = -D_REENTRANT -fexceptions @BILLS_CWARNINGS@
+diff -Nur mpeg4ip-0.9.8.orig/player/src/Makefile.am mpeg4ip-0.9.8/player/src/Makefile.am
+--- mpeg4ip-0.9.8.orig/player/src/Makefile.am	2003-04-17 22:53:08.000000000 +0200
++++ mpeg4ip-0.9.8/player/src/Makefile.am	2003-04-17 23:00:11.000000000 +0200
+@@ -108,6 +108,8 @@
+ PROG_E1 = gmp4player
+ endif
+ 
++LIBTOOL=@LIBTOOL@ --tag=CXX
++
+ bin_PROGRAMS = mp4player $(PROG_E1)
+ 
+ check_PROGRAMS = movplayer
+diff -Nur mpeg4ip-0.9.8.orig/server/mp4live/gui/Makefile.am mpeg4ip-0.9.8/server/mp4live/gui/Makefile.am
+--- mpeg4ip-0.9.8.orig/server/mp4live/gui/Makefile.am	2003-04-17 22:53:08.000000000 +0200
++++ mpeg4ip-0.9.8/server/mp4live/gui/Makefile.am	2003-04-17 23:00:39.000000000 +0200
+@@ -15,6 +15,8 @@
+ 	gui_utils.h \
+ 	gui_utils.cpp 
+ 
++LIBTOOL=@LIBTOOL@ --tag=CXX
++
+ INCLUDES=@GLIB_CFLAGS@ @GTK_CFLAGS@ \
+ 	-I.. \
+ 	-I$(top_srcdir)/include \
+diff -Nur mpeg4ip-0.9.8.orig/server/mp4live/Makefile.am mpeg4ip-0.9.8/server/mp4live/Makefile.am
+--- mpeg4ip-0.9.8.orig/server/mp4live/Makefile.am	2003-04-17 22:53:08.000000000 +0200
++++ mpeg4ip-0.9.8/server/mp4live/Makefile.am	2003-04-17 23:00:48.000000000 +0200
+@@ -81,6 +81,8 @@
+ # video_1394_source
+ # video_dv
+ 
++LIBTOOL=@LIBTOOL@ --tag=CXX
++
+ INCLUDES=\
+ 	@GLIB_CFLAGS@ @GTK_CFLAGS@ \
+ 	-I$(top_srcdir)/include \
+--- mpeg4ip-0.9.8/common/video/mpeg4/sys/Makefile.am.orig	2002-06-14 00:54:06.000000000 +0200
++++ mpeg4ip-0.9.8/common/video/mpeg4/sys/Makefile.am	2003-04-17 23:22:14.000000000 +0200
+@@ -4,6 +4,8 @@
+ 
+ AM_CXXFLAGS = -D_REENTRANT -DNOCONTROLS -fexceptions @BILLS_CPPWARNINGS@
+ 
++LIBTOOL = @LIBTOOL@ --tag=CXX
++
+ INCLUDES = -I../type -I../tools -I../../../../include
+ 
+ noinst_LTLIBRARIES = libobj_sys.la
+--- mpeg4ip-0.9.8/common/video/mpeg4/sys/decoder/Makefile.am.orig	2002-06-14 00:54:06.000000000 +0200
++++ mpeg4ip-0.9.8/common/video/mpeg4/sys/decoder/Makefile.am	2003-04-17 23:23:13.000000000 +0200
+@@ -2,6 +2,8 @@
+ 
+ AM_CXXFLAGS = -D__TRACE_AND_STATS_ -D__DOUBLE_PRECISION_ -D_REENTRANT -DNOCONTROLS -fexceptions @BILLS_CPPWARNINGS@
+ 
++LIBTOOL = @LIBTOOL@ --tag=CXX
++
+ INCLUDES = -I.. -I../../type -I../../tools -I../../../../../include
+ 
+ noinst_LTLIBRARIES = libobj_sys_decoder.la
+--- mpeg4ip-0.9.8/common/video/mpeg4/sys/encoder/Makefile.am.orig	2002-06-14 00:54:06.000000000 +0200
++++ mpeg4ip-0.9.8/common/video/mpeg4/sys/encoder/Makefile.am	2003-04-17 23:23:20.000000000 +0200
+@@ -2,6 +2,8 @@
+ 
+ AM_CXXFLAGS = -D__TRACE_AND_STATS_ -D__DOUBLE_PRECISION_ -D_REENTRANT -DNOCONTROLS -fexceptions @BILLS_CPPWARNINGS@
+ 
++LIBTOOL = @LIBTOOL@ --tag=CXX
++
+ INCLUDES = -I.. -I../../type -I../../tools -I../../../../../include
+ 
+ noinst_LTLIBRARIES = libobj_sys_encoder.la
+--- mpeg4ip-0.9.8/common/video/mpeg4/tools/entropy/Makefile.am.orig	2002-06-14 00:54:06.000000000 +0200
++++ mpeg4ip-0.9.8/common/video/mpeg4/tools/entropy/Makefile.am	2003-04-17 23:22:29.000000000 +0200
+@@ -2,6 +2,8 @@
+ 
+ AM_CXXFLAGS = -D__TRACE_AND_STATS_ -D__DOUBLE_PRECISION_ -D_REENTRANT -DNOCONTROLS -fexceptions @BILLS_CPPWARNINGS@
+ 
++LIBTOOL = @LIBTOOL@ --tag=CXX
++
+ INCLUDES = \
+ 	-I../../../../../include \
+ 	-I../../type
+--- mpeg4ip-0.9.8/common/video/mpeg4/type/Makefile.am.orig	2002-06-14 00:54:06.000000000 +0200
++++ mpeg4ip-0.9.8/common/video/mpeg4/type/Makefile.am	2003-04-17 23:22:42.000000000 +0200
+@@ -2,6 +2,8 @@
+ 
+ AM_CXXFLAGS = -D__TRACE_AND_STATS_ -D__DOUBLE_PRECISION_ -D_REENTRANT -DNOCONTROLS -fexceptions @BILLS_CPPWARNINGS@
+ 
++LIBTOOL = @LIBTOOL@ --tag=CXX
++
+ noinst_LTLIBRARIES = libobj_type.la
+ libobj_type_la_LDFLAGS = -static
+ 
+--- mpeg4ip-0.9.8/common/video/mpeg4/vtc/main/Makefile.am.orig	2001-10-03 21:53:13.000000000 +0200
++++ mpeg4ip-0.9.8/common/video/mpeg4/vtc/main/Makefile.am	2003-04-17 23:23:49.000000000 +0200
+@@ -2,6 +2,8 @@
+ 
+ AM_CXXFLAGS = -D__TRACE_AND_STATS_ -D__DOUBLE_PRECISION_ -D_REENTRANT -DNOCONTROLS -fexceptions @BILLS_CPPWARNINGS@
+ 
++LIBTOOL = @LIBTOOL@ --tag=CXX
++
+ INCLUDES = -I../include -I../main -I../pezw -I../wavelet -I../zte -I../ztq -I../../type
+ noinst_LTLIBRARIES = libobj_vtc_main.la libobj_vtc_main_dec.la libobj_vtc_main_enc.la
+ 
