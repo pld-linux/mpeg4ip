@@ -1,0 +1,185 @@
+diff -urN aa/mpeg4ip-1.0/common/video/mpeg4-2000/idct/idct.hpp mpeg4ip-1.0/common/video/mpeg4-2000/idct/idct.hpp
+--- aa/mpeg4ip-1.0/common/video/mpeg4-2000/idct/idct.hpp	2003-10-23 01:26:59.000000000 +0200
++++ mpeg4ip-1.0/common/video/mpeg4-2000/idct/idct.hpp	2004-06-30 18:37:15.963042832 +0200
+@@ -22,6 +22,7 @@
+ #ifndef _INT_IDCT_
+ #define _INT_IDCT_ 1
+ 
++#include "../type/header.h"
+ 
+ #define IDCT_BLOCK_SIZE	8
+ class idct{
+diff -urN aa/mpeg4ip-1.0/configure.in mpeg4ip-1.0/configure.in
+--- aa/mpeg4ip-1.0/configure.in	2003-12-22 23:50:08.000000000 +0100
++++ mpeg4ip-1.0/configure.in	2004-06-30 18:17:43.684256296 +0200
+@@ -374,7 +374,7 @@
+ 
+ dnl
+ BILLS_CWARNINGS="-Wall -Werror -Wmissing-prototypes -Wmissing-declarations -Wno-char-subscripts -Wno-unknown-pragmas"
+-BILLS_CPPWARNINGS="-Wall -Werror -Wmissing-prototypes -Wno-char-subscripts -Woverloaded-virtual -Wno-unknown-pragmas -Wno-deprecated"
++BILLS_CPPWARNINGS="-Wall -Werror -Wno-char-subscripts -Woverloaded-virtual -Wno-unknown-pragmas -Wno-deprecated"
+ AC_SUBST(BILLS_CWARNINGS)
+ AC_SUBST(BILLS_CPPWARNINGS)
+ 
+diff -urN aa/mpeg4ip-1.0/lib/mp4v2/mp4property.h mpeg4ip-1.0/lib/mp4v2/mp4property.h
+--- aa/mpeg4ip-1.0/lib/mp4v2/mp4property.h	2002-07-03 02:09:38.000000000 +0200
++++ mpeg4ip-1.0/lib/mp4v2/mp4property.h	2004-06-30 18:25:32.800939720 +0200
+@@ -58,7 +58,7 @@
+ 		return m_name;
+ 	}
+ 
+-	virtual MP4PropertyType GetType() = NULL; 
++	virtual MP4PropertyType GetType() = 0; 
+ 
+ 	bool IsReadOnly() {
+ 		return m_readOnly;
+@@ -74,17 +74,17 @@
+ 		m_implicit = value;
+ 	}
+ 
+-	virtual u_int32_t GetCount() = NULL;
+-	virtual void SetCount(u_int32_t count) = NULL;
++	virtual u_int32_t GetCount() = 0;
++	virtual void SetCount(u_int32_t count) = 0;
+ 
+ 	virtual void Generate() { /* default is a no-op */ };
+ 
+-	virtual void Read(MP4File* pFile, u_int32_t index = 0) = NULL;
++	virtual void Read(MP4File* pFile, u_int32_t index = 0) = 0;
+ 
+-	virtual void Write(MP4File* pFile, u_int32_t index = 0) = NULL;
++	virtual void Write(MP4File* pFile, u_int32_t index = 0) = 0;
+ 
+ 	virtual void Dump(FILE* pFile, u_int8_t indent,
+-		bool dumpImplicits, u_int32_t index = 0) = NULL;
++		bool dumpImplicits, u_int32_t index = 0) = 0;
+ 
+ 	virtual bool FindProperty(const char* name,
+ 		MP4Property** ppProperty, u_int32_t* pIndex = NULL);
+diff -urN aa/mpeg4ip-1.0/lib/mp4v2/rtphint.h mpeg4ip-1.0/lib/mp4v2/rtphint.h
+--- aa/mpeg4ip-1.0/lib/mp4v2/rtphint.h	2003-10-14 20:20:31.000000000 +0200
++++ mpeg4ip-1.0/lib/mp4v2/rtphint.h	2004-06-30 18:25:50.408263000 +0200
+@@ -35,8 +35,8 @@
+ 		return m_pPacket;
+ 	}
+ 
+-	virtual u_int16_t GetDataSize() = NULL;
+-	virtual void GetData(u_int8_t* pDest) = NULL;
++	virtual u_int16_t GetDataSize() = 0;
++	virtual void GetData(u_int8_t* pDest) = 0;
+ 
+ 	MP4Track* FindTrackFromRefIndex(u_int8_t refIndex);
+ 
+diff -urN aa/mpeg4ip-1.0/server/mp4live/audio_encoder.h mpeg4ip-1.0/server/mp4live/audio_encoder.h
+--- aa/mpeg4ip-1.0/server/mp4live/audio_encoder.h	2003-03-21 02:09:01.000000000 +0100
++++ mpeg4ip-1.0/server/mp4live/audio_encoder.h	2004-06-30 18:46:00.180349688 +0200
+@@ -31,17 +31,17 @@
+ public:
+ 	CAudioEncoder() { };
+ 
+-	virtual u_int32_t GetSamplesPerFrame() = NULL;
++	virtual u_int32_t GetSamplesPerFrame() = 0;
+ 
+ 	virtual bool EncodeSamples(
+ 		int16_t* pSamples, 
+ 		u_int32_t numSamplesPerChannel,
+-		u_int8_t numChannels) = NULL;
++		u_int8_t numChannels) = 0;
+ 
+ 	virtual bool GetEncodedFrame(
+ 		u_int8_t** ppBuffer, 
+ 		u_int32_t* pBufferLength,
+-		u_int32_t* pNumSamplesPerChannel) = NULL;
++		u_int32_t* pNumSamplesPerChannel) = 0;
+ 
+ 
+ 	// utility routines
+diff -urN aa/mpeg4ip-1.0/server/mp4live/media_codec.h mpeg4ip-1.0/server/mp4live/media_codec.h
+--- aa/mpeg4ip-1.0/server/mp4live/media_codec.h	2002-10-30 20:12:37.000000000 +0100
++++ mpeg4ip-1.0/server/mp4live/media_codec.h	2004-06-30 18:45:47.836226280 +0200
+@@ -33,11 +33,11 @@
+ 		m_pConfig = NULL;
+ 	}
+ 
+-	virtual MediaType GetFrameType(void) = NULL;
++	virtual MediaType GetFrameType(void) = 0;
+ 
+-	virtual bool Init(CLiveConfig* pConfig, bool realTime = true) = NULL;
++	virtual bool Init(CLiveConfig* pConfig, bool realTime = true) = 0;
+ 
+-	virtual void Stop() = NULL;
++	virtual void Stop() = 0;
+ 
+ protected:
+ 	CLiveConfig*	m_pConfig;
+diff -urN aa/mpeg4ip-1.0/server/mp4live/media_flow.h mpeg4ip-1.0/server/mp4live/media_flow.h
+--- aa/mpeg4ip-1.0/server/mp4live/media_flow.h	2003-10-14 18:02:15.000000000 +0200
++++ mpeg4ip-1.0/server/mp4live/media_flow.h	2004-06-30 18:43:35.501344240 +0200
+@@ -37,9 +37,9 @@
+ 		m_started = false;
+ 	}
+ 
+-	virtual void Start() = NULL;
++	virtual void Start() = 0;
+ 
+-	virtual void Stop() = NULL; 
++	virtual void Stop() = 0; 
+ 
+ 	void SetConfig(CLiveConfig* pConfig) {
+ 		m_pConfig = pConfig;
+diff -urN aa/mpeg4ip-1.0/server/mp4live/media_node.h mpeg4ip-1.0/server/mp4live/media_node.h
+--- aa/mpeg4ip-1.0/server/mp4live/media_node.h	2003-12-04 01:53:58.000000000 +0100
++++ mpeg4ip-1.0/server/mp4live/media_node.h	2004-06-30 18:43:07.006676088 +0200
+@@ -84,7 +84,7 @@
+ 	static const uint32_t MSG_NODE_STOP		= MSG_NODE + 2;
+ 	static const uint32_t MSG_NODE_STOP_THREAD	= MSG_NODE + 3;
+ 
+-	virtual int ThreadMain(void) = NULL;
++	virtual int ThreadMain(void) = 0;
+ 
+ protected:
+ 	SDL_Thread*			m_myThread;
+diff -urN aa/mpeg4ip-1.0/server/mp4live/media_source.h mpeg4ip-1.0/server/mp4live/media_source.h
+--- aa/mpeg4ip-1.0/server/mp4live/media_source.h	2003-12-04 01:53:58.000000000 +0100
++++ mpeg4ip-1.0/server/mp4live/media_source.h	2004-06-30 18:43:19.674750248 +0200
+@@ -64,11 +64,11 @@
+ 			NULL, 0, m_myMsgQueueSemaphore);
+ 	}
+ 
+-	virtual bool IsDone() = NULL;
++	virtual bool IsDone() = 0;
+ 
+ 	virtual Duration GetElapsedDuration();
+ 
+-	virtual float GetProgress() = NULL;
++	virtual float GetProgress() = 0;
+ 
+ 	virtual u_int32_t GetNumEncodedVideoFrames() {
+ 		return m_videoEncodedFrames;
+diff -urN aa/mpeg4ip-1.0/server/mp4live/video_encoder.h mpeg4ip-1.0/server/mp4live/video_encoder.h
+--- aa/mpeg4ip-1.0/server/mp4live/video_encoder.h	2003-05-16 23:05:20.000000000 +0200
++++ mpeg4ip-1.0/server/mp4live/video_encoder.h	2004-06-30 18:47:01.954958520 +0200
+@@ -31,19 +31,19 @@
+ public:
+ 	CVideoEncoder() { };
+ 
+-	virtual bool Init(CLiveConfig *pConfig, bool realTime = true) = NULL;
++	virtual bool Init(CLiveConfig *pConfig, bool realTime = true) = 0;
+ 
+ 	virtual bool EncodeImage(
+ 		u_int8_t* pY, u_int8_t* pU, u_int8_t* pV,
+ 		u_int32_t yStride, u_int32_t uvStride,
+ 		bool wantKeyFrame,
+-		Duration elapsedDuration) = NULL;
++		Duration elapsedDuration) = 0;
+ 
+ 	virtual bool GetEncodedImage(
+-		u_int8_t** ppBuffer, u_int32_t* pBufferLength) = NULL;
++		u_int8_t** ppBuffer, u_int32_t* pBufferLength) = 0;
+ 
+ 	virtual bool GetReconstructedImage(
+-		u_int8_t* pY, u_int8_t* pU, u_int8_t* pV) = NULL;
++		u_int8_t* pY, u_int8_t* pU, u_int8_t* pV) = 0;
+ 	virtual media_free_f GetMediaFreeFunction(void) { return NULL; };
+ };
+ 
