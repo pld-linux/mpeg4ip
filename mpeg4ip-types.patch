@@ -42,3 +42,14 @@
  	// return SL config values to 2 (file)
  	// return ESID values to 0
  	if (pAudioSLConfigPredef) {
+--- mpeg4ip-1.0/lib/mp4v2/mp4descriptor.cpp.orig	Wed Jun  5 23:50:38 2002
++++ mpeg4ip-1.0/lib/mp4v2/mp4descriptor.cpp	Tue Feb 24 13:55:02 2004
+@@ -82,7 +82,7 @@
+ {
+ 	VERBOSE_READ(pFile->GetVerbosity(),
+ 		printf("ReadDescriptor: pos = 0x%llx\n", 
+-			pFile->GetPosition()));
++			(long long)pFile->GetPosition()));
+ 
+ 	// read tag and length
+ 	u_int8_t tag = pFile->ReadUInt8();
