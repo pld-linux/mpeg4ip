@@ -81,7 +81,7 @@ Statyczne wersje podstawowych bibliotek MPEG4IP.
 
 %prep
 %setup -q
-%patch0 -p1 
+%patch0 -p1
 %patch1 -p1
 # won't work yet...
 #%patch2 -p1
@@ -122,7 +122,7 @@ rm -rf $RPM_BUILD_ROOT
 #%attr(755,root,root) %{_bindir}/{avi2raw,avidump,faac,gmp4player,ipvt_prog}
 #%attr(755,root,root) %{_bindir}/{lboxcrop,mp4creator,mp4dump,mp4encode}
 #%attr(755,root,root) %{_bindir}/{mp4extract,mp4info,mp4live,mp4player}
-#%attr(755,root,root) %{_bindir}/{mp4trackdump,mp4venc,rgb2yuv,sdl-config} 
+#%attr(755,root,root) %{_bindir}/{mp4trackdump,mp4venc,rgb2yuv,sdl-config}
 #%attr(755,root,root) %{_bindir}/{xvidenc,yuvdump}
 %attr(755,root,root) %{_bindir}/*
 %attr(755,root,root) %{_libdir}/mp4player_plugin
