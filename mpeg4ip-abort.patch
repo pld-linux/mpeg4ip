@@ -1,0 +1,11 @@
+--- lib/rtp/net_udp.c~	2004-05-06 01:33:43.000000000 +0200
++++ lib/rtp/net_udp.c	2004-10-16 23:35:46.418082485 +0200
+@@ -444,7 +444,7 @@
+              if (inet_aton(G_Multicast_Src, &imr.imr_sourceaddr) == 0) {
+                 rtp_message(LOG_ERR, "inet_aton failed for %s\n",
+                         G_Multicast_Src);
+-                abort;
++                abort();
+               }
+              if( setsockopt( s->fd, IPPROTO_IP, IP_DROP_SOURCE_MEMBERSHIP,
+                          (char*)&imr,
