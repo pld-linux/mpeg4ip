@@ -5,7 +5,7 @@ Version:	1.0RC3
 Release:	0.1
 License:	MPL v1.1 (original code) and other licenses (included libraries)
 Group:		Applications
-Source0:	http://dl.sourceforge.net/sourceforge/mpeg4ip/%{name}-%{version}.tar.gz
+Source0:	http://dl.sourceforge.net/mpeg4ip/%{name}-%{version}.tar.gz
 # Source0-md5:	0fb1b9fb2e2fd69d5efc05adeb6b5304
 Patch0:		%{name}-system-SDL.patch
 # don't use non-standard SDL_HasAudioDelayMsec() and SDL_AudioDelayMsec()
@@ -16,7 +16,7 @@ Patch3:		%{name}-system-rtp.patch
 # libtool bug: static convenience C++ libraries require --tag=CXX as workaround
 Patch5:		%{name}-lt-tag-cxx.patch
 Patch6:		%{name}-gcc.patch
-URL:		http://www.xmms.org/
+URL:		http://www.mpeg4ip.net/
 BuildRequires:	SDL-devel
 BuildRequires:	autoconf
 BuildRequires:	automake
