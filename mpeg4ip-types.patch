@@ -66,3 +66,19 @@
  
  			return sampleId;
  		}
+--- mpeg4ip-1.0/player/plugin/video/h261/p64dump.cpp.orig	Thu Dec  4 23:49:33 2003
++++ mpeg4ip-1.0/player/plugin/video/h261/p64dump.cpp	Tue Feb 24 16:05:11 2004
+@@ -159,10 +159,10 @@
+ 	va_start(ap, msg);
+ 	printf("-err: ");
+ 	vfprintf(stdout, msg, ap);
+-	printf(" @g%d m%d %d/%d of %d/%d: %04x %04x %04x %04x|%04x\n",
++	printf(" @g%d m%d %ld/%d of %ld/%d: %04x %04x %04x %04x|%04x\n",
+ 		gob_, mba_,
+-	       (u_char*)bs_ - (u_char*)ps_, nbb_,
+-	       (u_char*)es_ - (u_char*)ps_, pebit_,
++	       (long)((u_char*)bs_ - (u_char*)ps_), nbb_,
++	       (long)((u_char*)es_ - (u_char*)ps_), pebit_,
+ 	       bs_[-4], bs_[-3], bs_[-2], bs_[-1], bs_[0]);
+ }
+ 
