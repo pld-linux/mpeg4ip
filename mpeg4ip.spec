@@ -21,6 +21,7 @@ BuildRequires:	SDL-devel
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	faac-devel >= 1.20
+BuildRequires:	ffmpeg-devel >= 0.4.9
 BuildRequires:	gtk+2-devel >= 1:2.0.0
 BuildRequires:	lame-libs-devel >= 3.92
 BuildRequires:	libstdc++-devel
