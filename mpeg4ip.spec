@@ -2,7 +2,7 @@ Summary:	MPEG4IP - system for encoding, streaming and playing MPEG-4 audio/video
 Summary(pl):	MPEG4IP - sytem kodowania, streamingu i odtwarzania d¼wiêku i obrazu MPEG-4
 Name:		mpeg4ip
 Version:	1.0
-Release:	1
+Release:	2
 Epoch:		1
 License:	MPL v1.1 (original code) and other licenses (included libraries)
 Group:		Applications
@@ -14,7 +14,11 @@ Patch0:		%{name}-system-SDL.patch
 Patch1:		%{name}-nosdlaudiodelay.patch
 Patch2:		%{name}-xvid1.patch
 Patch3:		%{name}-link.patch
-#Patch4:		%{name}-system-rtp.patch
+Patch4:		%{name}-fmt.patch
+Patch5:		%{name}-libsdp.patch
+Patch6:		%{name}-types.patch
+Patch7:		%{name}-pic.patch
+#Patch8:		%{name}-system-rtp.patch
 URL:		http://www.mpeg4ip.net/
 BuildRequires:	SDL-devel
 BuildRequires:	autoconf
@@ -87,13 +91,25 @@ Statyczne wersje podstawowych bibliotek MPEG4IP.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
 # won't work yet...
-#%patch4 -p1
+#%patch8 -p1
 
 %build
+cd lib/rtp
 %{__libtoolize}
 %{__aclocal}
 %{__autoconf}
+%{__autoheader}
+%{__automake}
+cd ../..
+%{__libtoolize}
+%{__aclocal}
+%{__autoconf}
+%{__autoheader}
 %{__automake}
 %configure
 
@@ -141,7 +157,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libmp4util.so.*.*.*
 %attr(755,root,root) %{_libdir}/libmp4v2.so.*.*.*
 %attr(755,root,root) %{_libdir}/libmsg_queue.so.*.*.*
-%attr(755,root,root) %{_libdir}/libsdp.so.*.*.*
+%attr(755,root,root) %{_libdir}/libmpeg4ip_sdp.so.*.*.*
 
 %files devel
 %defattr(644,root,root,755)
@@ -152,14 +168,14 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libmp4util.so
 %attr(755,root,root) %{_libdir}/libmp4v2.so
 %attr(755,root,root) %{_libdir}/libmsg_queue.so
-%attr(755,root,root) %{_libdir}/libsdp.so
+%attr(755,root,root) %{_libdir}/libmpeg4ip_sdp.so
 %{_libdir}/libconfig_file.la
 %{_libdir}/libmp4.la
 %{_libdir}/libmp4av.la
 %{_libdir}/libmp4util.la
 %{_libdir}/libmp4v2.la
 %{_libdir}/libmsg_queue.la
-%{_libdir}/libsdp.la
+%{_libdir}/libmpeg4ip_sdp.la
 # static-only lib - private mpeg4ip use only?
 #%{_libdir}/libhttp.*a
 %{_includedir}/codec_plugin.h
@@ -177,4 +193,4 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libmp4util.a
 %{_libdir}/libmp4v2.a
 %{_libdir}/libmsg_queue.a
-%{_libdir}/libsdp.a
+%{_libdir}/libmpeg4ip_sdp.a
