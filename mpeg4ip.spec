@@ -2,7 +2,7 @@ Summary:	MPEG4IP - system for encoding, streaming and playing MPEG-4 audio/video
 Summary(pl):	MPEG4IP - sytem kodowania, streamingu i odtwarzania d¼wiêku i obrazu MPEG-4
 Name:		mpeg4ip
 Version:	1.0
-Release:	4
+Release:	5
 Epoch:		1
 License:	MPL v1.1 (original code) and other licenses (included libraries)
 Group:		Applications
@@ -20,12 +20,12 @@ Patch6:		%{name}-types.patch
 Patch7:		%{name}-pic.patch
 #Patch8:		%{name}-system-rtp.patch
 Patch9:		%{name}-gcc34.patch
+Patch10:	%{name}-gtk.patch
 URL:		http://www.mpeg4ip.net/
 BuildRequires:	SDL-devel
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	faac-devel >= 1.20
-BuildRequires:	gtk+-devel
 BuildRequires:	gtk+2-devel >= 2.0.0
 BuildRequires:	lame-libs-devel >= 3.92
 BuildRequires:	libstdc++-devel
@@ -100,6 +100,7 @@ Statyczne wersje podstawowych bibliotek MPEG4IP.
 # won't work yet...
 #%patch8 -p1
 %patch9 -p1
+%patch10 -p1
 
 %build
 cd lib/rtp
