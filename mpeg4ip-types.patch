@@ -1,0 +1,24 @@
+--- mpeg4ip-1.0/lib/sdp/sdp_encode.c.orig	2003-12-04 22:51:05.000000000 +0000
++++ mpeg4ip-1.0/lib/sdp/sdp_encode.c	2004-02-11 09:57:43.000000000 +0000
+@@ -479,8 +479,8 @@
+ 				sptr->orig_username == NULL ?
+ 				"-" : sptr->orig_username);
+   sprintf(buffer, " %lld %lld IN ",
+-	  sptr->session_id,
+-	  sptr->session_version);
++	  (long long)(sptr->session_id),
++	  (long long)(sptr->session_version));
+   ADD_STR_TO_ENCODE_WITH_RETURN(se, buffer);
+   ADD_STR_TO_ENCODE_WITH_RETURN(se, sptr->create_addr_type);
+   ADD_STR_TO_ENCODE_WITH_RETURN(se, " ");
+--- mpeg4ip-1.0/player/src/audio_sdl.cpp.orig	2004-02-11 10:00:21.000000000 +0000
++++ mpeg4ip-1.0/player/src/audio_sdl.cpp	2004-02-11 11:07:45.000000000 +0000
+@@ -354,7 +354,7 @@
+ 			m_last_fill_timestamp);
+ 	  m_last_fill_timestamp += m_msec_per_frame + 1; // fill plus extra
+ 	  ts_diff = ts - m_last_fill_timestamp;
+-	  audio_message(LOG_DEBUG, "diff is %lld", ts_diff);
++	  audio_message(LOG_DEBUG, "diff is %lld", (long long)ts_diff);
+ 	} while (ts_diff > 0);
+ 	locked = 0;
+ 	if (m_audio_initialized != 0) {
