@@ -19,6 +19,7 @@ Patch5:		%{name}-libsdp.patch
 Patch6:		%{name}-types.patch
 Patch7:		%{name}-pic.patch
 #Patch8:		%{name}-system-rtp.patch
+Patch9:		%{name}-gcc34.patch
 URL:		http://www.mpeg4ip.net/
 BuildRequires:	SDL-devel
 BuildRequires:	autoconf
@@ -97,6 +98,7 @@ Statyczne wersje podstawowych bibliotek MPEG4IP.
 %patch7 -p1
 # won't work yet...
 #%patch8 -p1
+%patch9 -p1
 
 %build
 cd lib/rtp
