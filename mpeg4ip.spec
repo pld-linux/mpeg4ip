@@ -1,24 +1,12 @@
-# TODO:
-# - link libmpeg4ipSDL with -lSDL
-# - link both player/plugin/rtp/isma_audio/ plugins with -lSDL
-# - check player/plugin/rtp/isma_video/
-#   isma_enc_video_rtp_plugin.so.0.0.0: undefined reference to `parse_fmtp_for_mpeg4'
-# - check player/plugin/video/mpeg3/
-#   mpeg3_video_plugin.so.0.0.0: undefined reference to `MP4AV_Mpeg3FindPictHdr'
-# - check player/src/codec/mp3/
-#   mp3_plugin.so.0.0.0: undefined reference to `MP4AV_Mp3HeaderFromBytes'
-#   mp3_plugin.so.0.0.0: undefined reference to `MP4AV_Mp3GetHdrLayer'
-#   mp3_plugin.so.0.0.0: undefined reference to `MP4AV_Mp3GetHdrSamplingWindow'
-#   mp3_plugin.so.0.0.0: undefined reference to `MP4AV_Mp3GetBitRate'
-# - check player/src/codec/wav/
-#   wav_plugin.so.0.0.0: undefined reference to `SDL_FreeWAV'
-#   wav_plugin.so.0.0.0: undefined reference to `SDL_RWFromFile'
-#   wav_plugin.so.0.0.0: undefined reference to `SDL_LoadWAV_RW'
+#
+# Conditional build:
+%bcond_without	alsa	# build without ALSA support in SDLAudio
+#
 Summary:	MPEG4IP - system for encoding, streaming and playing MPEG-4 audio/video
 Summary(pl):	MPEG4IP - sytem kodowania, streamingu i odtwarzania d¼wiêku i obrazu MPEG-4
 Name:		mpeg4ip
 Version:	1.1
-Release:	0.1
+Release:	1
 Epoch:		1
 License:	MPL v1.1 (original code) and other licenses (included libraries)
 Group:		Applications
@@ -32,7 +20,7 @@ Patch3:		%{name}-gtk.patch
 Patch4:		%{name}-abort.patch
 URL:		http://www.mpeg4ip.net/
 BuildRequires:	SDL-devel
-BuildRequires:	alsa-lib-devel >= 0.9.0
+%{?with_alsa:BuildRequires:	alsa-lib-devel >= 0.9.0}
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	faac-devel >= 1.20
@@ -105,7 +93,15 @@ Statyczne wersje podstawowych bibliotek MPEG4IP.
 %patch4 -p0
 
 %build
-cd lib/rtp
+cd lib/SDLAudio
+# kill libtool.m4 copy
+head -n 188 acinclude.m4 > acinc.tmp
+mv -f acinc.tmp acinclude.m4
+%{__libtoolize}
+%{__aclocal}
+%{__autoconf}
+%{__automake}
+cd ../rtp
 %{__libtoolize}
 %{__aclocal}
 %{__autoconf}
@@ -117,7 +113,8 @@ cd ../..
 %{__autoconf}
 %{__autoheader}
 %{__automake}
-%configure
+%configure \
+	%{!?with_alsa:--disable-alsa}
 
 %{__make} \
 	CCAS="%{__cc}"
@@ -163,7 +160,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/mp4player_plugin
 %attr(755,root,root) %{_libdir}/mp4player_plugin/*.so*
 %{_datadir}/mp4venc_template.par
-%{_mandir}/man1/*.1.gz
+%{_mandir}/man1/*.1*
 
 %files libs
 %defattr(644,root,root,755)
