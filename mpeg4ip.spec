@@ -5,19 +5,16 @@
 Summary:	MPEG4IP - system for encoding, streaming and playing MPEG-4 audio/video
 Summary(pl):	MPEG4IP - system kodowania, streamingu i odtwarzania d¼wiêku i obrazu MPEG-4
 Name:		mpeg4ip
-Version:	1.1
+Version:	1.2
 Release:	1
 Epoch:		1
 License:	MPL v1.1 (original code) and other licenses (included libraries)
 Group:		Applications
 Source0:	http://dl.sourceforge.net/mpeg4ip/%{name}-%{version}.tar.gz
-# Source0-md5:	fef0224a45485653a8db87bdd5c9e745
-# Source0-size:	4351378
+# Source0-md5:	d9c687ec1aaddf17f6462ed5bd35e5d3
 Patch0:		%{name}-link.patch
 Patch1:		%{name}-types.patch
-Patch2:		%{name}-gcc34.patch
-Patch3:		%{name}-gtk.patch
-Patch4:		%{name}-abort.patch
+Patch2:		%{name}-gtk.patch
 URL:		http://www.mpeg4ip.net/
 BuildRequires:	SDL-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel >= 0.9.0}
@@ -89,8 +86,6 @@ Statyczne wersje podstawowych bibliotek MPEG4IP.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
-%patch4 -p0
 
 %build
 cd lib/SDLAudio
@@ -139,28 +134,34 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc AUTHORS COPYING ChangeLog encoding60.dsw FEATURES.html index.html README* NEWS TODO 
 %doc doc/{*.pdf,*.txt,*.html,*.jpg} doc/ietf/rfc*.txt doc/mcast/{mcast.txt,*_example}
-%attr(755,root,root) %{_bindir}/rgb2yuv
-%attr(755,root,root) %{_bindir}/mp4encode
-%attr(755,root,root) %{_bindir}/mp4player
-%attr(755,root,root) %{_bindir}/mp4creator
-%attr(755,root,root) %{_bindir}/yuvdump
-%attr(755,root,root) %{_bindir}/gmp4player
-%attr(755,root,root) %{_bindir}/mp4dump
-%attr(755,root,root) %{_bindir}/mp4info
-%attr(755,root,root) %{_bindir}/mp4live
-%attr(755,root,root) %{_bindir}/mp4tags
-%attr(755,root,root) %{_bindir}/mpeg4vol
-%attr(755,root,root) %{_bindir}/h264_parse
-%attr(755,root,root) %{_bindir}/mp4extract
-%attr(755,root,root) %{_bindir}/mp4trackdump
 %attr(755,root,root) %{_bindir}/avi2raw
 %attr(755,root,root) %{_bindir}/avidump
-%attr(755,root,root) %{_bindir}/mpeg2video_parse
+%attr(755,root,root) %{_bindir}/gmp4player
+%attr(755,root,root) %{_bindir}/h264_parse
 %attr(755,root,root) %{_bindir}/lboxcrop
+%attr(755,root,root) %{_bindir}/mp4art
+%attr(755,root,root) %{_bindir}/mp4creator
+%attr(755,root,root) %{_bindir}/mp4dump
+%attr(755,root,root) %{_bindir}/mp4extract
+%attr(755,root,root) %{_bindir}/mp4info
+%attr(755,root,root) %{_bindir}/mp4live
+%attr(755,root,root) %{_bindir}/mp4player
+%attr(755,root,root) %{_bindir}/mp4tags
+%attr(755,root,root) %{_bindir}/mp4trackdump
+%attr(755,root,root) %{_bindir}/mpeg2video_parse
+%attr(755,root,root) %{_bindir}/mpeg4vol
+%attr(755,root,root) %{_bindir}/mpeg_ps_extract
+%attr(755,root,root) %{_bindir}/mpeg_ps_info
+%attr(755,root,root) %{_bindir}/rgb2yuv
+%attr(755,root,root) %{_bindir}/sdl_pcm_play
+%attr(755,root,root) %{_bindir}/yuvdump
 %dir %{_libdir}/mp4player_plugin
 %attr(755,root,root) %{_libdir}/mp4player_plugin/*.so*
-%{_datadir}/mp4venc_template.par
-%{_mandir}/man1/*.1*
+%{_mandir}/man1/gmp4player.1*
+%{_mandir}/man1/mp4creator.1*
+# no program
+#%{_mandir}/man1/mp4encode.1*
+%{_mandir}/man1/mp4live.1*
 
 %files libs
 %defattr(644,root,root,755)
@@ -169,11 +170,11 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/mpeg4ip-config
-%attr(755,root,root) %{_libdir}/*.so
-%{_libdir}/*.la
+%attr(755,root,root) %{_libdir}/lib*.so
+%{_libdir}/lib*.la
 %{_includedir}/*.h
 %{_mandir}/man3/*.3*
 
 %files static
 %defattr(644,root,root,755)
-%{_libdir}/*.a
+%{_libdir}/lib*.a
