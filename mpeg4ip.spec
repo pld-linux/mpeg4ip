@@ -88,6 +88,8 @@ Statyczne wersje podstawowych bibliotek MPEG4IP.
 %patch1 -p1
 %patch2 -p1
 
+sed -i -e 's|-Wmissing-prototypes||' -e 's|-Werror||' configure.in
+
 %build
 cd lib/SDLAudio
 # kill libtool.m4 copy
