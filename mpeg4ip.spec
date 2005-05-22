@@ -5,16 +5,16 @@
 Summary:	MPEG4IP - system for encoding, streaming and playing MPEG-4 audio/video
 Summary(pl):	MPEG4IP - system kodowania, streamingu i odtwarzania d¼wiêku i obrazu MPEG-4
 Name:		mpeg4ip
-Version:	1.2
+Version:	1.3
 Release:	1
 Epoch:		1
 License:	MPL v1.1 (original code) and other licenses (included libraries)
 Group:		Applications
 Source0:	http://dl.sourceforge.net/mpeg4ip/%{name}-%{version}.tar.gz
-# Source0-md5:	d9c687ec1aaddf17f6462ed5bd35e5d3
+# Source0-md5:	5a0301d3e395f17b2462ab95c2e5ba6a
 Patch0:		%{name}-link.patch
 Patch1:		%{name}-types.patch
-Patch2:		%{name}-gtk.patch
+#Patch2:		%{name}-gtk.patch
 URL:		http://www.mpeg4ip.net/
 BuildRequires:	SDL-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel >= 0.9.0}
@@ -86,15 +86,9 @@ Statyczne wersje podstawowych bibliotek MPEG4IP.
 %setup -q
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
-
-sed -i -e 's|-Wmissing-prototypes||' -e 's|-Werror||' configure.in
 
 %build
 cd lib/SDLAudio
-# kill libtool.m4 copy
-head -n 188 acinclude.m4 > acinc.tmp
-mv -f acinc.tmp acinclude.m4
 %{__libtoolize}
 %{__aclocal}
 %{__autoconf}
@@ -111,6 +105,8 @@ cd ../..
 %{__autoconf}
 %{__autoheader}
 %{__automake}
+install -d config
+touch bootstrapped
 %configure \
 	%{!?with_alsa:--disable-alsa}
 
@@ -151,6 +147,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/mp4player
 %attr(755,root,root) %{_bindir}/mp4tags
 %attr(755,root,root) %{_bindir}/mp4trackdump
+%attr(755,root,root) %{_bindir}/mp4videoinfo
 %attr(755,root,root) %{_bindir}/mpeg2video_parse
 %attr(755,root,root) %{_bindir}/mpeg4vol
 %attr(755,root,root) %{_bindir}/mpeg_ps_extract
