@@ -14,7 +14,6 @@ Source0:	http://dl.sourceforge.net/mpeg4ip/%{name}-%{version}.tar.gz
 # Source0-md5:	5a0301d3e395f17b2462ab95c2e5ba6a
 Patch0:		%{name}-link.patch
 Patch1:		%{name}-types.patch
-#Patch2:		%{name}-gtk.patch
 URL:		http://www.mpeg4ip.net/
 BuildRequires:	SDL-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel >= 0.9.0}
