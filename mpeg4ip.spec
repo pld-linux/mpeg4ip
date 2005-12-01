@@ -14,6 +14,7 @@ Source0:	http://dl.sourceforge.net/mpeg4ip/%{name}-%{version}.tar.gz
 # Source0-md5:	68968c23c7e9d23cac11f15f3bcf7ede
 Patch0:		%{name}-link.patch
 Patch1:		%{name}-types.patch
+Patch2:		%{name}-gcc4.patch
 URL:		http://www.mpeg4ip.net/
 BuildRequires:	SDL-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel >= 0.9.0}
@@ -85,6 +86,7 @@ Statyczne wersje podstawowych bibliotek MPEG4IP.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %build
 cd lib/SDLAudio
