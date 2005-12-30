@@ -34,6 +34,8 @@ BuildConflicts:	faad2 < 2.0-3
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
+%define		specflags	-fno-strict-aliasing
+
 %description
 The MPEG4IP project provides a standards-based system for encoding,
 streaming, and playing MPEG-4 encoded audio and video. To achieve
