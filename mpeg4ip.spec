@@ -17,6 +17,7 @@ Patch1:		%{name}-types.patch
 Patch2:		%{name}-gcc4.patch
 URL:		http://www.mpeg4ip.net/
 BuildRequires:	SDL-devel
+BuildRequires:	a52dec-libs-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel >= 0.9.0}
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -24,11 +25,14 @@ BuildRequires:	faac-devel >= 1.20
 BuildRequires:	ffmpeg-devel >= 0.4.9
 BuildRequires:	gtk+2-devel >= 1:2.0.0
 BuildRequires:	lame-libs-devel >= 3.92
+BuildRequires:	libid3tag-devel
+BuildRequires:	libmad-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:1.4d
 BuildRequires:	libvorbis-devel >= 1:1.0
+BuildRequires:	mpeg2dec-devel
+BuildRequires:	nasm >= 0.98.19
 BuildRequires:	pkgconfig
-BuildRequires:	libid3tag-devel
 BuildRequires:	xvid-devel >= 1:1.0.0
 BuildConflicts:	faad2 < 2.0-3
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
