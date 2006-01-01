@@ -31,7 +31,9 @@ BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:1.4d
 BuildRequires:	libvorbis-devel >= 1:1.0
 BuildRequires:	mpeg2dec-devel
+%ifarch %{ix86} %{x8664}
 BuildRequires:	nasm >= 0.98.19
+%endif
 BuildRequires:	pkgconfig
 BuildRequires:	xvid-devel >= 1:1.0.0
 BuildConflicts:	faad2 < 2.0-3
