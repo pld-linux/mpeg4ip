@@ -5,23 +5,23 @@
 Summary:	MPEG4IP - system for encoding, streaming and playing MPEG-4 audio/video
 Summary(pl):	MPEG4IP - system kodowania, streamingu i odtwarzania d¼wiêku i obrazu MPEG-4
 Name:		mpeg4ip
-Version:	1.4.1
-Release:	3
+Version:	1.5.0.1
+Release:	1
 Epoch:		1
 License:	MPL v1.1 (original code) and other licenses (included libraries)
 Group:		Applications
 Source0:	http://dl.sourceforge.net/mpeg4ip/%{name}-%{version}.tar.gz
-# Source0-md5:	68968c23c7e9d23cac11f15f3bcf7ede
+# Source0-md5:	f53b06c62e914ab724bda9d9af041e08
 Patch0:		%{name}-link.patch
 Patch1:		%{name}-types.patch
-Patch2:		%{name}-gcc4.patch
+Patch2:		%{name}-x.patch
 URL:		http://www.mpeg4ip.net/
 BuildRequires:	SDL-devel
 BuildRequires:	a52dec-libs-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel >= 0.9.0}
 BuildRequires:	autoconf
 BuildRequires:	automake
-BuildRequires:	faac-devel >= 1.20
+BuildRequires:	faac-devel >= 1.20.1
 BuildRequires:	ffmpeg-devel >= 0.4.9
 BuildRequires:	gtk+2-devel >= 1:2.0.0
 BuildRequires:	lame-libs-devel >= 3.92
@@ -30,11 +30,14 @@ BuildRequires:	libmad-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:1.4d
 BuildRequires:	libvorbis-devel >= 1:1.0
+BuildRequires:	libx264-devel
 BuildRequires:	mpeg2dec-devel
 %ifarch %{ix86} %{x8664}
 BuildRequires:	nasm >= 0.98.19
 %endif
 BuildRequires:	pkgconfig
+BuildRequires:	srtp-devel >= 1.4.2
+#BuildRequires:	srtp-devel >= 1.5
 BuildRequires:	xvid-devel >= 1:1.0.0
 BuildConflicts:	faad2 < 2.0-3
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
@@ -117,7 +120,8 @@ cd ../..
 install -d config
 touch bootstrapped
 %configure \
-	%{!?with_alsa:--disable-alsa}
+	%{!?with_alsa:--disable-alsa} \
+	--enable-ipv6
 
 %{__make} \
 	CCAS="%{__cc}"
