@@ -6,7 +6,7 @@ Summary:	MPEG4IP - system for encoding, streaming and playing MPEG-4 audio/video
 Summary(pl):	MPEG4IP - system kodowania, streamingu i odtwarzania d¼wiêku i obrazu MPEG-4
 Name:		mpeg4ip
 Version:	1.5.0.1
-Release:	1
+Release:	2
 Epoch:		1
 License:	MPL v1.1 (original code) and other licenses (included libraries)
 Group:		Applications
@@ -15,6 +15,7 @@ Source0:	http://dl.sourceforge.net/mpeg4ip/%{name}-%{version}.tar.gz
 Patch0:		%{name}-link.patch
 Patch1:		%{name}-types.patch
 Patch2:		%{name}-x.patch
+Patch3:		%{name}-x264.patch
 URL:		http://www.mpeg4ip.net/
 BuildRequires:	SDL-devel
 BuildRequires:	a52dec-libs-devel
@@ -22,7 +23,7 @@ BuildRequires:	a52dec-libs-devel
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	faac-devel >= 1.20.1
-BuildRequires:	ffmpeg-devel >= 0.4.9
+BuildRequires:	ffmpeg-devel >= 0.4.9-3.20061204
 BuildRequires:	gtk+2-devel >= 1:2.0.0
 BuildRequires:	lame-libs-devel >= 3.92
 BuildRequires:	libid3tag-devel
@@ -47,9 +48,9 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
 The MPEG4IP project provides a standards-based system for encoding,
-streaming, and playing MPEG-4 encoded audio and video. To achieve
-this the developers integrated a number of existing open source
-packages, and also created some original code to fill in the gaps.
+streaming, and playing MPEG-4 encoded audio and video. To achieve this
+the developers integrated a number of existing open source packages,
+and also created some original code to fill in the gaps.
 
 %description -l pl
 Projekt MPEG4IP udostêpnia oparty na standardach system do kodowania,
@@ -98,6 +99,7 @@ Statyczne wersje podstawowych bibliotek MPEG4IP.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %build
 cd lib/SDLAudio
@@ -150,7 +152,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS COPYING ChangeLog encoding60.dsw FEATURES.html index.html README* NEWS TODO 
+%doc AUTHORS COPYING ChangeLog encoding60.dsw FEATURES.html index.html README* NEWS TODO
 %doc doc/{*.pdf,*.txt,*.html,*.jpg} doc/ietf/rfc*.txt doc/mcast/{mcast.txt,*_example}
 %attr(755,root,root) %{_bindir}/avi2raw
 %attr(755,root,root) %{_bindir}/avidump
