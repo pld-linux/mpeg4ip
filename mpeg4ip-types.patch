@@ -29,3 +29,14 @@
      ffmpeg->m_c->extradata_size = ud_size;
    }
    if (avcodec_open(ffmpeg->m_c, ffmpeg->m_codec) < 0) {
+--- mpeg4ip-1.5.0.1/player/plugin/video/ffmpeg/ffmpeg.cpp~	2006-02-22 02:25:17.000000000 +0200
++++ mpeg4ip-1.5.0.1/player/plugin/video/ffmpeg/ffmpeg.cpp	2006-12-09 13:58:14.675212917 +0200
+@@ -255,7 +255,7 @@
+   }
+     break;
+   case CODEC_ID_SVQ3:
+-    ffmpeg->m_c->extradata = (void *)userdata;
++    ffmpeg->m_c->extradata = (uint8_t *)userdata;
+     ffmpeg->m_c->extradata_size = ud_size;
+     if (vinfo != NULL) {
+       ffmpeg->m_c->width = vinfo->width;
