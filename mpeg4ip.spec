@@ -16,6 +16,8 @@ Patch0:		%{name}-link.patch
 Patch1:		%{name}-types.patch
 Patch2:		%{name}-x.patch
 Patch3:		%{name}-x264.patch
+Patch4:		%{name}-ac.patch
+Patch5:		%{name}-gcc4.patch
 URL:		http://www.mpeg4ip.net/
 BuildRequires:	SDL-devel
 BuildRequires:	a52dec-libs-devel
@@ -44,7 +46,7 @@ BuildConflicts:	faad2 < 2.0-3
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		specflags	-fno-strict-aliasing
+%define		specflags	-fno-strict-aliasing -Wno-error
 
 %description
 The MPEG4IP project provides a standards-based system for encoding,
@@ -100,6 +102,8 @@ Statyczne wersje podstawowych bibliotek MPEG4IP.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
+%patch5 -p1
 
 %build
 cd lib/SDLAudio
