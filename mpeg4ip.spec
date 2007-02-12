@@ -3,7 +3,7 @@
 %bcond_without	alsa	# build without ALSA support in SDLAudio
 #
 Summary:	MPEG4IP - system for encoding, streaming and playing MPEG-4 audio/video
-Summary(pl):	MPEG4IP - system kodowania, streamingu i odtwarzania d¼wiêku i obrazu MPEG-4
+Summary(pl.UTF-8):   MPEG4IP - system kodowania, streamingu i odtwarzania dÅºwiÄ™ku i obrazu MPEG-4
 Name:		mpeg4ip
 Version:	1.5.0.1
 Release:	3
@@ -54,26 +54,26 @@ streaming, and playing MPEG-4 encoded audio and video. To achieve this
 the developers integrated a number of existing open source packages,
 and also created some original code to fill in the gaps.
 
-%description -l pl
-Projekt MPEG4IP udostêpnia oparty na standardach system do kodowania,
-streamingu i odtwarzania d¼wiêku i obrazu kodowanego MPEG-4. Aby to
-osi±gn±æ, programi¶ci zintegrowali wiele istniej±cych wolnodostêpnych
-pakietów oraz stworzyli trochê w³asnego kodu, aby wype³niæ luki.
+%description -l pl.UTF-8
+Projekt MPEG4IP udostÄ™pnia oparty na standardach system do kodowania,
+streamingu i odtwarzania dÅºwiÄ™ku i obrazu kodowanego MPEG-4. Aby to
+osiÄ…gnÄ…Ä‡, programiÅ›ci zintegrowali wiele istniejÄ…cych wolnodostÄ™pnych
+pakietÃ³w oraz stworzyli trochÄ™ wÅ‚asnego kodu, aby wypeÅ‚niÄ‡ luki.
 
 %package libs
 Summary:	Base shared MPEG4IP libraries
-Summary(pl):	Podstawowe biblioteki wspó³dzielone MPEG4IP
+Summary(pl.UTF-8):   Podstawowe biblioteki wspÃ³Å‚dzielone MPEG4IP
 Group:		Libraries
 
 %description libs
 Base shared MPEG4IP libraries.
 
-%description libs -l pl
-Podstawowe biblioteki wspó³dzielone MPEG4IP.
+%description libs -l pl.UTF-8
+Podstawowe biblioteki wspÃ³Å‚dzielone MPEG4IP.
 
 %package devel
 Summary:	Header files for base MPEG4IP libraries
-Summary(pl):	Pliki nag³ówkowe podstawowych bibliotek MPEG4IP
+Summary(pl.UTF-8):   Pliki nagÅ‚Ã³wkowe podstawowych bibliotek MPEG4IP
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 Requires:	libstdc++-devel
@@ -81,19 +81,19 @@ Requires:	libstdc++-devel
 %description devel
 Header files for base MPEG4IP libraries.
 
-%description devel -l pl
-Pliki nag³ówkowe podstawowych bibliotek MPEG4IP.
+%description devel -l pl.UTF-8
+Pliki nagÅ‚Ã³wkowe podstawowych bibliotek MPEG4IP.
 
 %package static
 Summary:	Static versions of base MPEG4IP libraries
-Summary(pl):	Statyczne wersje podstawowych bibliotek MPEG4IP
+Summary(pl.UTF-8):   Statyczne wersje podstawowych bibliotek MPEG4IP
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{epoch}:%{version}-%{release}
 
 %description static
 Static versions of base MPEG4IP libraries.
 
-%description static -l pl
+%description static -l pl.UTF-8
 Statyczne wersje podstawowych bibliotek MPEG4IP.
 
 %prep
