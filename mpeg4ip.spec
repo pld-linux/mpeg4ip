@@ -3,7 +3,7 @@
 %bcond_without	alsa	# build without ALSA support in SDLAudio
 #
 Summary:	MPEG4IP - system for encoding, streaming and playing MPEG-4 audio/video
-Summary(pl.UTF-8):   MPEG4IP - system kodowania, streamingu i odtwarzania dźwięku i obrazu MPEG-4
+Summary(pl.UTF-8):	MPEG4IP - system kodowania, streamingu i odtwarzania dźwięku i obrazu MPEG-4
 Name:		mpeg4ip
 Version:	1.5.0.1
 Release:	3
@@ -62,7 +62,7 @@ pakietów oraz stworzyli trochę własnego kodu, aby wypełnić luki.
 
 %package libs
 Summary:	Base shared MPEG4IP libraries
-Summary(pl.UTF-8):   Podstawowe biblioteki współdzielone MPEG4IP
+Summary(pl.UTF-8):	Podstawowe biblioteki współdzielone MPEG4IP
 Group:		Libraries
 
 %description libs
@@ -73,7 +73,7 @@ Podstawowe biblioteki współdzielone MPEG4IP.
 
 %package devel
 Summary:	Header files for base MPEG4IP libraries
-Summary(pl.UTF-8):   Pliki nagłówkowe podstawowych bibliotek MPEG4IP
+Summary(pl.UTF-8):	Pliki nagłówkowe podstawowych bibliotek MPEG4IP
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 Requires:	libstdc++-devel
@@ -86,7 +86,7 @@ Pliki nagłówkowe podstawowych bibliotek MPEG4IP.
 
 %package static
 Summary:	Static versions of base MPEG4IP libraries
-Summary(pl.UTF-8):   Statyczne wersje podstawowych bibliotek MPEG4IP
+Summary(pl.UTF-8):	Statyczne wersje podstawowych bibliotek MPEG4IP
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{epoch}:%{version}-%{release}
 
