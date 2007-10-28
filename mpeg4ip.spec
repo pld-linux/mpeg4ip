@@ -5,13 +5,13 @@
 Summary:	MPEG4IP - system for encoding, streaming and playing MPEG-4 audio/video
 Summary(pl.UTF-8):	MPEG4IP - system kodowania, streamingu i odtwarzania dźwięku i obrazu MPEG-4
 Name:		mpeg4ip
-Version:	1.5.0.1
-Release:	4
+Version:	1.6.1
+Release:	0.1
 Epoch:		1
 License:	MPL v1.1 (original code) and other licenses (included libraries)
 Group:		Applications
 Source0:	http://dl.sourceforge.net/mpeg4ip/%{name}-%{version}.tar.gz
-# Source0-md5:	f53b06c62e914ab724bda9d9af041e08
+# Source0-md5:	6b24d3e93809077576ff3bcbf2b1f2fb
 Patch0:		%{name}-link.patch
 Patch1:		%{name}-types.patch
 Patch2:		%{name}-x.patch
