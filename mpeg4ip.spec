@@ -21,7 +21,7 @@ BuildRequires:	SDL-devel
 BuildRequires:	a52dec-libs-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel >= 0.9.0}
 BuildRequires:	autoconf
-BuildRequires:	automake
+BuildRequires:	automake >= 1.4
 BuildRequires:	esound-devel >= 0.2.8
 BuildRequires:	faac-devel >= 1.20.1
 BuildRequires:	ffmpeg-devel >= 0.4.9-3.20061204
