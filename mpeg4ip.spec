@@ -5,25 +5,24 @@
 Summary:	MPEG4IP - system for encoding, streaming and playing MPEG-4 audio/video
 Summary(pl.UTF-8):	MPEG4IP - system kodowania, streamingu i odtwarzania dźwięku i obrazu MPEG-4
 Name:		mpeg4ip
-Version:	1.5.0.1
-Release:	4
+Version:	1.6
+Release:	1
 Epoch:		1
 License:	MPL v1.1 (original code) and other licenses (included libraries)
 Group:		Applications
 Source0:	http://dl.sourceforge.net/mpeg4ip/%{name}-%{version}.tar.gz
-# Source0-md5:	f53b06c62e914ab724bda9d9af041e08
+# Source0-md5:	004b481542e5aa9fdb455d9a1b640eff
 Patch0:		%{name}-link.patch
-Patch1:		%{name}-types.patch
-Patch2:		%{name}-x.patch
-Patch3:		%{name}-x264.patch
-Patch4:		%{name}-ac.patch
-Patch5:		%{name}-gcc4.patch
+Patch1:		%{name}-ac.patch
+Patch2:		%{name}-gcc4.patch
+Patch3:		%{name}-configure.patch
 URL:		http://www.mpeg4ip.net/
 BuildRequires:	SDL-devel
 BuildRequires:	a52dec-libs-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel >= 0.9.0}
 BuildRequires:	autoconf
 BuildRequires:	automake
+BuildRequires:	esound-devel >= 0.2.8
 BuildRequires:	faac-devel >= 1.20.1
 BuildRequires:	ffmpeg-devel >= 0.4.9-3.20061204
 BuildRequires:	gtk+2-devel >= 1:2.0.0
@@ -102,20 +101,12 @@ Statyczne wersje podstawowych bibliotek MPEG4IP.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1
-%patch5 -p1
 
 %build
 cd lib/SDLAudio
 %{__libtoolize}
 %{__aclocal}
 %{__autoconf}
-%{__automake}
-cd ../rtp
-%{__libtoolize}
-%{__aclocal}
-%{__autoconf}
-%{__autoheader}
 %{__automake}
 cd ../..
 %{__libtoolize}
@@ -173,6 +164,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/mp4tags
 %attr(755,root,root) %{_bindir}/mp4trackdump
 %attr(755,root,root) %{_bindir}/mp4videoinfo
+%attr(755,root,root) %{_bindir}/mpeg2t_dump
 %attr(755,root,root) %{_bindir}/mpeg2video_parse
 %attr(755,root,root) %{_bindir}/mpeg4vol
 %attr(755,root,root) %{_bindir}/mpeg_ps_extract
@@ -190,16 +182,55 @@ rm -rf $RPM_BUILD_ROOT
 
 %files libs
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/lib*.so.*.*.*
+%attr(755,root,root) %{_libdir}/libhttp.so.*.*.*
+%attr(755,root,root) %{_libdir}/libismacryp.so.*.*.*
+%attr(755,root,root) %{_libdir}/libmp4*.so.*.*.*
+%attr(755,root,root) %{_libdir}/libmpeg4ip*.so.*.*.*
+%attr(755,root,root) %{_libdir}/libmsg_queue.so.*.*.*
+%attr(755,root,root) %{_libdir}/libsdp.so.*.*.*
+%attr(755,root,root) %{_libdir}/libsrtpif.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libhttp.so.0
+%attr(755,root,root) %ghost %{_libdir}/libismacryp.so.0
+%attr(755,root,root) %ghost %{_libdir}/libmp4*.so.0
+%attr(755,root,root) %ghost %{_libdir}/libmpeg4ip*.so.0
+%attr(755,root,root) %ghost %{_libdir}/libmsg_queue.so.0
+%attr(755,root,root) %ghost %{_libdir}/libsdp.so.0
+%attr(755,root,root) %ghost %{_libdir}/libsrtpif.so.0
 
 %files devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/mpeg4ip-config
-%attr(755,root,root) %{_libdir}/lib*.so
-%{_libdir}/lib*.la
-%{_includedir}/*.h
-%{_mandir}/man3/*.3*
+%attr(755,root,root) %{_libdir}/libhttp.so
+%attr(755,root,root) %{_libdir}/libismacryp.so
+%attr(755,root,root) %{_libdir}/libmp4*.so
+%attr(755,root,root) %{_libdir}/libmpeg4ip*.so
+%attr(755,root,root) %{_libdir}/libmsg_queue.so
+%attr(755,root,root) %{_libdir}/libsdp.so
+%attr(755,root,root) %{_libdir}/libsrtpif.so
+%{_libdir}/libhttp.la
+%{_libdir}/libismacryp.la
+%{_libdir}/libmp4*.la
+%{_libdir}/libmpeg4ip*.la
+%{_libdir}/libmsg_queue.la
+%{_libdir}/libsdp.la
+%{_libdir}/libsrtpif.la
+%{_includedir}/codec_plugin.h
+%{_includedir}/h264_sdp.h
+%{_includedir}/mp4.h
+%{_includedir}/mp4av*.h
+%{_includedir}/mpeg4_*.h
+%{_includedir}/mpeg4ip*.h
+%{_includedir}/rtp_plugin.h
+%{_includedir}/sdp*.h
+%{_includedir}/text_plugin.h
+%{_mandir}/man3/MP4*.3*
 
 %files static
 %defattr(644,root,root,755)
-%{_libdir}/lib*.a
+%{_libdir}/libhttp.a
+%{_libdir}/libismacryp.a
+%{_libdir}/libmp4*.a
+%{_libdir}/libmpeg4ip*.a
+%{_libdir}/libmsg_queue.a
+%{_libdir}/libsdp.a
+%{_libdir}/libsrtpif.a
