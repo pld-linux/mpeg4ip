@@ -16,6 +16,7 @@ Patch0:		%{name}-link.patch
 Patch1:		%{name}-ac.patch
 Patch2:		%{name}-gcc4.patch
 Patch3:		%{name}-configure.patch
+Patch4:		%{name}-audio_l16.cpp-typo.patch
 URL:		http://www.mpeg4ip.net/
 BuildRequires:	SDL-devel
 BuildRequires:	a52dec-libs-devel
@@ -101,6 +102,7 @@ Statyczne wersje podstawowych bibliotek MPEG4IP.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 %build
 cd lib/SDLAudio
