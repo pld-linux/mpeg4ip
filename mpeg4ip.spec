@@ -28,6 +28,7 @@ BuildRequires:	faac-devel >= 1.20.1
 BuildRequires:	ffmpeg-devel >= 0.4.9-3.20061204
 BuildRequires:	gtk+2-devel >= 1:2.0.0
 BuildRequires:	lame-libs-devel >= 3.92
+BuildRequires:	libatomic_ops
 BuildRequires:	libid3tag-devel
 BuildRequires:	libmad-devel
 BuildRequires:	libstdc++-devel
