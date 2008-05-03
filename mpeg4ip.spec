@@ -137,6 +137,8 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
+install server/util/mp4encode/mp4encode $RPM_BUILD_ROOT%{_bindir}
+
 rm -f $RPM_BUILD_ROOT%{_libdir}/mp4player_plugin/*.{a,la}
 # bogus manual
 rm -rf $RPM_BUILD_ROOT%{_mandir}/manm
@@ -159,6 +161,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/mp4art
 %attr(755,root,root) %{_bindir}/mp4creator
 %attr(755,root,root) %{_bindir}/mp4dump
+%attr(755,root,root) %{_bindir}/mp4encode
 %attr(755,root,root) %{_bindir}/mp4extract
 %attr(755,root,root) %{_bindir}/mp4info
 %attr(755,root,root) %{_bindir}/mp4live
@@ -178,8 +181,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/mp4player_plugin/*.so*
 %{_mandir}/man1/gmp4player.1*
 %{_mandir}/man1/mp4creator.1*
-# no program
-#%{_mandir}/man1/mp4encode.1*
+%{_mandir}/man1/mp4encode.1*
 %{_mandir}/man1/mp4live.1*
 
 %files libs
