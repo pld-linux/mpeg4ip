@@ -42,3 +42,14 @@
  #else
  #include <avcodec.h>
  #endif
+--- mpeg4ip-1.6.1/configure.in.orig	2008-08-26 17:02:49.000000000 +0200
++++ mpeg4ip-1.6.1/configure.in	2008-08-26 19:28:09.000000000 +0200
+@@ -487,7 +487,7 @@
+   if test x$have_ffmpeg_arg = xtrue; then
+      AC_MSG_NOTICE([have enable ffmpeg $enable_ffmpeg])
+      FFMPEG_INC=-I${enable_ffmpeg}/libavcodec
+-     FFMPEG_LIB="${enable_ffmpeg}/libavcodec/libavcodec.a -lz"
++     FFMPEG_LIB="-lavcodec -lz"
+      saveCFLAGS="$CFLAGS"
+      CFLAGS="$CFLAGS $FFMPEG_INC"
+      AC_CHECK_TYPES([AVRational], , , [#include <avcodec.h>])
