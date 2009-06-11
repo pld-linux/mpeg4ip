@@ -24,6 +24,7 @@ URL:		http://www.mpeg4ip.net/
 BuildRequires:	SDL-devel
 BuildRequires:	a52dec-libs-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel >= 0.9.0}
+%{?with_alsa:BuildRequires:	artsc-devel}
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.4
 BuildRequires:	esound-devel >= 0.2.8
