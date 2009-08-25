@@ -1,0 +1,29 @@
+--- mpeg4ip-1.6.1/include/mpeg4ip.h~	2006-08-07 21:27:00.000000000 +0300
++++ mpeg4ip-1.6.1/include/mpeg4ip.h	2009-08-25 19:16:50.675218747 +0300
+@@ -120,14 +120,6 @@
+ #endif
+ #include <sys/param.h>
+ 
+-#ifdef __cplusplus
+-extern "C" {
+-#endif
+-char *strcasestr(const char *haystack, const char *needle);
+-#ifdef __cplusplus
+-}
+-#endif
+-
+ #define OPEN_RDWR O_RDWR
+ #define OPEN_CREAT O_CREAT 
+ #define OPEN_RDONLY O_RDONLY
+--- mpeg4ip-1.6.1/player/src/media_utils.cpp~	2007-03-29 21:52:19.000000000 +0300
++++ mpeg4ip-1.6.1/player/src/media_utils.cpp	2009-08-25 20:04:15.872642682 +0300
+@@ -605,7 +605,8 @@
+ 				  int have_audio_driver,
+ 				  control_callback_vft_t *cc_vft)
+ {
+-  char *slash, *cm;
++  const char *slash;
++  char *cm;
+   uint64_t prog;
+   session_desc_t *sdp;
+ 

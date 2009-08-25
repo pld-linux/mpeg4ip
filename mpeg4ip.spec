@@ -1,3 +1,8 @@
+# TODO
+# revision 1.34
+# - mpeg2dec.spec is obsoleted, port/find replacement?
+#   date: 2009/07/14 19:46:33;  author: arekm;  state: dead;  lines: +4 -1;  kopt: kv;  commitid: 76ee4a5ce098bfaa;  filename: mpeg2dec.spec;
+#    - obsolete by libmpeg2
 #
 # Conditional build:
 %bcond_without	alsa	# build without ALSA support in SDLAudio
@@ -6,7 +11,7 @@ Summary:	MPEG4IP - system for encoding, streaming and playing MPEG-4 audio/video
 Summary(pl.UTF-8):	MPEG4IP - system kodowania, streamingu i odtwarzania dźwięku i obrazu MPEG-4
 Name:		mpeg4ip
 Version:	1.6.1
-Release:	6
+Release:	7
 Epoch:		1
 License:	MPL v1.1 (original code) and other licenses (included libraries)
 Group:		Applications
@@ -20,6 +25,7 @@ Patch2:		%{name}-gcc4.patch
 Patch3:		%{name}-configure.patch
 Patch4:		%{name}-audio_l16.cpp-typo.patch
 Patch5:		%{name}-ffmpeg.patch
+Patch6:		gcc44.patch
 URL:		http://www.mpeg4ip.net/
 BuildRequires:	SDL-devel
 BuildRequires:	a52dec-libs-devel
@@ -38,13 +44,12 @@ BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:1.4d
 BuildRequires:	libvorbis-devel >= 1:1.0
 BuildRequires:	libx264-devel
-BuildRequires:	mpeg2dec-devel
+#BuildRequires:	mpeg2dec-devel
 %ifarch %{ix86} %{x8664}
 BuildRequires:	nasm >= 0.98.19
 %endif
 BuildRequires:	pkgconfig
 BuildRequires:	srtp-devel >= 1.4.2
-#BuildRequires:	srtp-devel >= 1.5
 BuildRequires:	xvid-devel >= 1:1.0.0
 BuildConflicts:	faad2 < 2.0-3
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
@@ -108,6 +113,7 @@ Statyczne wersje podstawowych bibliotek MPEG4IP.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
+%patch6 -p1
 
 %build
 cd lib/SDLAudio
