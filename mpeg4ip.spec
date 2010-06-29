@@ -53,7 +53,7 @@ BuildConflicts:	faad2 < 2.0-3
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		specflags	-fno-strict-aliasing -Wno-error
+%define		specflags	-fno-strict-aliasing -Wno-error -D__STDC_CONSTANT_MACROS
 
 %description
 The MPEG4IP project provides a standards-based system for encoding,
