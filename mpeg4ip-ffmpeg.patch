@@ -38,7 +38,7 @@
       AC_MSG_NOTICE([have enable ffmpeg $enable_ffmpeg])
       FFMPEG_INC=-I${enable_ffmpeg}/libavcodec
 -     FFMPEG_LIB="${enable_ffmpeg}/libavcodec/libavcodec.a -lz"
-+     FFMPEG_LIB="-lavcodec -lz"
++     FFMPEG_LIB="-lavcodec -lavutil -lz"
       saveCFLAGS="$CFLAGS"
       CFLAGS="$CFLAGS $FFMPEG_INC"
       AC_CHECK_TYPES([AVRational], , , [#include <avcodec.h>])
@@ -50,7 +50,7 @@ diff -burNp mpeg4ip-1.6.1/configure.in mpeg4ip-1.6.1-new/configure.in
          AC_DEFINE(HAVE_FFMPEG_INSTALLED, 1, [defined if ffmpeg is installed])
          FFMPEG_INC=
 -        FFMPEG_LIB="-lavcodec -lz $ffmpeg_add_libs"
-+        FFMPEG_LIB="-lavcodec -lz $ffmpeg_add_libs $(pkg-config libswscale --libs --silence-errors)"
++        FFMPEG_LIB="-lavcodec -lavutil -lz $ffmpeg_add_libs $(pkg-config libswscale --libs --silence-errors)"
          AC_CHECK_TYPES([AVRational], , , [#include <ffmpeg/avcodec.h>])
  	AC_CHECK_MEMBERS(AVCodecContext.time_base, , , [#include <ffmpeg/avcodec.h>])
  	AC_CHECK_DECLS([avcodec_decode_audio2], , ,[#include <ffmpeg/avcodec.h>])
