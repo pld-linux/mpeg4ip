@@ -1,0 +1,42 @@
+--- mpeg4ip-1.0/server/mp4live/util.cpp.orig	Mon Aug  4 22:44:06 2003
++++ mpeg4ip-1.0/server/mp4live/util.cpp	Wed Feb 25 13:24:57 2004
+@@ -36,7 +36,7 @@
+   gettimeofday(&thistime, NULL);
+   // To add date, add %a %b %d to strftime
+   strftime(buffer, sizeof(buffer), "%T", localtime(&thistime.tv_sec));
+-  printf("%s.%03ld-mp4live-3: ", buffer, thistime.tv_usec / 1000);
++  printf("%s.%03ld-mp4live-3: ", buffer, (long)(thistime.tv_usec / 1000));
+   va_start(ap, fmt);
+   vprintf(fmt, ap);
+   va_end(ap);
+@@ -58,7 +58,7 @@
+   gettimeofday(&thistime, NULL);
+   // To add date, add %a %b %d to strftime
+   strftime(buffer, sizeof(buffer), "%T", localtime(&thistime.tv_sec));
+-  printf("%s.%03ld-mp4live-7: ", buffer, thistime.tv_usec / 1000);
++  printf("%s.%03ld-mp4live-7: ", buffer, (long)(thistime.tv_usec / 1000));
+   va_start(ap, fmt);
+   vprintf(fmt, ap);
+   va_end(ap);
+--- mpeg4ip-1.5.0.1/player/plugin/audio/ffmpeg/ffmpeg.cpp~	2006-12-09 13:55:42.291783229 +0200
++++ mpeg4ip-1.5.0.1/player/plugin/audio/ffmpeg/ffmpeg.cpp	2006-12-09 13:55:46.431876410 +0200
+@@ -166,7 +166,7 @@
+     break;
+   }
+   if (userdata) {
+-    ffmpeg->m_c->extradata = (void *)userdata;
++    ffmpeg->m_c->extradata = (uint8_t *)userdata;
+     ffmpeg->m_c->extradata_size = ud_size;
+   }
+   if (avcodec_open(ffmpeg->m_c, ffmpeg->m_codec) < 0) {
+--- mpeg4ip-1.5.0.1/player/plugin/video/ffmpeg/ffmpeg.cpp~	2006-02-22 02:25:17.000000000 +0200
++++ mpeg4ip-1.5.0.1/player/plugin/video/ffmpeg/ffmpeg.cpp	2006-12-09 13:58:14.675212917 +0200
+@@ -255,7 +255,7 @@
+   }
+     break;
+   case CODEC_ID_SVQ3:
+-    ffmpeg->m_c->extradata = (void *)userdata;
++    ffmpeg->m_c->extradata = (uint8_t *)userdata;
+     ffmpeg->m_c->extradata_size = ud_size;
+     if (vinfo != NULL) {
+       ffmpeg->m_c->width = vinfo->width;
