@@ -11,7 +11,7 @@ Summary:	MPEG4IP - system for encoding, streaming and playing MPEG-4 audio/video
 Summary(pl.UTF-8):	MPEG4IP - system kodowania, streamingu i odtwarzania dźwięku i obrazu MPEG-4
 Name:		mpeg4ip
 Version:	1.6.1
-Release:	14
+Release:	15
 Epoch:		1
 License:	MPL v1.1 (original code) and other licenses (included libraries)
 Group:		Applications
@@ -147,7 +147,7 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-install server/util/mp4encode/mp4encode $RPM_BUILD_ROOT%{_bindir}
+install -p server/util/mp4encode/mp4encode $RPM_BUILD_ROOT%{_bindir}
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/mp4player_plugin/*.{a,la}
 # bogus manual
