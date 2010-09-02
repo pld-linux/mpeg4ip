@@ -1,17 +1,13 @@
-# TODO
-# revision 1.34
-# - mpeg2dec.spec is obsoleted, port/find replacement?
-#   date: 2009/07/14 19:46:33;  author: arekm;  state: dead;  lines: +4 -1;  kopt: kv;  commitid: 76ee4a5ce098bfaa;  filename: mpeg2dec.spec;
-#    - obsolete by libmpeg2
 #
 # Conditional build:
 %bcond_without	alsa	# build without ALSA support in SDLAudio
-#
+%bcond_without	static_libs	# don't build static libraries
+
 Summary:	MPEG4IP - system for encoding, streaming and playing MPEG-4 audio/video
 Summary(pl.UTF-8):	MPEG4IP - system kodowania, streamingu i odtwarzania dźwięku i obrazu MPEG-4
 Name:		mpeg4ip
 Version:	1.6.1
-Release:	15
+Release:	16
 Epoch:		1
 License:	MPL v1.1 (original code) and other licenses (included libraries)
 Group:		Applications
@@ -103,6 +99,28 @@ Static versions of base MPEG4IP libraries.
 %description static -l pl.UTF-8
 Statyczne wersje podstawowych bibliotek MPEG4IP.
 
+%package utils
+Summary:	Utilities for MPEG4IP
+Group:		Applications
+Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
+
+%description utils
+This package contains various utilities :
+- mp4info - display information about tracks in mp4 file
+- mp4dump - dumps contents from mp4 files
+- mp4trackdump - dumps track information
+- mp4tags - sets iTunes tag information
+- mp4art - extract iTunes cover art
+- mp4videoinfo - dump information about video tracks in mp4 files
+
+%package server
+Summary:	mp4 server
+Group:		Daemons
+Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
+
+%description server
+This package contains the mp4 server.
+
 %prep
 %setup -q
 %patch0 -p1
@@ -129,6 +147,7 @@ install -d config
 touch bootstrapped
 %configure \
 	%{!?with_alsa:--disable-alsa} \
+	%{!?with_static_libs:--disable-static} \
 	--enable-ffmpeg=%{_includedir} \
 	--enable-ipv6
 
@@ -163,53 +182,42 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc AUTHORS COPYING ChangeLog encoding60.dsw FEATURES.html index.html README* NEWS TODO
 %doc doc/{*.pdf,*.txt,*.html,*.jpg} doc/ietf/rfc*.txt doc/mcast/{mcast.txt,*_example}
-%attr(755,root,root) %{_bindir}/avi2raw
-%attr(755,root,root) %{_bindir}/avidump
 %attr(755,root,root) %{_bindir}/gmp4player
-%attr(755,root,root) %{_bindir}/h264_parse
-%attr(755,root,root) %{_bindir}/lboxcrop
-%attr(755,root,root) %{_bindir}/mp4art
-%attr(755,root,root) %{_bindir}/mp4creator
-%attr(755,root,root) %{_bindir}/mp4dump
 %attr(755,root,root) %{_bindir}/mp4encode
-%attr(755,root,root) %{_bindir}/mp4extract
-%attr(755,root,root) %{_bindir}/mp4info
-%attr(755,root,root) %{_bindir}/mp4live
 %attr(755,root,root) %{_bindir}/mp4player
-%attr(755,root,root) %{_bindir}/mp4tags
-%attr(755,root,root) %{_bindir}/mp4trackdump
-%attr(755,root,root) %{_bindir}/mp4videoinfo
-%attr(755,root,root) %{_bindir}/mpeg2t_dump
-%attr(755,root,root) %{_bindir}/mpeg2video_parse
-%attr(755,root,root) %{_bindir}/mpeg4vol
-%attr(755,root,root) %{_bindir}/mpeg_ps_extract
-%attr(755,root,root) %{_bindir}/mpeg_ps_info
-%attr(755,root,root) %{_bindir}/rgb2yuv
 %attr(755,root,root) %{_bindir}/sdl_pcm_play
 %attr(755,root,root) %{_bindir}/yuvdump
 %dir %{_libdir}/mp4player_plugin
 %attr(755,root,root) %{_libdir}/mp4player_plugin/*.so*
 %{_mandir}/man1/gmp4player.1*
-%{_mandir}/man1/mp4creator.1*
 %{_mandir}/man1/mp4encode.1*
-%{_mandir}/man1/mp4live.1*
+
+# used by gui only
+%attr(755,root,root) %{_libdir}/libmpeg4ipSDL*.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libmpeg4ipSDL*.so.0
 
 %files libs
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libhttp.so.*.*.*
-%attr(755,root,root) %{_libdir}/libismacryp.so.*.*.*
+# libmp4v2.so.0 used by faac, easytag, libtunepimp, amarok-1.4 ...
 %attr(755,root,root) %{_libdir}/libmp4*.so.*.*.*
-%attr(755,root,root) %{_libdir}/libmpeg4ip*.so.*.*.*
-%attr(755,root,root) %{_libdir}/libmsg_queue.so.*.*.*
-%attr(755,root,root) %{_libdir}/libsdp.so.*.*.*
-%attr(755,root,root) %{_libdir}/libsrtpif.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libhttp.so.0
-%attr(755,root,root) %ghost %{_libdir}/libismacryp.so.0
 %attr(755,root,root) %ghost %{_libdir}/libmp4*.so.0
-%attr(755,root,root) %ghost %{_libdir}/libmpeg4ip*.so.0
-%attr(755,root,root) %ghost %{_libdir}/libmsg_queue.so.0
+
+# libsdp.so.0 used by libopensync-plugin-irmc (maybe bogus)
+%attr(755,root,root) %{_libdir}/libsdp.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libsdp.so.0
+
+# these libs not used by anything else externally, but mpeg4ip progs
+%attr(755,root,root) %{_libdir}/libmpeg4ip_*.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libmpeg4ip_*.so.0
+%attr(755,root,root) %{_libdir}/libhttp.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libhttp.so.0
+%attr(755,root,root) %{_libdir}/libismacryp.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libismacryp.so.0
+%attr(755,root,root) %{_libdir}/libsrtpif.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libsrtpif.so.0
+# links with SDL
+%attr(755,root,root) %{_libdir}/libmsg_queue.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libmsg_queue.so.0
 
 %files devel
 %defattr(644,root,root,755)
@@ -239,6 +247,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/text_plugin.h
 %{_mandir}/man3/MP4*.3*
 
+%if %{with static_libs}
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/libhttp.a
@@ -248,3 +257,31 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libmsg_queue.a
 %{_libdir}/libsdp.a
 %{_libdir}/libsrtpif.a
+%endif
+
+%files utils
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/h264_parse
+%attr(755,root,root) %{_bindir}/mp4art
+%attr(755,root,root) %{_bindir}/mp4dump
+%attr(755,root,root) %{_bindir}/mp4extract
+%attr(755,root,root) %{_bindir}/mp4info
+%attr(755,root,root) %{_bindir}/mp4tags
+%attr(755,root,root) %{_bindir}/mp4trackdump
+%attr(755,root,root) %{_bindir}/mp4videoinfo
+%attr(755,root,root) %{_bindir}/mpeg2t_dump
+%attr(755,root,root) %{_bindir}/mpeg2video_parse
+%attr(755,root,root) %{_bindir}/mpeg4vol
+%attr(755,root,root) %{_bindir}/mpeg_ps_extract
+%attr(755,root,root) %{_bindir}/mpeg_ps_info
+
+%files server
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/avi2raw
+%attr(755,root,root) %{_bindir}/avidump
+%attr(755,root,root) %{_bindir}/lboxcrop
+%attr(755,root,root) %{_bindir}/mp4creator
+%attr(755,root,root) %{_bindir}/mp4live
+%attr(755,root,root) %{_bindir}/rgb2yuv
+%{_mandir}/man1/mp4creator.1*
+%{_mandir}/man1/mp4live.1*
