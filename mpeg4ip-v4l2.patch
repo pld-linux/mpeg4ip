@@ -1,0 +1,33 @@
+--- mpeg4ip-1.6.1/server/mp4live/video_v4l_source.h~	2006-05-15 19:52:52.000000000 +0200
++++ mpeg4ip-1.6.1/server/mp4live/video_v4l_source.h	2011-07-26 22:06:51.582637534 +0200
+@@ -25,7 +25,7 @@
+ 
+ #include <sys/types.h>
+ #include <sys/ioctl.h>
+-#include <linux/videodev.h>
++#include <linux/videodev2.h>
+ 
+ #include "media_source.h"
+ #include "video_encoder.h"
+--- mpeg4ip-1.6.1/server/mp4live/video_v4l2_source.h~	2006-05-15 19:52:52.000000000 +0200
++++ mpeg4ip-1.6.1/server/mp4live/video_v4l2_source.h	2011-07-26 22:09:10.296037947 +0200
+@@ -88,7 +88,7 @@
+ 
+   typedef struct {
+     void* start;
+-    __u32 length;
++    uint32_t length;
+     bool in_use;
+   } capture_buffer_t;
+ 
+--- mpeg4ip-1.6.1/configure.in~	2011-07-26 21:54:11.291313354 +0200
++++ mpeg4ip-1.6.1/configure.in	2011-07-26 22:19:49.013449755 +0200
+@@ -430,7 +430,7 @@
+ 	              [have_mp4live=false],
+ 		        [#include <sys/time.h>
+ #include <sys/types.h>
+-#include <linux/videodev.h>])
++#include <linux/videodev2.h>])
+ 	if test x$have_mp4live = xfalse; then
+ 	    KERNEL_VERSION=`uname -r`
+ 	    AC_CHECK_FILE(/lib/modules/$KERNEL_VERSION/build/include/linux/videodev2.h,
