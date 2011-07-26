@@ -31,7 +31,7 @@ BuildRequires:	a52dec-libs-devel
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.4
 BuildRequires:	faac-devel >= 1.20.1
-BuildRequires:	ffmpeg-devel >= 0.4.9-3.20061204
+BuildRequires:	ffmpeg-devel >= 0.8-4
 BuildRequires:	gtk+2-devel >= 1:2.0.0
 BuildRequires:	lame-libs-devel >= 3.92
 BuildRequires:	libid3tag-devel
