@@ -89,3 +89,89 @@ diff -burNp mpeg4ip-1.6.1/configure.in mpeg4ip-1.6.1-new/configure.in
        ffmpeg->m_vft->video_filled_buffer(ffmpeg->m_ifptr,
  					 ffmpeg->have_cached_ts ?
  					 ffmpeg->cached_ts : ts);
+--- mpeg4ip-1.6.1/player/plugin/audio/ffmpeg/ffmpeg.cpp~	2011-07-26 18:37:06.785253535 +0200
++++ mpeg4ip-1.6.1/player/plugin/audio/ffmpeg/ffmpeg.cpp	2011-07-26 18:43:29.810426398 +0200
+@@ -220,14 +220,13 @@
+   uint32_t freq_ts = pts->audio_freq_timestamp;
+ 
+   do {
+-#if HAVE_DECL_AVCODEC_DECODE_AUDIO2 != 1
+-    used = avcodec_decode_audio(ffmpeg->m_c, (short *)ffmpeg->m_outbuf,
+-				&outsize, buffer, left);
+-#else
+-    outsize = AVCODEC_MAX_AUDIO_FRAME_SIZE;
+-    used = avcodec_decode_audio2(ffmpeg->m_c, (int16_t *)ffmpeg->m_outbuf,
+-				 &outsize, buffer, left);
+-#endif
++	AVPacket pkt;
++	av_init_packet(&pkt);
++	pkt.data = buffer; 
++	pkt.size = left; 
++	used = avcodec_decode_audio3(ffmpeg->m_c, (int16_t *)ffmpeg->m_outbuf,
++			&outsize, &pkt);
++
+     if (used < 0) {
+       ffmpeg_message(LOG_DEBUG, "ffmpeg", "failed to decode at "U64, 
+ 		     ts);
+--- mpeg4ip-1.6.1/player/plugin/video/ffmpeg/ffmpeg.cpp.orig	2011-07-26 13:26:04.684844016 +0200
++++ mpeg4ip-1.6.1/player/plugin/video/ffmpeg/ffmpeg.cpp	2011-07-26 21:00:12.921661697 +0200
+@@ -295,11 +295,13 @@
+       uint32_t offset = 0;
+       do {
+ 	int got_picture;
+-	offset += avcodec_decode_video(ffmpeg->m_c, 
+-				       ffmpeg->m_picture,
+-				       &got_picture,
+-				       (uint8_t *)userdata + offset, 
+-				       ud_size - offset);
++	AVPacket pkt;
++	av_init_packet(&pkt);
++	pkt.data = (uint8_t *)userdata + offset;
++	pkt.size = ud_size - offset;
++	offset += avcodec_decode_video2(ffmpeg->m_c,
++			ffmpeg->m_picture,
++			&got_picture, &pkt);
+       } while (offset < ud_size);
+     }
+ 	
+@@ -442,11 +444,13 @@
+   int ret;
+   do {
+     int local_got_picture;
+-    ret = avcodec_decode_video(ffmpeg->m_c, 
+-			       ffmpeg->m_picture,
+-			       &local_got_picture,
+-			       buffer + bytes_used, 
+-			       buflen - bytes_used);
++	AVPacket pkt;
++	av_init_packet(&pkt);
++	pkt.data = buffer + bytes_used; 
++	pkt.size = buflen - bytes_used;
++	ret = avcodec_decode_video2(ffmpeg->m_c,
++			ffmpeg->m_picture,
++			&local_got_picture, &pkt);
+     bytes_used += ret;
+     //ffmpeg_message(LOG_CRIT, "ffmpeg", "used %d %d", ret, local_got_picture);
+     got_picture |= local_got_picture;
+--- mpeg4ip-1.6.1/server/mp4live/audio_ffmpeg.cpp~	2006-09-29 21:55:42.000000000 +0200
++++ mpeg4ip-1.6.1/server/mp4live/audio_ffmpeg.cpp	2011-07-26 22:13:07.825014397 +0200
+@@ -475,7 +475,7 @@
+   m_avctx = avcodec_alloc_context();
+   m_frame = avcodec_alloc_frame();
+ 
+-  m_avctx->codec_type = CODEC_TYPE_AUDIO;
++  m_avctx->codec_type = AVMEDIA_TYPE_AUDIO;
+   switch (m_media_frame) {
+   case MP3AUDIOFRAME:
+     m_avctx->codec_id = CODEC_ID_MP2;
+--- mpeg4ip-1.6.1/server/mp4live/video_ffmpeg.cpp~	2007-01-30 22:53:45.000000000 +0100
++++ mpeg4ip-1.6.1/server/mp4live/video_ffmpeg.cpp	2011-07-26 22:17:55.917224166 +0200
+@@ -225,7 +225,7 @@
+   }
+   if (wantKeyFrame) m_picture->pict_type = FF_I_TYPE; //m_picture->key_frame = 1;
+   else //m_picture->key_frame = 0;
+-    m_picture->pict_type = 0;
++    m_picture->pict_type = AV_PICTURE_TYPE_NONE;
+ 
+   m_picture->data[0] = (uint8_t *)pY;
+   m_picture->data[1] = (uint8_t *)pU;
