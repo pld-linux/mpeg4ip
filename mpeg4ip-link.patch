@@ -94,11 +94,16 @@
  
 --- mpeg4ip-1.6/lib/srtp/Makefile.am.orig	2007-07-24 22:32:28.000000000 +0200
 +++ mpeg4ip-1.6/lib/srtp/Makefile.am	2007-11-04 01:17:33.421260290 +0100
-@@ -9,15 +9,16 @@
+@@ -9,15 +9,21 @@
  
  libsrtpif_la_SOURCES = liblibsrtp.c \
  	liblibsrtp.h
-+libsrtpif_la_LIBADD = @SRTPLIB@
++libsrtpif_la_LIBADD = @SRTPLIB@ \
++	@SDL_LIBS@ \
++	$(top_builddir)/lib/mp4v2/libmp4v2.la \
++	$(top_builddir)/lib/utils/libmutex.la \
++	$(top_builddir)/lib/utils/libutils.la \
++	$(top_builddir)/lib/rtp/libuclmmbase.la
  
  #EXTRA_DIST = README README.html
  
@@ -211,3 +216,36 @@
  	@SRTPLIB@ \
  	-lpthread \
  	@SDL_LIBS@ $(GUILIBS) @FFMPEG_LIB@ @LIBVORBIS_LIB@ $(XVID_LIB) \
+--- mpeg4ip-1.6.1/lib/ffmpeg/Makefile.am~	2011-07-26 21:14:27.273944391 +0200
++++ mpeg4ip-1.6.1/lib/ffmpeg/Makefile.am	2011-07-26 21:15:10.510442435 +0200
+@@ -4,6 +4,10 @@
+ 	ffmpeg_if.c \
+ 	ffmpeg_if.h
+ 
++libmpeg4ip_ffmpeg_la_LIBADD = \
++	$(top_builddir)/lib/utils/libmutex.la \
++	$(top_builddir)/lib/utils/libutils.la \
++	@SDL_LIBS@
+ 
+ INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/lib/utils
+ 
+--- mpeg4ip-1.6.1/player/plugin/audio/celp/Makefile.am~	2007-09-18 22:52:08.000000000 +0200
++++ mpeg4ip-1.6.1/player/plugin/audio/celp/Makefile.am	2011-07-26 21:21:23.715653596 +0200
+@@ -5,6 +5,7 @@
+ celp_plugin_la_SOURCES = \
+ 	celp.cpp celp.h
+ celp_plugin_la_LIBADD = \
++	$(top_builddir)/lib/mp4av/libmp4av.la \
+ 	$(top_builddir)/player/lib/mp4util/libmp4util.la \
+ 	$(top_builddir)/player/lib/audio/celp/BS/libmpeg4ip_celpbs.la \
+ 	$(top_builddir)/player/lib/audio/celp/dec/libmpeg4ip_celp.la 
+--- mpeg4ip-1.6.1/player/src/codec/mp3/Makefile.am~	2007-09-18 22:52:18.000000000 +0200
++++ mpeg4ip-1.6.1/player/src/codec/mp3/Makefile.am	2011-07-26 21:24:17.481642573 +0200
+@@ -30,6 +30,7 @@
+ endif
+ mp3_plugin_la_LIBADD = \
+ 	-lm $(ID3_LIBS) \
++	$(top_builddir)/lib/mp4av/libmp4av.la \
+ 	$(top_builddir)/lib/fposrec/libmpeg4ip_fposrec.la
+ 
+ 
