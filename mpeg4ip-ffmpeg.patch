@@ -68,6 +68,14 @@ diff -burNp mpeg4ip-1.6.1/configure.in mpeg4ip-1.6.1-new/configure.in
  #endif
 --- mpeg4ip-1.6.1/player/plugin/video/ffmpeg/ffmpeg.cpp	2007-07-02 22:26:03.000000000 +0200
 +++ mpeg4ip-1.6.1-new/player/plugin/video/ffmpeg/ffmpeg.cpp	2008-10-10 23:01:19.519476374 +0200
+@@ -186,7 +186,6 @@
+ 
+   ffmpeg->m_vft = vft;
+   ffmpeg->m_ifptr = ifptr;
+-  avcodec_init();
+   avcodec_register_all();
+   av_log_set_level(AV_LOG_QUIET);
+ 
 @@ -585,10 +585,16 @@ static int ffmpeg_decode (codec_data_t *
  	from.data[ix] = ffmpeg->m_picture->data[ix];
  	from.linesize[ix] = ffmpeg->m_picture->linesize[ix];
@@ -89,8 +97,24 @@ diff -burNp mpeg4ip-1.6.1/configure.in mpeg4ip-1.6.1-new/configure.in
        ffmpeg->m_vft->video_filled_buffer(ffmpeg->m_ifptr,
  					 ffmpeg->have_cached_ts ?
  					 ffmpeg->cached_ts : ts);
+@@ -635,7 +634,6 @@
+ {
+   enum CodecID fcodec;
+   AVCodec *c;
+-  avcodec_init();
+   avcodec_register_all();
+   av_log_set_level(AV_LOG_QUIET);
+   fcodec = ffmpeg_find_codec(stream_type, compressor, type, profile, 
 --- mpeg4ip-1.6.1/player/plugin/audio/ffmpeg/ffmpeg.cpp~	2011-07-26 18:37:06.785253535 +0200
 +++ mpeg4ip-1.6.1/player/plugin/audio/ffmpeg/ffmpeg.cpp	2011-07-26 18:43:29.810426398 +0200
+@@ -135,7 +135,6 @@
+ 
+   ffmpeg->m_vft = vft;
+   ffmpeg->m_ifptr = ifptr;
+-  avcodec_init();
+   avcodec_register_all();
+ 
+   ffmpeg->m_codecId = ffmpeg_find_codec(stream_type, compressor, type, 
 @@ -220,14 +220,13 @@
    uint32_t freq_ts = pts->audio_freq_timestamp;
  
@@ -113,6 +137,14 @@ diff -burNp mpeg4ip-1.6.1/configure.in mpeg4ip-1.6.1-new/configure.in
      if (used < 0) {
        ffmpeg_message(LOG_DEBUG, "ffmpeg", "failed to decode at "U64, 
  		     ts);
+@@ -288,7 +288,6 @@
+ {
+   enum CodecID fcodec;
+   AVCodec *c;
+-  avcodec_init();
+   avcodec_register_all();
+ 
+   fcodec = ffmpeg_find_codec(stream_type, compressor, type, profile, 
 --- mpeg4ip-1.6.1/player/plugin/video/ffmpeg/ffmpeg.cpp.orig	2011-07-26 13:26:04.684844016 +0200
 +++ mpeg4ip-1.6.1/player/plugin/video/ffmpeg/ffmpeg.cpp	2011-07-26 21:00:12.921661697 +0200
 @@ -295,11 +295,13 @@
@@ -155,6 +187,14 @@ diff -burNp mpeg4ip-1.6.1/configure.in mpeg4ip-1.6.1-new/configure.in
      got_picture |= local_got_picture;
 --- mpeg4ip-1.6.1/server/mp4live/audio_ffmpeg.cpp~	2006-09-29 21:55:42.000000000 +0200
 +++ mpeg4ip-1.6.1/server/mp4live/audio_ffmpeg.cpp	2011-07-26 22:13:07.825014397 +0200
+@@ -442,7 +442,6 @@
+ {
+   const char *encoding = Profile()->GetStringValue(CFG_AUDIO_ENCODING);
+ 
+-  avcodec_init();
+   avcodec_register_all();
+ 
+   if (strcasecmp(encoding,AUDIO_ENCODING_MP3) == 0) {
 @@ -475,7 +475,7 @@
    m_avctx = avcodec_alloc_context();
    m_frame = avcodec_alloc_frame();
@@ -164,11 +204,30 @@ diff -burNp mpeg4ip-1.6.1/configure.in mpeg4ip-1.6.1-new/configure.in
    switch (m_media_frame) {
    case MP3AUDIOFRAME:
      m_avctx->codec_id = CODEC_ID_MP2;
+@@ -647,7 +646,6 @@
+   AddAudioEncoderTable(&ffmpeg_alaw_audio_encoder_table);
+   AddAudioEncoderTable(&ffmpeg_ulaw_audio_encoder_table);
+ #ifdef MAY_HAVE_AMR_CODEC
+-  avcodec_init();
+   avcodec_register_all();
+   bool have_amr_nb = avcodec_find_encoder(CODEC_ID_AMR_NB) != NULL;
+   bool have_amr_wb = avcodec_find_encoder(CODEC_ID_AMR_WB) != NULL;
 --- mpeg4ip-1.6.1/server/mp4live/video_ffmpeg.cpp~	2007-01-30 22:53:45.000000000 +0100
 +++ mpeg4ip-1.6.1/server/mp4live/video_ffmpeg.cpp	2011-07-26 22:17:55.917224166 +0200
-@@ -225,7 +225,7 @@
+@@ -72,7 +72,6 @@
+ 
+ bool CFfmpegVideoEncoder::Init (void)
+ {
+-  avcodec_init();
+   avcodec_register_all();
+ 
+   if (m_push != NULL) {
+@@ -222,9 +222,9 @@
+       m_count = 0;
+     }
    }
-   if (wantKeyFrame) m_picture->pict_type = FF_I_TYPE; //m_picture->key_frame = 1;
+-  if (wantKeyFrame) m_picture->pict_type = FF_I_TYPE; //m_picture->key_frame = 1;
++  if (wantKeyFrame) m_picture->pict_type = AV_PICTURE_TYPE_I; //m_picture->key_frame = 1;
    else //m_picture->key_frame = 0;
 -    m_picture->pict_type = 0;
 +    m_picture->pict_type = AV_PICTURE_TYPE_NONE;
