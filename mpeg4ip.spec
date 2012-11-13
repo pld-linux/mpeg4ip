@@ -24,7 +24,7 @@ Patch5:		%{name}-ffmpeg.patch
 Patch6:		gcc44.patch
 Patch7:		%{name}-srtp.patch
 Patch8:		%{name}-v4l2.patch
-Patch9:		%{name}-remove-mp4v2.patch
+Patch9:		%{name}-system-mp4v2.patch
 URL:		http://www.mpeg4ip.net/
 BuildRequires:	SDL-devel
 BuildRequires:	a52dec-libs-devel
@@ -41,7 +41,7 @@ BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:1.4d
 BuildRequires:	libvorbis-devel >= 1:1.0
 BuildRequires:	libx264-devel
-#BuildRequires:	mpeg2dec-devel
+#BuildRequires:	mp4v2-devel
 %ifarch %{ix86} %{x8664}
 BuildRequires:	nasm >= 0.98.19
 %endif
@@ -135,7 +135,8 @@ This package contains the mp4 server.
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
-%patch9 -p1
+# needs more work on mp4v2 package side
+#%patch9 -p1
 
 %build
 cd lib/SDLAudio
@@ -204,9 +205,14 @@ rm -rf $RPM_BUILD_ROOT
 
 %files libs
 %defattr(644,root,root,755)
-# libmp4v2.so.0 used by faac, easytag, libtunepimp, amarok-1.4 ...
-%attr(755,root,root) %{_libdir}/libmp4*.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libmp4*.so.0
+%attr(755,root,root) %{_libdir}/libmp4.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libmp4.so.0
+%attr(755,root,root) %{_libdir}/libmp4av.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libmp4av.so.0
+%attr(755,root,root) %{_libdir}/libmp4util.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libmp4util.so.0
+%attr(755,root,root) %{_libdir}/libmp4v2.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libmp4v2.so.0
 
 # libsdp.so.0 used by libopensync-plugin-irmc (maybe bogus)
 %attr(755,root,root) %{_libdir}/libsdp.so.*.*.*
