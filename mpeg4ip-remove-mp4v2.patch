@@ -1,8 +1,0 @@
---- mpeg4ip-1.6.1/lib/Makefile.am~	2006-09-29 21:55:39.000000000 +0200
-+++ mpeg4ip-1.6.1/lib/Makefile.am	2012-11-13 13:02:07.730778548 +0100
-@@ -8,4 +8,4 @@
- endif
- endif
- 
--SUBDIRS = utils audio avi ffmpeg fposrec gnu ismacryp mp4av mp4 mp4v2 msg_queue rtp sdp mpeg2t mpeg2ps srtp $(extradir)
-+SUBDIRS = utils audio avi ffmpeg fposrec gnu ismacryp mp4av mp4 msg_queue rtp sdp mpeg2t mpeg2ps srtp $(extradir)
