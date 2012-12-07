@@ -40,6 +40,15 @@ diff -ur mpeg4ip-1.6.1/lib/Makefile.am mpeg4ip-1.6.1-system-mp4v2/lib/Makefile.a
 diff -ur mpeg4ip-1.6.1/lib/mp4av/Makefile.am mpeg4ip-1.6.1-system-mp4v2/lib/mp4av/Makefile.am
 --- mpeg4ip-1.6.1/lib/mp4av/Makefile.am	2012-11-13 13:55:08.185482687 +0100
 +++ mpeg4ip-1.6.1-system-mp4v2/lib/mp4av/Makefile.am	2012-11-13 13:34:10.372193724 +0100
+@@ -1,7 +1,7 @@
+ 
+ INCLUDES = \
+ 	-I$(top_srcdir)/include \
+-	-I$(top_srcdir)/lib/mp4v2 \
++	-I/usr/include/mp4v2 \
+ 	-I$(top_srcdir)/lib/avi 
+ 
+ AM_CXXFLAGS = -DMPEG4IP @BILLS_CPPWARNINGS@
 @@ -48,10 +48,7 @@
  	rfcisma.cpp \
  	rfch264.cpp
@@ -55,7 +64,17 @@ diff -ur mpeg4ip-1.6.1/lib/mp4av/Makefile.am mpeg4ip-1.6.1-system-mp4v2/lib/mp4a
 diff -ur mpeg4ip-1.6.1/lib/mpeg2ps/Makefile.am mpeg4ip-1.6.1-system-mp4v2/lib/mpeg2ps/Makefile.am
 --- mpeg4ip-1.6.1/lib/mpeg2ps/Makefile.am	2012-11-13 13:55:08.188816020 +0100
 +++ mpeg4ip-1.6.1-system-mp4v2/lib/mpeg2ps/Makefile.am	2012-11-13 13:34:50.808858966 +0100
-@@ -15,7 +15,7 @@
+@@ -6,16 +6,16 @@
+ 	mpeg2ps_util.c
+ 
+ 
+-INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/lib -I$(top_srcdir)/lib/mp4av -I$(top_srcdir)/lib/mp4v2 
++INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/lib -I$(top_srcdir)/lib/mp4av -I/usr/include/mp4v2 
+ AM_CFLAGS = -D_REENTRANT @BILLS_CWARNINGS@
+ AM_CXXFLAGS = -D_REENTRANT @BILLS_CPPWARNINGS@
+ 
+ bin_PROGRAMS = mpeg_ps_info mpeg_ps_extract
+ prog_libadd = \
  	libmpeg2_program.la \
  	$(top_builddir)/lib/gnu/libmpeg4ip_gnu.la \
  	$(top_builddir)/lib/mp4av/libmp4av.la \
@@ -76,6 +95,15 @@ diff -ur mpeg4ip-1.6.1/lib/mpeg2ps/Makefile.am mpeg4ip-1.6.1-system-mp4v2/lib/mp
 diff -ur mpeg4ip-1.6.1/lib/mpeg2t/Makefile.am mpeg4ip-1.6.1-system-mp4v2/lib/mpeg2t/Makefile.am
 --- mpeg4ip-1.6.1/lib/mpeg2t/Makefile.am	2007-01-30 22:53:42.000000000 +0100
 +++ mpeg4ip-1.6.1-system-mp4v2/lib/mpeg2t/Makefile.am	2012-11-13 13:35:25.452191078 +0100
+@@ -9,7 +9,7 @@
+ 	mpeg2t_video.c \
+ 	mpeg2t_util.c 
+ 
+-INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/lib -I$(top_srcdir)/lib/mp4av -I$(top_srcdir)/lib/mp4v2 
++INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/lib -I$(top_srcdir)/lib/mp4av -I/usr/include/mp4v2 
+ AM_CFLAGS = -D_REENTRANT @BILLS_CWARNINGS@
+ AM_CXXFLAGS = -D_REENTRANT @BILLS_CPPWARNINGS@
+ 
 @@ -21,21 +21,21 @@
  mpeg2t_dump_LDADD = libmpeg2_transport.la \
  	$(top_builddir)/lib/gnu/libmpeg4ip_gnu.la \
@@ -104,6 +132,15 @@ diff -ur mpeg4ip-1.6.1/lib/mpeg2t/Makefile.am mpeg4ip-1.6.1-system-mp4v2/lib/mpe
 diff -ur mpeg4ip-1.6.1/lib/srtp/Makefile.am mpeg4ip-1.6.1-system-mp4v2/lib/srtp/Makefile.am
 --- mpeg4ip-1.6.1/lib/srtp/Makefile.am	2012-11-13 13:55:08.188816020 +0100
 +++ mpeg4ip-1.6.1-system-mp4v2/lib/srtp/Makefile.am	2012-11-13 13:35:59.645523204 +0100
+@@ -3,7 +3,7 @@
+ INCLUDES=-I$(top_srcdir)/include \
+ 	-I$(top_srcdir)/lib/rtp \
+ 	-I$(top_srcdir)/lib/utils \
+-	-I$(top_srcdir)/lib/mp4v2
++	-I/usr/include/mp4v2
+ 
+ AM_CFLAGS = -D_REENTRANT @BILLS_CWARNINGS@
+ 
 @@ -11,7 +11,7 @@
  	liblibsrtp.h
  libsrtpif_la_LIBADD = @SRTPLIB@ \
@@ -135,7 +172,8 @@ diff -ur mpeg4ip-1.6.1/player/lib/mp4util/Makefile.am mpeg4ip-1.6.1-system-mp4v2
 -	$(top_builddir)/lib/mp4v2/libmp4v2.la
 +	-lmp4v2
  
- INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/lib -I$(top_srcdir)/lib/mp4v2
+-INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/lib -I$(top_srcdir)/lib/mp4v2
++INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/lib -I/usr/include/mp4v2
  
  AM_CFLAGS = -D_REENTRANT @BILLS_CWARNINGS@
  
@@ -150,7 +188,8 @@ diff -ur mpeg4ip-1.6.1/player/plugin/audio/g711/Makefile.am mpeg4ip-1.6.1-system
 +	-lmp4v2 \
  	-lm  
  
- INCLUDES = -I$(top_srcdir)/player/src -I$(top_srcdir)/include -I$(top_srcdir)/lib -I$(top_srcdir)/lib/mp4av -I$(top_srcdir)/lib/mp4v2 -I$(top_srcdir)/lib/sdp
+-INCLUDES = -I$(top_srcdir)/player/src -I$(top_srcdir)/include -I$(top_srcdir)/lib -I$(top_srcdir)/lib/mp4av -I$(top_srcdir)/lib/mp4v2 -I$(top_srcdir)/lib/sdp
++INCLUDES = -I$(top_srcdir)/player/src -I$(top_srcdir)/include -I$(top_srcdir)/lib -I$(top_srcdir)/lib/mp4av -I/usr/include/mp4v2 -I$(top_srcdir)/lib/sdp
  
  AM_CFLAGS = -D_REENTRANT -fexceptions @BILLS_CWARNINGS@
  
@@ -173,6 +212,15 @@ diff -ur mpeg4ip-1.6.1/player/plugin/video/ffmpeg/Makefile.am mpeg4ip-1.6.1-syst
  	@FFMPEG_LIB@
  
  INCLUDES = \
+@@ -27,7 +27,7 @@
+ 	-I$(top_srcdir)/lib \
+ 	-I$(top_srcdir)/lib/ffmpeg \
+ 	-I$(top_srcdir)/lib/mp4av \
+-	-I$(top_srcdir)/lib/mp4v2 \
++	-I/usr/include/mp4v2 \
+ 	-I$(top_srcdir)/lib/sdp \
+ 	@FFMPEG_INC@
+ 
 diff -ur mpeg4ip-1.6.1/player/src/codec/aa/Makefile.am mpeg4ip-1.6.1-system-mp4v2/player/src/codec/aa/Makefile.am
 --- mpeg4ip-1.6.1/player/src/codec/aa/Makefile.am	2007-09-18 22:52:17.000000000 +0200
 +++ mpeg4ip-1.6.1-system-mp4v2/player/src/codec/aa/Makefile.am	2012-11-13 13:36:49.705521439 +0100
@@ -186,13 +234,23 @@ diff -ur mpeg4ip-1.6.1/player/src/codec/aa/Makefile.am mpeg4ip-1.6.1-system-mp4v
  	-lm
  
  
- INCLUDES =  -I$(top_srcdir)/include -I$(top_srcdir)/lib -I$(top_srcdir)/lib/sdp -I$(top_srcdir)/player/src -I$(top_srcdir)/player/lib/audio -I$(top_srcdir)/player/lib -I$(top_srcdir)/lib/mp4v2 -I$(top_srcdir)/lib/mp4av
+-INCLUDES =  -I$(top_srcdir)/include -I$(top_srcdir)/lib -I$(top_srcdir)/lib/sdp -I$(top_srcdir)/player/src -I$(top_srcdir)/player/lib/audio -I$(top_srcdir)/player/lib -I$(top_srcdir)/lib/mp4v2 -I$(top_srcdir)/lib/mp4av
++INCLUDES =  -I$(top_srcdir)/include -I$(top_srcdir)/lib -I$(top_srcdir)/lib/sdp -I$(top_srcdir)/player/src -I$(top_srcdir)/player/lib/audio -I$(top_srcdir)/player/lib -I/usr/include/mp4v2 -I$(top_srcdir)/lib/mp4av
  
  AM_CFLAGS = -D_REENTRANT -fexceptions @BILLS_CWARNINGS@
  
 diff -ur mpeg4ip-1.6.1/player/src/Makefile.am mpeg4ip-1.6.1-system-mp4v2/player/src/Makefile.am
 --- mpeg4ip-1.6.1/player/src/Makefile.am	2012-11-13 13:55:08.188816020 +0100
 +++ mpeg4ip-1.6.1-system-mp4v2/player/src/Makefile.am	2012-11-13 13:37:43.155519553 +0100
+@@ -158,7 +158,7 @@
+ 	-I$(top_srcdir)/lib/ismacryp \
+ 	-I$(top_srcdir)/lib/mp4av \
+ 	-I$(top_srcdir)/lib/mp4 \
+-	-I$(top_srcdir)/lib/mp4v2 \
++	-I/usr/include/mp4v2 \
+ 	-I$(top_srcdir)/lib/mpeg2ps \
+ 	-I$(top_srcdir)/lib/msg_queue \
+ 	-I$(top_srcdir)/lib/rtp \
 @@ -187,7 +187,7 @@
  	$(top_builddir)/lib/utils/libmutex.la \
  	$(top_builddir)/player/lib/rtsp/librtsp.la \
@@ -205,6 +263,15 @@ diff -ur mpeg4ip-1.6.1/player/src/Makefile.am mpeg4ip-1.6.1-system-mp4v2/player/
 diff -ur mpeg4ip-1.6.1/server/mp4creator/Makefile.am mpeg4ip-1.6.1-system-mp4v2/server/mp4creator/Makefile.am
 --- mpeg4ip-1.6.1/server/mp4creator/Makefile.am	2012-11-13 13:55:08.188816020 +0100
 +++ mpeg4ip-1.6.1-system-mp4v2/server/mp4creator/Makefile.am	2012-11-13 13:40:41.645513256 +0100
+@@ -1,7 +1,7 @@
+ 
+ INCLUDES = \
+ 	-I$(top_srcdir)/include \
+-	-I$(top_srcdir)/lib/mp4v2 \
++	-I/usr/include/mp4v2 \
+ 	-I$(top_srcdir)/lib/mp4av \
+ 	-I$(top_srcdir)/lib/avi \
+ 	-I$(top_srcdir)/lib/ismacryp \
 @@ -26,7 +26,7 @@
  
  mp4creator_LDADD = \
@@ -217,6 +284,15 @@ diff -ur mpeg4ip-1.6.1/server/mp4creator/Makefile.am mpeg4ip-1.6.1-system-mp4v2/
 diff -ur mpeg4ip-1.6.1/server/mp4live/Makefile.am mpeg4ip-1.6.1-system-mp4v2/server/mp4live/Makefile.am
 --- mpeg4ip-1.6.1/server/mp4live/Makefile.am	2012-11-13 13:55:08.188816020 +0100
 +++ mpeg4ip-1.6.1-system-mp4v2/server/mp4live/Makefile.am	2012-11-13 13:40:59.682179287 +0100
+@@ -138,7 +138,7 @@
+ 	@GLIB_CFLAGS@ @GTK_CFLAGS@ \
+ 	-I$(top_srcdir)/include \
+ 	-I$(top_srcdir)/lib/ffmpeg \
+-	-I$(top_srcdir)/lib/mp4v2 \
++	-I/usr/include/mp4v2 \
+ 	-I$(top_srcdir)/lib/mp4av \
+ 	-I$(top_srcdir)/lib/msg_queue \
+ 	-I$(top_srcdir)/lib/rtp \
 @@ -161,7 +161,7 @@
  	libmp4live.la \
  	$(top_builddir)/lib/mpeg2ps/libmpeg2_program.la \
@@ -226,6 +302,17 @@ diff -ur mpeg4ip-1.6.1/server/mp4live/Makefile.am mpeg4ip-1.6.1-system-mp4v2/ser
  	$(top_builddir)/lib/mp4av/libmp4av.la \
  	$(top_builddir)/lib/rtp/libuclmmbase.la \
  	$(top_builddir)/lib/utils/libmutex.la \
+--- mpeg4ip-1.6.1/server/mp4live/gui/Makefile.am.orig	2012-12-06 18:38:25.645314273 +0100
++++ mpeg4ip-1.6.1/server/mp4live/gui/Makefile.am	2012-12-07 22:14:31.399909844 +0100
+@@ -23,7 +23,7 @@
+ INCLUDES=@GLIB_CFLAGS@ @GTK_CFLAGS@ \
+ 	-I$(top_srcdir)/server/mp4live \
+ 	-I$(top_srcdir)/include \
+-	-I$(top_srcdir)/lib/mp4v2 \
++	-I/usr/include/mp4v2 \
+ 	-I$(top_srcdir)/lib/mp4av \
+ 	-I$(top_srcdir)/lib/msg_queue \
+ 	-I$(top_srcdir)/lib/rtp \
 diff -ur mpeg4ip-1.6.1/util/h264/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util/h264/Makefile.am
 --- mpeg4ip-1.6.1/util/h264/Makefile.am	2007-09-18 22:52:21.000000000 +0200
 +++ mpeg4ip-1.6.1-system-mp4v2/util/h264/Makefile.am	2012-11-13 13:41:45.815510993 +0100
@@ -259,3 +346,710 @@ diff -ur mpeg4ip-1.6.1/util/mpeg4vol/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util
 +	-lmp4v2
  
  EXTRA_DIST=mpeg4vol.dsp
+--- mpeg4ip-1.6.1/player/src/mp4_file.cpp.orig	2006-12-01 00:19:30.000000000 +0100
++++ mpeg4ip-1.6.1/player/src/mp4_file.cpp	2012-12-06 18:08:29.688685040 +0100
+@@ -27,7 +27,7 @@
+ #include "player_media.h"
+ #include "player_util.h"
+ #include "media_utils.h"
+-#include <mp4.h>
++#include <mp4v2.h>
+ #include "mp4_bytestream.h"
+ #include "mp4_file.h"
+ #include <mp4util/mpeg4_audio_config.h>
+@@ -55,7 +55,7 @@
+   MP4FileHandle fh;
+   CMp4File *Mp4File1;
+ 
+-  fh = MP4Read(name, MP4_DETAILS_ERROR); // | MP4_DETAILS_READ | MP4_DETAILS_SAMPLE);
++  fh = MP4Read(name);
+   if (!MP4_IS_VALID_FILE_HANDLE(fh)) {
+     psptr->set_message("`%s\' is not an mp4 file", name);
+     return -1;
+@@ -170,8 +170,8 @@
+        * in this context original format is encv 
+        * and compressor specifies which codec
+        */
+-      uint32_t verb = MP4GetVerbosity(m_mp4file);
+-      MP4SetVerbosity(m_mp4file, verb & ~(MP4_DETAILS_ERROR));
++      MP4LogLevel verb = MP4LogGetLevel();
++      MP4LogSetLevel(MP4_LOG_NONE);
+       if (strcasecmp(vq[ix].original_fmt, "avc1") == 0) {
+ 	vbyte = new CMp4H264VideoByteStream(this, vq[ix].track_id);
+       } else if (strcasecmp(vq[ix].original_fmt, "encv") == 0) {
+@@ -205,7 +205,7 @@
+       } else {
+ 	vbyte = new CMp4VideoByteStream(this, vq[ix].track_id);
+       }
+-      MP4SetVerbosity(m_mp4file, verb);
++      MP4LogSetLevel(verb);
+ 
+       if (vbyte == NULL) {
+ 	delete mptr;
+@@ -216,9 +216,9 @@
+       if (ret != 0) {
+ 	return (-1);
+       }
+-      MP4SetVerbosity(m_mp4file, verb & ~(MP4_DETAILS_ERROR));
++      MP4LogSetLevel(MP4_LOG_NONE);
+       char *mp4info = MP4Info(m_mp4file, vq[ix].track_id);
+-      MP4SetVerbosity(m_mp4file, verb);
++      MP4LogSetLevel(verb);
+       char *temp = mp4info;
+       while (*temp != '\0') {
+ 	if (isspace(*temp)) *temp = ' ';
+@@ -253,8 +253,8 @@
+       }
+ 
+       /* check if ismacryp */
+-      uint32_t verb = MP4GetVerbosity(m_mp4file);
+-      MP4SetVerbosity(m_mp4file, verb & ~(MP4_DETAILS_ERROR));
++      MP4LogLevel verb = MP4LogGetLevel();
++      MP4LogSetLevel(MP4_LOG_NONE);
+       if (MP4IsIsmaCrypMediaTrack(m_mp4file, aq[ix].track_id)) {
+         MP4GetTrackIntegerProperty(m_mp4file,
+                     aq[ix].track_id, "mdia.minf.stbl.stsd.enca.sinf.schi.iSFM.IV-length", &IVLength);
+@@ -262,7 +262,7 @@
+       } else {
+ 	abyte = new CMp4AudioByteStream(this, aq[ix].track_id);
+       }
+-      MP4SetVerbosity(m_mp4file, verb);
++      MP4LogSetLevel(verb);
+ 
+       audio_info_t *ainfo;
+       ainfo = (audio_info_t *)malloc(sizeof(audio_info_t));
+@@ -310,9 +310,9 @@
+       if (ret != 0) {
+ 	return (-1);
+       }
+-      MP4SetVerbosity(m_mp4file, verb & ~(MP4_DETAILS_ERROR));
++      MP4LogSetLevel(MP4_LOG_NONE);
+       char *mp4info = MP4Info(m_mp4file, aq[ix].track_id);
+-      MP4SetVerbosity(m_mp4file, verb);
++      MP4LogSetLevel(verb);
+       char *temp = mp4info;
+       while (*temp != '\0') {
+ 	if (isspace(*temp)) *temp = ' ';
+@@ -339,7 +339,7 @@
+   //uint64_t IVLength;
+   CPlayerMedia *mptr;
+   codec_plugin_t *plugin;
+-  uint32_t verb = MP4GetVerbosity(m_mp4file);
++  MP4LogLevel verb = MP4LogGetLevel();
+   for (ix = 0; ix < text_offset; ix++) {
+     if (tq[ix].enabled != 0) {
+       CMp4TextByteStream *tbyte;
+@@ -350,8 +350,8 @@
+ 
+       /* check if ismacryp */
+ #if 0
+-      uint32_t verb = MP4GetVerbosity(m_mp4file);
+-      MP4SetVerbosity(m_mp4file, verb & ~(MP4_DETAILS_ERROR));
++      MP4LogLevel verb = MP4LogGetLevel();
++      MP4LogSetLevel(MP4_LOGL_NONE);
+       if (MP4IsIsmaCrypMediaTrack(m_mp4file, aq[ix].track_id)) {
+         IVLength = MP4GetTrackIntegerProperty(m_mp4file,
+                     aq[ix].track_id, "mdia.minf.stbl.stsd.enca.sinf.schi.iSFM.IV-length");
+@@ -359,7 +359,7 @@
+       } else {
+ 	abyte = new CMp4AudioByteStream(this, aq[ix].track_id);
+       }
+-      MP4SetVerbosity(m_mp4file, verb);
++      MP4LogSetLevel(verb);
+ #else
+       tbyte = new CMp4TextByteStream(this, tq[ix].track_id,
+ 				     MP4GetHrefTrackBaseUrl(m_mp4file,
+@@ -394,9 +394,9 @@
+       if (ret != 0) {
+ 	return (-1);
+       }
+-      MP4SetVerbosity(m_mp4file, verb & ~(MP4_DETAILS_ERROR));
++      MP4LogSetLevel(MP4_LOG_NONE);
+       char *mp4info = MP4Info(m_mp4file, tq[ix].track_id);
+-      MP4SetVerbosity(m_mp4file, verb);
++      MP4LogSetLevel(verb);
+       char *temp = mp4info;
+       while (*temp != '\0') {
+ 	if (isspace(*temp)) *temp = ' ';
+@@ -433,13 +433,13 @@
+   u_int32_t bufsize;
+   char original_fmt[8];
+   
+-  uint32_t verb = MP4GetVerbosity(m_mp4file);
+-  MP4SetVerbosity(m_mp4file, verb & ~(MP4_DETAILS_ERROR));
++  MP4LogLevel verb = MP4LogGetLevel();
++  MP4LogSetLevel(MP4_LOG_NONE);
+   video_count = MP4GetNumberOfTracks(m_mp4file, MP4_VIDEO_TRACK_TYPE);
+   audio_count = MP4GetNumberOfTracks(m_mp4file, MP4_AUDIO_TRACK_TYPE);
+   text_count = MP4GetNumberOfTracks(m_mp4file, MP4_CNTL_TRACK_TYPE);
+   mp4f_message(LOG_DEBUG, "cntl tracks %u", text_count);
+-  MP4SetVerbosity(m_mp4file, verb);
++  MP4LogSetLevel(verb);
+ 
+   if (video_count == 0 && audio_count == 0 && text_count == 0) {
+     psptr->set_message("No audio, video or control tracks in file");
+@@ -492,9 +492,9 @@
+       uint8_t profileID = MP4GetVideoProfileLevel(m_mp4file, trackId);
+       mp4f_message(LOG_DEBUG, "MP4 - got track %x profile ID %d", 
+ 		 trackId, profileID);
+-      MP4SetVerbosity(m_mp4file, verb & ~(MP4_DETAILS_ERROR));
++      MP4LogSetLevel(MP4_LOG_NONE);
+       MP4GetTrackESConfiguration(m_mp4file, trackId, &foo, &bufsize);
+-      MP4SetVerbosity(m_mp4file, verb);
++      MP4LogSetLevel(verb);
+       vq[video_offset].type = video_type;
+       vq[video_offset].profile = profileID;
+       vq[video_offset].fptr = NULL;
+@@ -609,13 +609,13 @@
+ 	uint8_t *userdata = NULL;
+ 	u_int32_t userdata_size;
+ 	aq[audio_offset].type = MP4GetTrackEsdsObjectTypeId(m_mp4file, trackId);
+-	MP4SetVerbosity(m_mp4file, verb & ~(MP4_DETAILS_ERROR));
++	MP4LogSetLevel(MP4_LOG_NONE);
+ 	aq[audio_offset].profile = MP4GetAudioProfileLevel(m_mp4file);
+ 	MP4GetTrackESConfiguration(m_mp4file, 
+ 				   trackId, 
+ 				   &userdata, 
+ 				   &userdata_size);
+-	MP4SetVerbosity(m_mp4file, verb);
++	MP4LogSetLevel(verb);
+ 	aq[audio_offset].config = userdata;
+ 	aq[audio_offset].config_len = userdata_size;
+       }
+@@ -631,9 +631,9 @@
+ 	aq[audio_offset].fptr = NULL;
+ 	aq[audio_offset].sampling_freq = 
+ 	  MP4GetTrackTimeScale(m_mp4file, trackId);
+-	MP4SetVerbosity(m_mp4file, verb & ~(MP4_DETAILS_ERROR));
++	MP4LogSetLevel(MP4_LOG_NONE);
+ 	aq[audio_offset].chans = MP4GetTrackAudioChannels(m_mp4file, trackId);
+-	MP4SetVerbosity(m_mp4file, verb);
++	MP4LogSetLevel(verb);
+ 	aq[audio_offset].enabled = 0;
+ 	aq[audio_offset].reference = NULL;
+ 	audio_offset++;
+@@ -711,14 +711,13 @@
+   if (audret < 0 || textret < 0) ret_value = -1;
+ 
+-  char *name;
+-  verb = MP4GetVerbosity(m_mp4file);
+-  MP4SetVerbosity(m_mp4file, verb & ~(MP4_DETAILS_ERROR));
+-  if (MP4GetMetadataName(m_mp4file, &name) &&
+-      name != NULL) {
+-    psptr->set_session_desc(0, name);
+-    free(name);
++  const MP4Tags *tags = MP4TagsAlloc();
++  verb = MP4LogGetLevel();
++  MP4LogSetLevel(MP4_LOG_NONE);
++  if (MP4TagsFetch(tags, m_mp4file) && tags->name != NULL) {
++    psptr->set_session_desc(0, tags->name);
+   }
+-  MP4SetVerbosity(m_mp4file, verb);
++  MP4TagsFree(tags);
++  MP4LogSetLevel(verb);
+   
+   return (ret_value);
+ }
+--- mpeg4ip-1.6.1/player/src/media_utils.h.orig	2006-10-24 00:26:42.000000000 +0200
++++ mpeg4ip-1.6.1/player/src/media_utils.h	2012-12-07 16:41:45.473659334 +0100
+@@ -23,7 +23,6 @@
+ 
+ #include "player_session.h"
+ #include "our_bytestream.h"
+-#include "mp4.h"
++#include <mp4v2.h>
+ 
+ typedef struct video_query_t {
+   uint32_t track_id;
+--- mpeg4ip-1.6.1/player/src/mp4_file.h.orig	2005-04-19 23:51:04.000000000 +0200
++++ mpeg4ip-1.6.1/player/src/mp4_file.h	2012-12-07 16:49:28.250316353 +0100
+@@ -23,7 +23,7 @@
+  */
+ #ifndef __MP4_FILE_H__
+ #define __MP4_FILE_H__ 1
+-#include <mp4.h>
++#include <mp4v2.h>
+ #include "mpeg4ip_sdl_includes.h"
+ 
+ class CPlayerSession;
+--- mpeg4ip-1.6.1/lib/mp4av/mp4av.h.orig	2004-11-20 00:23:52.000000000 +0100
++++ mpeg4ip-1.6.1/lib/mp4av/mp4av.h	2012-12-07 16:52:57.096978668 +0100
+@@ -22,7 +22,8 @@
+ #ifndef __MP4AV_INCLUDED__
+ #define __MP4AV_INCLUDED__ 
+ 
+-#include <mp4.h>
++#include "mpeg4ip.h"
++#include <mp4v2.h>
+ 
+ #ifdef __cplusplus
+ /* exploit C++ ability of default values for function parameters */
+--- mpeg4ip-1.6.1/player/src/codec/aa/aac.cpp.orig	2006-08-07 20:27:23.000000000 +0200
++++ mpeg4ip-1.6.1/player/src/codec/aa/aac.cpp	2012-12-07 16:56:01.946974815 +0100
+@@ -21,7 +21,7 @@
+ #include "aac.h"
+ #include <mp4util/mpeg4_audio_config.h>
+ #include <mp4util/mpeg4_sdp.h>
+-#include <mp4.h>
++#include <mp4v2.h>
+ #include <mp4av.h>
+ 
+ #define DEBUG_SYNC 2
+--- mpeg4ip-1.6.1/player/src/codec/mp3/Makefile.am.orig	2012-12-06 18:38:25.648647606 +0100
++++ mpeg4ip-1.6.1/player/src/codec/mp3/Makefile.am	2012-12-07 16:56:51.053640459 +0100
+@@ -34,7 +34,7 @@
+ 	$(top_builddir)/lib/fposrec/libmpeg4ip_fposrec.la
+ 
+ 
+-INCLUDES = -I$(top_srcdir)/player/src -I$(top_srcdir)/player/lib -I$(top_srcdir)/player/lib/audio -I$(top_srcdir)/common/video/mpeg4 -I$(top_srcdir)/include -I$(top_srcdir)/lib -I$(top_srcdir)/lib/mp4v2 -I$(top_srcdir)/lib/sdp -I$(top_srcdir)/lib/utils
++INCLUDES = -I$(top_srcdir)/player/src -I$(top_srcdir)/player/lib -I$(top_srcdir)/player/lib/audio -I$(top_srcdir)/common/video/mpeg4 -I$(top_srcdir)/include -I$(top_srcdir)/lib -I/usr/include/mp4v2 -I$(top_srcdir)/lib/sdp -I$(top_srcdir)/lib/utils
+ 
+ AM_CFLAGS = -D_REENTRANT -fexceptions @BILLS_CWARNINGS@
+ 
+--- mpeg4ip-1.6.1/player/src/codec/mp3/mp3if.cpp.orig	2006-08-07 20:27:23.000000000 +0200
++++ mpeg4ip-1.6.1/player/src/codec/mp3/mp3if.cpp	2012-12-07 17:00:38.903635708 +0100
+@@ -20,7 +20,7 @@
+  */
+ #include "mp3if.h"
+ #include <mp4av/mp4av.h>
+-#include <mp4v2/mp4.h>
++#include <mp4v2.h>
+ #include <mpeg2t/mpeg2_transport.h>
+ #include <mpeg2ps/mpeg2_ps.h>
+ 
+--- mpeg4ip-1.6.1/player/src/codec/mpeg4/Makefile.am.orig	2007-09-18 22:52:19.000000000 +0200
++++ mpeg4ip-1.6.1/player/src/codec/mpeg4/Makefile.am	2012-12-07 17:01:51.286967533 +0100
+@@ -29,7 +29,7 @@
+ 	-I$(top_srcdir)/$(mpeg4_dir)/include \
+ 	-I$(top_srcdir)/include \
+ 	-I$(top_srcdir)/lib \
+-	-I$(top_srcdir)/lib/mp4v2 \
++	-I/usr/include/mp4v2 \
+ 	-I$(top_srcdir)/lib/sdp
+ 
+ AM_CFLAGS = -D_REENTRANT -fexceptions @BILLS_CWARNINGS@ -D__TRACE_AND_STATS_ -D__DOUBLE_PRECISION_ -D_OBSS_
+--- mpeg4ip-1.6.1/player/src/codec/mpeg4/mpeg4.cpp.orig	2007-03-29 20:52:19.000000000 +0200
++++ mpeg4ip-1.6.1/player/src/codec/mpeg4/mpeg4.cpp	2012-12-07 17:03:30.056965474 +0100
+@@ -41,7 +41,7 @@
+ #include <vopsedec.hpp>
+ #include "mpeg4.h"
+ 
+-#include <mp4v2/mp4.h>
++#include <mp4v2.h>
+ #include <mp4av/mp4av.h>
+ 
+ #define iso_message (iso->m_vft->log_msg)
+--- mpeg4ip-1.6.1/player/src/mp4_bytestream.h.orig	2007-01-30 22:53:44.000000000 +0100
++++ mpeg4ip-1.6.1/player/src/mp4_bytestream.h	2012-12-07 17:07:19.340294028 +0100
+@@ -24,7 +24,7 @@
+ 
+ #ifndef __MP4_BYTESTREAM_H__
+ #define __MP4_BYTESTREAM_H__
+-#include <mp4.h>
++#include <mp4v2.h>
+ #include <ismacryplib.h>
+ #include "our_bytestream.h"
+ #include "mp4_file.h"
+--- mpeg4ip-1.6.1/lib/srtp/liblibsrtp.c.orig	2006-08-07 20:27:04.000000000 +0200
++++ mpeg4ip-1.6.1/lib/srtp/liblibsrtp.c	2012-12-07 17:48:18.803576099 +0100
+@@ -19,7 +19,7 @@
+ 
+ #include "liblibsrtp.h"
+ #include "rtp.h"
+-#include "mp4.h"
++#include <mp4v2.h>
+ #include <assert.h>
+ #include "mutex.h"
+ 
+--- mpeg4ip-1.6.1/player/plugin/audio/celp/Makefile.am.orig	2012-12-06 18:38:25.648647606 +0100
++++ mpeg4ip-1.6.1/player/plugin/audio/celp/Makefile.am	2012-12-07 19:53:52.206752412 +0100
+@@ -10,7 +10,7 @@
+ 	$(top_builddir)/player/lib/audio/celp/BS/libmpeg4ip_celpbs.la \
+ 	$(top_builddir)/player/lib/audio/celp/dec/libmpeg4ip_celp.la 
+ 
+-INCLUDES = -I$(top_srcdir)/player/src -I$(top_srcdir)/player/lib -I$(top_srcdir)/include -I$(top_srcdir)/lib -I$(top_srcdir)/player/lib/audio/celp -I$(top_srcdir)/player/lib/audio/celp/BS -I$(top_srcdir)/player/lib/audio/celp/dec -I$(top_srcdir)/player/lib/audio/celp/include -I$(top_srcdir)/lib/mp4av -I$(top_srcdir)/lib/sdp -I$(top_srcdir)/lib/mp4v2
++INCLUDES = -I$(top_srcdir)/player/src -I$(top_srcdir)/player/lib -I$(top_srcdir)/include -I$(top_srcdir)/lib -I$(top_srcdir)/player/lib/audio/celp -I$(top_srcdir)/player/lib/audio/celp/BS -I$(top_srcdir)/player/lib/audio/celp/dec -I$(top_srcdir)/player/lib/audio/celp/include -I$(top_srcdir)/lib/mp4av -I$(top_srcdir)/lib/sdp -I/usr/include/mp4v2
+ 
+ AM_CFLAGS = -D_REENTRANT -fexceptions @BILLS_CWARNINGS@
+ 
+--- mpeg4ip-1.6.1/player/plugin/audio/celp/celp.cpp.orig	2006-08-07 20:27:05.000000000 +0200
++++ mpeg4ip-1.6.1/player/plugin/audio/celp/celp.cpp	2012-12-07 20:02:09.063408724 +0100
+@@ -28,7 +28,7 @@
+ 
+ #include <mp4util/mpeg4_audio_config.h>
+ #include <mp4util/mpeg4_sdp.h>
+-#include <mp4v2/mp4.h>
++#include <mp4v2.h>
+ #include <mp4av/mp4av.h>
+ 
+ #define DEBUG_SYNC 2
+--- mpeg4ip-1.6.1/player/plugin/audio/g711/ourg711.cpp.orig	2005-04-22 21:20:43.000000000 +0200
++++ mpeg4ip-1.6.1/player/plugin/audio/g711/ourg711.cpp	2012-12-07 20:05:52.480070735 +0100
+@@ -20,7 +20,7 @@
+  */
+ #include "ourg711.h"
+ #include "mp4av.h"
+-#include <mp4v2/mp4.h>
++#include <mp4v2.h>
+ #define LOGIT g711->m_vft->log_msg
+ static int16_t alaw2linear(uint8_t a_val);
+ static int16_t ulaw2linear(uint8_t u_val);
+--- mpeg4ip-1.6.1/player/plugin/audio/a52dec/Makefile.am.orig	2004-10-29 00:44:18.000000000 +0200
++++ mpeg4ip-1.6.1/player/plugin/audio/a52dec/Makefile.am	2012-12-07 20:06:29.470069963 +0100
+@@ -9,7 +9,7 @@
+ 	$(top_builddir)/lib/mp4av/libmp4av.la 
+ 
+ 
+-INCLUDES = -I$(top_srcdir)/player/src -I$(top_src_dir)/player/lib -I$(top_srcdir)/include -I$(top_srcdir)/lib -I$(top_srcdir)/lib/sdp -I$(top_srcdir)/lib/mp4v2
++INCLUDES = -I$(top_srcdir)/player/src -I$(top_src_dir)/player/lib -I$(top_srcdir)/include -I$(top_srcdir)/lib -I$(top_srcdir)/lib/sdp -I/usr/include/mp4v2
+ 
+ AM_CFLAGS = -D_REENTRANT -fexceptions @BILLS_CWARNINGS@
+ 
+--- mpeg4ip-1.6.1/player/plugin/audio/a52dec/a52dec.cpp.orig	2006-02-09 18:57:29.000000000 +0100
++++ mpeg4ip-1.6.1/player/plugin/audio/a52dec/a52dec.cpp	2012-12-07 20:10:05.186732134 +0100
+@@ -19,7 +19,7 @@
+  *              Bill May        wmay@cisco.com
+  */
+ #include "a52dec.h"
+-#include <mp4v2/mp4.h>
++#include <mp4v2.h>
+ #include <mp4av/mp4av.h>
+ #include <mpeg2ps/mpeg2_ps.h>
+ #define LOGIT a52dec->m_vft->log_msg
+--- mpeg4ip-1.6.1/player/plugin/audio/ffmpeg/Makefile.am.orig	2007-01-22 18:31:13.000000000 +0100
++++ mpeg4ip-1.6.1/player/plugin/audio/ffmpeg/Makefile.am	2012-12-07 20:10:56.326731066 +0100
+@@ -26,7 +26,7 @@
+ 	-I$(top_srcdir)/lib \
+ 	-I$(top_srcdir)/lib/ffmpeg \
+ 	-I$(top_srcdir)/lib/mp4av \
+-	-I$(top_srcdir)/lib/mp4v2 \
++	-I/usr/include/mp4v2 \
+ 	-I$(top_srcdir)/lib/sdp \
+ 	@FFMPEG_INC@
+ 
+--- mpeg4ip-1.6.1/player/plugin/video/mpeg2dec/Makefile.am.orig	2004-03-16 00:56:31.000000000 +0100
++++ mpeg4ip-1.6.1/player/plugin/video/mpeg2dec/Makefile.am	2012-12-07 20:11:38.640063520 +0100
+@@ -9,7 +9,7 @@
+ 	$(top_builddir)/lib/mp4av/libmp4av.la \
+ 	-lmpeg2
+ 
+-INCLUDES = -I$(top_srcdir)/player/src -I$(top_srcdir)/player/lib -I$(top_srcdir)/include -I$(top_srcdir)/lib -I$(top_srcdir)/lib/mp4av -I$(top_srcdir)/lib/mp4v2 -I$(top_srcdir)/lib/sdp
++INCLUDES = -I$(top_srcdir)/player/src -I$(top_srcdir)/player/lib -I$(top_srcdir)/include -I$(top_srcdir)/lib -I$(top_srcdir)/lib/mp4av -I/usr/include/mp4v2 -I$(top_srcdir)/lib/sdp
+ 
+ AM_CFLAGS = -D_REENTRANT -fexceptions @BILLS_CWARNINGS@
+ 
+--- mpeg4ip-1.6.1/player/plugin/video/xvid/Makefile.am.orig	2005-08-22 22:18:27.000000000 +0200
++++ mpeg4ip-1.6.1/player/plugin/video/xvid/Makefile.am	2012-12-07 20:20:12.160052815 +0100
+@@ -46,7 +46,7 @@
+ 	$(top_builddir)/lib/mp4av/libmp4av.la
+ 
+ endif
+-INCLUDES = -I$(top_srcdir)/player/lib  -I$(top_srcdir)/include -I$(top_srcdir)/lib -I$(top_srcdir)/player/src -I$(top_srcdir)/lib/mp4v2 -I$(top_srcdir)/lib/sdp -I$(top_srcdir)/lib/mp4av
++INCLUDES = -I$(top_srcdir)/player/lib  -I$(top_srcdir)/include -I$(top_srcdir)/lib -I$(top_srcdir)/player/src -I/usr/include/mp4v2 -I$(top_srcdir)/lib/sdp -I$(top_srcdir)/lib/mp4av
+ 
+ 
+ AM_CFLAGS = -D_REENTRANT -fexceptions @BILLS_CWARNINGS@
+--- mpeg4ip-1.6.1/player/plugin/video/xvid/xvid1_0.cpp.orig	2007-03-29 20:52:18.000000000 +0200
++++ mpeg4ip-1.6.1/player/plugin/video/xvid/xvid1_0.cpp	2012-12-07 20:20:49.316718706 +0100
+@@ -25,7 +25,7 @@
+ #include "ourxvid.h"
+ #include "codec_plugin.h"
+ #include <mp4util/mpeg4_sdp.h>
+-#include <mp4v2/mp4.h>
++#include <mp4v2.h>
+ #include <xvid.h>
+ #include <mp4av/mp4av.h>
+ 
+--- mpeg4ip-1.6.1/player/lib/mp4util/h264_sdp.h.orig	2004-10-29 00:44:18.000000000 +0200
++++ mpeg4ip-1.6.1/player/lib/mp4util/h264_sdp.h	2012-12-07 20:34:38.653368088 +0100
+@@ -23,7 +23,7 @@
+ #define __H264_SDP_H__ 1
+ 
+ #include "mpeg4ip.h"
+-#include "mp4.h"
++#include <mp4v2.h>
+ #ifdef __cplusplus
+ extern "C" {
+ #endif
+--- mpeg4ip-1.6.1/player/plugin/rtp/rfc3267/Makefile.am.orig	2005-08-22 22:18:27.000000000 +0200
++++ mpeg4ip-1.6.1/player/plugin/rtp/rfc3267/Makefile.am	2012-12-07 20:35:50.320033261 +0100
+@@ -16,7 +16,7 @@
+ 	   -I$(top_srcdir)/include \
+            -I$(top_srcdir)/lib/sdp \
+            -I$(top_srcdir)/lib/rtp \
+-           -I$(top_srcdir)/lib/mp4v2 \
++           -I/usr/include/mp4v2 \
+            -I$(top_srcdir)/lib/gnu \
+            -I$(top_srcdir)/lib/mp4av
+ 
+--- mpeg4ip-1.6.1/server/mp4creator/mp4creator.h.orig	2005-02-22 23:56:53.000000000 +0100
++++ mpeg4ip-1.6.1/server/mp4creator/mp4creator.h	2012-12-07 21:43:14.789948965 +0100
+@@ -24,7 +24,7 @@
+ #define __MP4CREATOR_INCLUDED__ 
+ 
+ #include <mpeg4ip.h>
+-#include <mp4.h>
++#include <mp4v2.h>
+ #include <mp4av.h>
+ #include <ismacryplib.h>
+ 
+@@ -55,7 +55,7 @@
+ #endif
+ 
+ MP4CREATOR_GLOBAL char* ProgName;
+-MP4CREATOR_GLOBAL u_int32_t Verbosity;
++MP4CREATOR_GLOBAL MP4LogLevel Verbosity;
+ MP4CREATOR_GLOBAL double VideoFrameRate;
+ MP4CREATOR_GLOBAL u_int32_t Mp4TimeScale;
+ MP4CREATOR_GLOBAL bool TimeScaleSpecified;
+--- mpeg4ip-1.6.1/server/mp4creator/h264.cpp.orig	2006-10-24 00:26:43.000000000 +0200
++++ mpeg4ip-1.6.1/server/mp4creator/h264.cpp	2012-12-07 21:59:30.479928624 +0100
+@@ -359,10 +359,9 @@ MP4TrackId H264Creator (MP4FileHandle mp
+     }
+ 
+     if (MP4GetNumberOfTracks(mp4File, MP4_VIDEO_TRACK_TYPE) == 1) {
+-      uint32_t new_verb = Verbosity & ~(MP4_DETAILS_ERROR);
+-      MP4SetVerbosity(mp4File, new_verb);
++      MP4LogSetLevel(MP4_LOG_NONE);
+       MP4SetVideoProfileLevel(mp4File, 0x7f);
+-      MP4SetVerbosity(mp4File, Verbosity);
++      MP4LogSetLevel(Verbosity);
+     }
+ 
+     uint8_t *nal_buffer;
+@@ -431,7 +430,7 @@ MP4TrackId H264Creator (MP4FileHandle mp
+ 	} 
+       }
+       bool copy_nal_to_buffer = false;
+-      if (Verbosity & MP4_DETAILS_SAMPLE) {
++      if (Verbosity >= MP4_LOG_VERBOSE2) {
+ 	printf("H264 type %x size %u\n",
+                     h264_dec.nal_unit_type, nal.buffer_on);
+       }
+--- mpeg4ip-1.6.1/server/mp4creator/mp4creator.cpp.orig	2007-01-30 22:53:44.000000000 +0100
++++ mpeg4ip-1.6.1/server/mp4creator/mp4creator.cpp	2012-12-07 22:10:24.436581663 +0100
+@@ -148,7 +148,7 @@ int main(int argc, char** argv)
+   char* p3gppSupportedBrands[2] = {"3gp5", "3gp4"};
+   uint32_t newverbosity;
+ 
+-  Verbosity = MP4_DETAILS_ERROR;
++  Verbosity = MP4_LOG_ERROR;
+   VideoFrameRate = 0;		// determine from input file
+   TimeScaleSpecified = false;
+   Mp4TimeScale = 90000;
+@@ -385,21 +385,21 @@ int main(int argc, char** argv)
+       createFlags |= MP4_CREATE_64BIT_TIME;
+       break;  
+     case 'v':
+-      Verbosity |= (MP4_DETAILS_READ | MP4_DETAILS_WRITE);
++      Verbosity = MP4_LOG_INFO;
+       if (optarg) {
+ 	u_int32_t level;
+ 	if (sscanf(optarg, "%u", &level) == 1) {
+ 	  if (level >= 2) {
+-	    Verbosity |= MP4_DETAILS_TABLE;
++	    Verbosity = MP4_LOG_VERBOSE1;
+ 	  } 
+ 	  if (level >= 3) {
+-	    Verbosity |= MP4_DETAILS_SAMPLE;
++	    Verbosity = MP4_LOG_VERBOSE2;
+ 	  } 
+ 	  if (level >= 4) {
+-	    Verbosity |= MP4_DETAILS_HINT;
++	    Verbosity = MP4_LOG_VERBOSE3;
+ 	  } 
+ 	  if (level >= 5) {
+-	    Verbosity = MP4_DETAILS_ALL;
++	    Verbosity = MP4_LOG_VERBOSE4;
+ 	  } 
+ 	}
+       }
+@@ -426,6 +426,7 @@ int main(int argc, char** argv)
+     exit(EXIT_COMMAND_LINE);
+   }
+   
++  MP4LogSetLevel(Verbosity);
+   if ((argc - optind) == 1) {
+     mp4FileName = argv[optind++];
+   } else {
+@@ -515,7 +516,6 @@ int main(int argc, char** argv)
+ 
+ 	if ((!strcmp(extension, ".amr")) || (!strcmp(extension, ".263"))) {
+ 		mp4File = MP4CreateEx(mp4FileName,
+-				      Verbosity,
+ 				      createFlags,
+ 				      1,  // add ftyp atom
+ 				      0,  // don't add iods
+@@ -524,7 +524,7 @@ int main(int argc, char** argv)
+ 				      p3gppSupportedBrands,
+ 				      sizeof(p3gppSupportedBrands) / sizeof(p3gppSupportedBrands[0]));
+ 	} else {
+-	  mp4File = MP4Create(mp4FileName, Verbosity,
++	  mp4File = MP4Create(mp4FileName,
+ 			      createFlags);
+ 	}
+ 	if (mp4File) {
+@@ -546,7 +546,7 @@ int main(int argc, char** argv)
+ 	fprintf(stderr, "Must specify 64 bits on new file only");
+ 	exit(EXIT_CREATE_FILE);
+       }
+-      mp4File = MP4Modify(mp4FileName, Verbosity);
++      mp4File = MP4Modify(mp4FileName, 0);
+     }
+ 
+     if (!mp4File) {
+@@ -574,13 +574,12 @@ int main(int argc, char** argv)
+ 	  MP4GetTrackType(mp4File, *pTrackId);
+ 	// look for objectTypeId (GetTrackEsdsObjectTypeId)
+ 	uint64_t temp;
+-	newverbosity = Verbosity & ~(MP4_DETAILS_ERROR);
+-	MP4SetVerbosity(mp4File, newverbosity);
++	MP4LogSetLevel(MP4_LOG_NONE);
+ 	bool ret = 
+ 	  MP4GetTrackIntegerProperty(mp4File, *pTrackId,
+ 				     "mdia.minf.stbl.stsd.*.esds.decConfigDescr.objectTypeId",
+ 				     &temp);
+-	MP4SetVerbosity(mp4File, Verbosity);
++	MP4LogSetLevel(Verbosity);
+ 	if (ret) {
+ 	  if (!strcmp(type, MP4_AUDIO_TRACK_TYPE)) { 
+ 	    allMpeg4Streams &=
+@@ -624,20 +623,18 @@ int main(int argc, char** argv)
+ 					"mdia.minf.stbl.stsd.*.esds.decConfigDescr.objectTypeId", 
+ 				       &temp)) {
+ 	  if (!strcmp(type, MP4_AUDIO_TRACK_TYPE)) { 
+-	    newverbosity = Verbosity & ~(MP4_DETAILS_ERROR);
+-	    MP4SetVerbosity(mp4File, newverbosity);
++	    MP4LogSetLevel(MP4_LOG_NONE);
+ 	    allMpeg4Streams &=
+ 	      (MP4GetTrackEsdsObjectTypeId(mp4File, trackId) 
+ 	       == MP4_MPEG4_AUDIO_TYPE);
+-	    MP4SetVerbosity(mp4File, Verbosity);
++	    MP4LogSetLevel(Verbosity);
+ 			    
+ 	  } else if (!strcmp(type, MP4_VIDEO_TRACK_TYPE)) { 
+-	    newverbosity = Verbosity & ~(MP4_DETAILS_ERROR);
+-	    MP4SetVerbosity(mp4File, newverbosity);
++	    MP4LogSetLevel(MP4_LOG_NONE);
+ 	    allMpeg4Streams &=
+ 	      (MP4GetTrackEsdsObjectTypeId(mp4File, trackId) 
+ 	       == MP4_MPEG4_VIDEO_TYPE);
+-	    MP4SetVerbosity(mp4File, Verbosity);
++	    MP4LogSetLevel(Verbosity);
+ 	  }
+ 	}
+       }
+@@ -645,29 +642,30 @@ int main(int argc, char** argv)
+ 
+     char *buffer;
+     char *value;
+-    newverbosity = Verbosity & ~(MP4_DETAILS_ERROR);
+-    MP4SetVerbosity(mp4File, newverbosity);
+-    bool retval = MP4GetMetadataTool(mp4File, &value);
+-    MP4SetVerbosity(mp4File, Verbosity);
+-    if (retval && value != NULL) {
+-      if (strncasecmp("mp4creator", value, strlen("mp4creator")) != 0) {
+-	buffer = (char *)malloc(strlen(value) + 80);
+-	sprintf(buffer, "%s mp4creator %s", value, MPEG4IP_VERSION);
+-	MP4SetMetadataTool(mp4File, buffer);
++    const MP4Tags *tags = MP4TagsAlloc();
++    MP4LogSetLevel(MP4_LOG_NONE);
++    bool retval = MP4TagsFetch(tags, mp4File);
++    MP4LogSetLevel(Verbosity);
++    if (retval && tags->encodingTool != NULL) {
++      if (strncasecmp("mp4creator", tags->encodingTool, strlen("mp4creator")) != 0) {
++	buffer = (char *)malloc(strlen(tags->encodingTool) + 80);
++	sprintf(buffer, "%s mp4creator %s", tags->encodingTool, MPEG4IP_VERSION);
++	MP4TagsSetEncodingTool(tags, buffer);
+ 	free(buffer);
+       }
+     } else {
+       buffer = (char *)malloc(80);
+       sprintf(buffer, "mp4creator %s", MPEG4IP_VERSION);
+-      MP4SetMetadataTool(mp4File, buffer);
++      MP4TagsSetEncodingTool(tags, buffer);
+     }
++    MP4TagsStore(tags, mp4File);
++    MP4TagsFree(tags);
+     bool is3GPP = Is3GPP(mp4File);
+     
+     MP4Close(mp4File);
+     if (is3GPP || (force3GPCompliance)) {
+       // If we created the file, CreateEX already takes care of this...
+       MP4Make3GPCompliant(mp4FileName,
+-                          Verbosity,
+                           p3gppSupportedBrands[0],
+                           0x0001,
+                           p3gppSupportedBrands,
+@@ -682,7 +680,7 @@ int main(int argc, char** argv)
+       exit(EXIT_CREATE_FILE);
+     }
+     
+-    mp4File = MP4Read(mp4FileName, Verbosity);
++    mp4File = MP4Read(mp4FileName);
+     if (!mp4File) {
+       // mp4 library should have printed a message
+       exit(EXIT_CREATE_FILE);
+@@ -695,7 +693,7 @@ int main(int argc, char** argv)
+       outputFileName = tempName;
+     }
+ 
+-    MP4FileHandle outputFile = MP4CreateEx(outputFileName, Verbosity,
++    MP4FileHandle outputFile = MP4CreateEx(outputFileName,
+ 					   createFlags, true, true);
+     MP4SetTimeScale(outputFile, Mp4TimeScale);
+     u_int32_t numTracks = MP4GetNumberOfTracks(mp4File);
+@@ -799,7 +797,7 @@ int main(int argc, char** argv)
+       exit(EXIT_CREATE_FILE);
+     }
+ 
+-    mp4File = MP4Read(mp4FileName, Verbosity);
++    mp4File = MP4Read(mp4FileName);
+     if (!mp4File) {
+       // mp4 library should have printed a message
+       exit(EXIT_CREATE_FILE);
+@@ -824,7 +822,7 @@ int main(int argc, char** argv)
+       exit(EXIT_CREATE_FILE);
+     }
+ 
+-    mp4File = MP4Modify(mp4FileName, Verbosity);
++    mp4File = MP4Modify(mp4FileName, 0);
+     if (!mp4File) {
+       // mp4 library should have printed a message
+       exit(EXIT_CREATE_FILE);
+@@ -838,11 +836,11 @@ int main(int argc, char** argv)
+   }
+   
+   if (doIsma) {
+-    MP4MakeIsmaCompliant(mp4FileName, Verbosity);
++    MP4MakeIsmaCompliant(mp4FileName, true);
+   }
+ 
+   if (doOptimize) {
+-    if (!MP4Optimize(mp4FileName, NULL, Verbosity)) {
++    if (!MP4Optimize(mp4FileName, NULL)) {
+       // mp4 library should have printed a message
+       exit(EXIT_OPTIMIZE_FILE);
+     }
+--- mpeg4ip-1.6.1/server/mp4live/mp4live_config.h.orig	2006-09-29 21:55:42.000000000 +0200
++++ mpeg4ip-1.6.1/server/mp4live/mp4live_config.h	2012-12-07 22:13:39.899910921 +0100
+@@ -25,7 +25,7 @@
+ #define __LIVE_CONFIG_H__
+ 
+ #include <sys/types.h>
+-#include <mp4.h>
++#include <mp4v2.h>
+ 
+ #include "mpeg4ip_config_set.h"
+ 
+--- mpeg4ip-1.6.1/server/mp4live/audio_encoder.h.orig	2006-09-29 21:55:42.000000000 +0200
++++ mpeg4ip-1.6.1/server/mp4live/audio_encoder.h	2012-12-07 22:24:11.496564423 +0100
+@@ -25,7 +25,7 @@
+ #include "media_codec.h"
+ #include "media_frame.h"
+ #include <sdp.h>
+-#include <mp4.h>
++#include <mp4v2.h>
+ #include "profile_audio.h"
+ #include "resampl.h"
+ #include "encoder_gui_options.h"

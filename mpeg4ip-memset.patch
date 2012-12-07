@@ -1,0 +1,11 @@
+--- mpeg4ip-1.6.1/player/lib/rtsp/rtsp_thread.c.orig	2006-10-24 00:26:40.000000000 +0200
++++ mpeg4ip-1.6.1/player/lib/rtsp/rtsp_thread.c	2012-12-07 17:51:18.793572347 +0100
+@@ -378,7 +378,7 @@
+ 
+   
+   continue_thread = 0;
+-  memset(&state, sizeof(state), 0);
++  memset(&state, 0, sizeof(state));
+   state.rtp_ptr = NULL;
+   state.state = RTP_DATA_UNKNOWN;
+   rtsp_thread_init_thread_info(info);

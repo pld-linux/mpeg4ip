@@ -25,6 +25,7 @@ Patch6:		gcc44.patch
 Patch7:		%{name}-srtp.patch
 Patch8:		%{name}-v4l2.patch
 Patch9:		%{name}-system-mp4v2.patch
+Patch10:	%{name}-memset.patch
 URL:		http://www.mpeg4ip.net/
 BuildRequires:	SDL-devel
 BuildRequires:	a52dec-libs-devel
@@ -137,6 +138,7 @@ This package contains the mp4 server.
 %patch8 -p1
 # needs more work on mp4v2 package side
 #%patch9 -p1
+%patch10 -p1
 
 %build
 cd lib/SDLAudio
