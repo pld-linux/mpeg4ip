@@ -1,8 +1,9 @@
 #
 # Conditional build:
-%bcond_without	alsa	# build without ALSA support in SDLAudio
+%bcond_without	alsa		# build without ALSA support in SDLAudio
 %bcond_without	static_libs	# don't build static libraries
-
+%bcond_without	system_mp4v2	# don't use system MP4v2 library
+#
 Summary:	MPEG4IP - system for encoding, streaming and playing MPEG-4 audio/video
 Summary(pl.UTF-8):	MPEG4IP - system kodowania, streamingu i odtwarzania dźwięku i obrazu MPEG-4
 Name:		mpeg4ip
@@ -12,7 +13,7 @@ Epoch:		1
 License:	MPL v1.1 (original code) and other licenses (included libraries)
 Group:		Applications
 # official tarball corrupted
-# Source0:	http://dl.sourceforge.net/mpeg4ip/%{name}-%{version}.tar.gz
+# Source0:	http://downloads.sourceforge.net/mpeg4ip/%{name}-%{version}.tar.gz
 Source0:	ftp://ftp.freebsd.org/pub/FreeBSD/ports/local-distfiles/ahze/%{name}-%{version}.tar.gz
 # Source0-md5:	59e9d9cb7aad0a9605fb6015e7f0b197
 Patch0:		%{name}-link.patch
@@ -26,7 +27,7 @@ Patch7:		%{name}-srtp.patch
 Patch8:		%{name}-v4l2.patch
 Patch9:		%{name}-system-mp4v2.patch
 Patch10:	%{name}-memset.patch
-URL:		http://www.mpeg4ip.net/
+URL:		http://mpeg4ip.sourceforge.net/
 BuildRequires:	SDL-devel
 BuildRequires:	a52dec-libs-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel >= 0.9.0}
@@ -42,7 +43,7 @@ BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:1.4d
 BuildRequires:	libvorbis-devel >= 1:1.0
 BuildRequires:	libx264-devel
-#BuildRequires:	mp4v2-devel
+%{?with_system_mp4v2:BuildRequires:	mp4v2-devel >= 2.0.0-2}
 %ifarch %{ix86} %{x8664}
 BuildRequires:	nasm >= 0.98.19
 %endif
@@ -84,6 +85,7 @@ Summary(pl.UTF-8):	Pliki nagłówkowe podstawowych bibliotek MPEG4IP
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 Requires:	libstdc++-devel
+%{?with_system_mp4v2:Requires:	mp4v2-devel >= 2.0.0-2}
 
 %description devel
 Header files for base MPEG4IP libraries.
@@ -105,25 +107,45 @@ Statyczne wersje podstawowych bibliotek MPEG4IP.
 
 %package utils
 Summary:	Utilities for MPEG4IP
-Group:		Applications
+Summary(pl.UTF-8):	Narzędzia MPEG4IP
+Group:		Applications/Multimedia
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 
 %description utils
-This package contains various utilities :
+This package contains various MPEG4IP utilities.
+%if %{without system_mp4v2}
+Additionally it contains MP4 utilities:
 - mp4info - display information about tracks in mp4 file
 - mp4dump - dumps contents from mp4 files
 - mp4trackdump - dumps track information
 - mp4tags - sets iTunes tag information
 - mp4art - extract iTunes cover art
 - mp4videoinfo - dump information about video tracks in mp4 files
+%endif
+
+%description utils -l pl.UTF-8
+Ten pakiet zawiera różne narzędzia MPEG4IP.
+%if %{without system_mp4v2}
+Dodatkowo zawiera także narzędzia MP4:
+- mp4info - wyświetlanie informacji o ścieżkach w pliku mp4
+- mp4dump - zrzut zawartości plików mp4
+- mp4trackdump - zrzut informacji o ścieżkach
+- mp4tags - ustawianie informacji w znacznikach iTunes
+- mp4art - wydobywanie okładek iTunes
+- mp4videoinfo - zrzut informacji o ścieżkach wideo w plikach mp4
+%endif
 
 %package server
 Summary:	mp4 server
+Summary(pl.UTF-8):	Serwer mp4
 Group:		Daemons
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 
 %description server
 This package contains the mp4 server.
+
+%description server -l pl.UTF-8
+Ten pakiet zawiera serwer mp4.
 
 %prep
 %setup -q
@@ -136,8 +158,7 @@ This package contains the mp4 server.
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
-# needs more work on mp4v2 package side
-#%patch9 -p1
+%{?with_system_mp4v2:%patch9 -p1}
 %patch10 -p1
 
 %build
@@ -166,20 +187,20 @@ touch bootstrapped
 %install
 rm -rf $RPM_BUILD_ROOT
 
+%if %{without system_mp4v2}
 # workaround for:
 # libtool: install: warning: relinking `libmp4av.la'
 #   ...  /usr/bin/ld: cannot find -lmp4v2
 %{__make} -C lib/mp4v2 install \
 	DESTDIR=$RPM_BUILD_ROOT
+%endif
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
 install -p server/util/mp4encode/mp4encode $RPM_BUILD_ROOT%{_bindir}
 
-rm -f $RPM_BUILD_ROOT%{_libdir}/mp4player_plugin/*.{a,la}
-# bogus manual
-rm -rf $RPM_BUILD_ROOT%{_mandir}/manm
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/mp4player_plugin/*.{a,la}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -202,8 +223,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/mp4encode.1*
 
 # used by gui only
-%attr(755,root,root) %{_libdir}/libmpeg4ipSDL*.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libmpeg4ipSDL*.so.0
+%attr(755,root,root) %{_libdir}/libmpeg4ipSDL-1.2.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libmpeg4ipSDL-1.2.so.0
 
 %files libs
 %defattr(644,root,root,755)
@@ -213,8 +234,10 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %ghost %{_libdir}/libmp4av.so.0
 %attr(755,root,root) %{_libdir}/libmp4util.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libmp4util.so.0
+%if %{without system_mp4v2}
 %attr(755,root,root) %{_libdir}/libmp4v2.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libmp4v2.so.0
+%endif
 
 # libsdp.so.0 used by libopensync-plugin-irmc (maybe bogus)
 %attr(755,root,root) %{_libdir}/libsdp.so.*.*.*
@@ -238,35 +261,46 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/mpeg4ip-config
 %attr(755,root,root) %{_libdir}/libhttp.so
 %attr(755,root,root) %{_libdir}/libismacryp.so
-%attr(755,root,root) %{_libdir}/libmp4*.so
+%attr(755,root,root) %{_libdir}/libmp4.so
+%attr(755,root,root) %{_libdir}/libmp4av.so
+%attr(755,root,root) %{_libdir}/libmp4util.so
 %attr(755,root,root) %{_libdir}/libmpeg4ip*.so
 %attr(755,root,root) %{_libdir}/libmsg_queue.so
 %attr(755,root,root) %{_libdir}/libsdp.so
 %attr(755,root,root) %{_libdir}/libsrtpif.so
 %{_libdir}/libhttp.la
 %{_libdir}/libismacryp.la
-%{_libdir}/libmp4*.la
+%{_libdir}/libmp4.la
+%{_libdir}/libmp4av.la
+%{_libdir}/libmp4util.la
 %{_libdir}/libmpeg4ip*.la
 %{_libdir}/libmsg_queue.la
 %{_libdir}/libsdp.la
 %{_libdir}/libsrtpif.la
 %{_includedir}/codec_plugin.h
 %{_includedir}/h264_sdp.h
-%{_includedir}/mp4.h
 %{_includedir}/mp4av*.h
 %{_includedir}/mpeg4_*.h
 %{_includedir}/mpeg4ip*.h
 %{_includedir}/rtp_plugin.h
 %{_includedir}/sdp*.h
 %{_includedir}/text_plugin.h
+%if %{without system_mp4v2}
+%attr(755,root,root) %{_libdir}/libmp4v2.so
+%{_libdir}/libmp4v2.la
+%{_includedir}/mp4.h
 %{_mandir}/man3/MP4*.3*
+%endif
 
 %if %{with static_libs}
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/libhttp.a
 %{_libdir}/libismacryp.a
-%{_libdir}/libmp4*.a
+%{_libdir}/libmp4.a
+%{_libdir}/libmp4av.a
+%{_libdir}/libmp4util.a
+%{!?with_system_mp4v2:%{_libdir}/libmp4v2.a}
 %{_libdir}/libmpeg4ip*.a
 %{_libdir}/libmsg_queue.a
 %{_libdir}/libsdp.a
@@ -276,6 +310,12 @@ rm -rf $RPM_BUILD_ROOT
 %files utils
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/h264_parse
+%attr(755,root,root) %{_bindir}/mpeg2t_dump
+%attr(755,root,root) %{_bindir}/mpeg2video_parse
+%attr(755,root,root) %{_bindir}/mpeg4vol
+%attr(755,root,root) %{_bindir}/mpeg_ps_extract
+%attr(755,root,root) %{_bindir}/mpeg_ps_info
+%if %{without system_mp4v2}
 %attr(755,root,root) %{_bindir}/mp4art
 %attr(755,root,root) %{_bindir}/mp4dump
 %attr(755,root,root) %{_bindir}/mp4extract
@@ -283,11 +323,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/mp4tags
 %attr(755,root,root) %{_bindir}/mp4trackdump
 %attr(755,root,root) %{_bindir}/mp4videoinfo
-%attr(755,root,root) %{_bindir}/mpeg2t_dump
-%attr(755,root,root) %{_bindir}/mpeg2video_parse
-%attr(755,root,root) %{_bindir}/mpeg4vol
-%attr(755,root,root) %{_bindir}/mpeg_ps_extract
-%attr(755,root,root) %{_bindir}/mpeg_ps_info
+%endif
 
 %files server
 %defattr(644,root,root,755)

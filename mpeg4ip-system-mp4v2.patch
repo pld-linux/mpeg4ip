@@ -316,6 +316,15 @@ diff -ur mpeg4ip-1.6.1/server/mp4live/Makefile.am mpeg4ip-1.6.1-system-mp4v2/ser
 diff -ur mpeg4ip-1.6.1/util/h264/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util/h264/Makefile.am
 --- mpeg4ip-1.6.1/util/h264/Makefile.am	2007-09-18 22:52:21.000000000 +0200
 +++ mpeg4ip-1.6.1-system-mp4v2/util/h264/Makefile.am	2012-11-13 13:41:45.815510993 +0100
+@@ -7,7 +7,7 @@
+ 
+ strip_bytes_SOURCES = strip.cpp
+ 
+-INCLUDES = -I$(srcdir) -I$(top_srcdir)/common/video/mpeg4 -I$(top_srcdir)/lib/mp4v2 -I$(top_srcdir)/include -I$(top_srcdir)/lib -I$(top_srcdir)/lib/mp4av 
++INCLUDES = -I$(srcdir) -I$(top_srcdir)/common/video/mpeg4 -I/usr/include/mp4v2 -I$(top_srcdir)/include -I$(top_srcdir)/lib -I$(top_srcdir)/lib/mp4av 
+ 
+ AM_CFLAGS= -D_REENTRANT @BILLS_CWARNINGS@ 
+ 
 @@ -17,6 +17,6 @@
  	-lm \
  	$(top_builddir)/lib/gnu/libmpeg4ip_gnu.la \
@@ -327,6 +336,15 @@ diff -ur mpeg4ip-1.6.1/util/h264/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util/h26
 diff -ur mpeg4ip-1.6.1/util/mpeg2/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util/mpeg2/Makefile.am
 --- mpeg4ip-1.6.1/util/mpeg2/Makefile.am	2005-08-22 22:18:28.000000000 +0200
 +++ mpeg4ip-1.6.1-system-mp4v2/util/mpeg2/Makefile.am	2012-11-13 13:42:07.652176889 +0100
+@@ -4,7 +4,7 @@
+ mpeg2video_parse_SOURCES = \
+ 	main.cpp
+ 
+-INCLUDES = -I$(srcdir) -I$(top_srcdir)/common/video/mpeg4 -I$(top_srcdir)/lib/mp4v2 -I$(top_srcdir)/include -I$(top_srcdir)/lib -I$(top_srcdir)/lib/mp4av 
++INCLUDES = -I$(srcdir) -I$(top_srcdir)/common/video/mpeg4 -I/usr/include/mp4v2 -I$(top_srcdir)/include -I$(top_srcdir)/lib -I$(top_srcdir)/lib/mp4av 
+ 
+ AM_CFLAGS= -D_REENTRANT @BILLS_CWARNINGS@ 
+ 
 @@ -13,6 +13,6 @@
  mpeg2video_parse_LDADD = \
  	$(top_builddir)/lib/gnu/libmpeg4ip_gnu.la \
@@ -338,6 +356,15 @@ diff -ur mpeg4ip-1.6.1/util/mpeg2/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util/mp
 diff -ur mpeg4ip-1.6.1/util/mpeg4vol/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util/mpeg4vol/Makefile.am
 --- mpeg4ip-1.6.1/util/mpeg4vol/Makefile.am	2005-10-04 00:24:04.000000000 +0200
 +++ mpeg4ip-1.6.1-system-mp4v2/util/mpeg4vol/Makefile.am	2012-11-13 13:42:22.478843031 +0100
+@@ -4,7 +4,7 @@
+ mpeg4vol_SOURCES = \
+ 	main.cpp audio.cpp
+ 
+-INCLUDES = -I$(srcdir) -I$(top_srcdir)/common/video/mpeg4 -I$(top_srcdir)/lib/mp4v2 -I$(top_srcdir)/include -I$(top_srcdir)/lib -I$(top_srcdir)/lib/mp4av 
++INCLUDES = -I$(srcdir) -I$(top_srcdir)/common/video/mpeg4 -I/usr/include/mp4v2 -I$(top_srcdir)/include -I$(top_srcdir)/lib -I$(top_srcdir)/lib/mp4av 
+ 
+ AM_CFLAGS= -D_REENTRANT @BILLS_CWARNINGS@ 
+ 
 @@ -12,6 +12,6 @@
  
  mpeg4vol_LDADD = \
@@ -552,7 +579,7 @@ diff -ur mpeg4ip-1.6.1/util/mpeg4vol/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util
  }
 --- mpeg4ip-1.6.1/player/src/media_utils.h.orig	2006-10-24 00:26:42.000000000 +0200
 +++ mpeg4ip-1.6.1/player/src/media_utils.h	2012-12-07 16:41:45.473659334 +0100
-@@ -23,7 +23,6 @@
+@@ -23,7 +23,7 @@
  
  #include "player_session.h"
  #include "our_bytestream.h"
@@ -1053,3 +1080,239 @@ diff -ur mpeg4ip-1.6.1/util/mpeg4vol/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util
  #include "profile_audio.h"
  #include "resampl.h"
  #include "encoder_gui_options.h"
+--- mpeg4ip-1.6.1/server/mp4live/gui/file_utils.cpp.orig	2005-02-22 23:56:53.000000000 +0100
++++ mpeg4ip-1.6.1/server/mp4live/gui/file_utils.cpp	2012-12-08 07:46:46.272527535 +0100
+@@ -23,7 +23,7 @@
+ #include "mp4live.h"
+ #include "mp4live_gui.h"
+ 
+-#include <mp4.h>
++#include <mp4v2.h>
+ #include "mpeg2_ps.h"
+ 
+ GtkWidget* CreateFileCombo(const char* entryText)
+--- mpeg4ip-1.6.1/server/mp4live/profile_video.h.orig	2005-09-08 00:28:01.000000000 +0200
++++ mpeg4ip-1.6.1/server/mp4live/profile_video.h	2012-12-08 07:47:50.872526189 +0100
+@@ -21,7 +21,7 @@
+ #ifndef __PROFILE_VIDEO__
+ #define __PROFILE_VIDEO__ 1
+ #include "config_list.h"
+-#include "mp4.h"
++#include <mp4v2.h>
+ 
+ #define VIDEO_ENCODER_XVID "xvid"
+ #define VIDEO_ENCODING_MPEG4 "MPEG4"
+--- mpeg4ip-1.6.1/server/mp4live/video_encoder.h.orig	2006-05-30 21:48:12.000000000 +0200
++++ mpeg4ip-1.6.1/server/mp4live/video_encoder.h	2012-12-08 07:48:26.045858790 +0100
+@@ -25,7 +25,7 @@
+ #include "media_codec.h"
+ #include "media_frame.h"
+ #include <sdp.h>
+-#include <mp4.h>
++#include <mp4v2.h>
+ #include "profile_video.h"
+ #include "media_sink.h"
+ #include "media_feeder.h"
+--- mpeg4ip-1.6.1/server/mp4live/text_encoder.h.orig	2006-06-08 21:01:58.000000000 +0200
++++ mpeg4ip-1.6.1/server/mp4live/text_encoder.h	2012-12-08 07:57:48.655847065 +0100
+@@ -25,7 +25,7 @@
+ #include "media_codec.h"
+ #include "media_frame.h"
+ #include <sdp.h>
+-#include <mp4.h>
++#include <mp4v2.h>
+ #include "encoder_gui_options.h"
+ #include "profile_text.h"
+ 
+--- mpeg4ip-1.6.1/server/mp4live/h261/Makefile.am.orig	2006-03-21 00:13:32.000000000 +0100
++++ mpeg4ip-1.6.1/server/mp4live/h261/Makefile.am	2012-12-08 07:58:45.875845871 +0100
+@@ -13,7 +13,7 @@
+ INCLUDES = -I$(top_srcdir)/server/mp4live \
+ 	-I$(top_srcdir)/include \
+ 	-I$(top_srcdir)/lib/ \
+-	-I$(top_srcdir)/lib/mp4v2 \
++	-I/usr/include/mp4v2 \
+ 	-I$(top_srcdir)/lib/mp4av \
+ 	-I$(top_srcdir)/lib/msg_queue \
+ 	-I$(top_srcdir)/lib/utils \
+--- mpeg4ip-1.6.1/server/mp4live/audio_faac.cpp.orig	2007-01-22 18:31:28.000000000 +0100
++++ mpeg4ip-1.6.1/server/mp4live/audio_faac.cpp	2012-12-08 08:07:22.209168441 +0100
+@@ -22,7 +22,7 @@
+ #include "mp4live.h"
+ #ifdef HAVE_FAAC
+ #include "audio_faac.h"
+-#include "mp4.h"
++#include <mp4v2.h>
+ #include "mp4av.h"
+ 
+ static const u_int32_t samplingRateAllValues[] = {
+--- mpeg4ip-1.6.1/server/mp4live/file_mp4_recorder.h.orig	2005-08-29 20:57:11.000000000 +0200
++++ mpeg4ip-1.6.1/server/mp4live/file_mp4_recorder.h	2012-12-08 08:11:13.409163623 +0100
+@@ -23,7 +23,7 @@
+ #ifndef __FILE_MP4_RECORDER_H__
+ #define __FILE_MP4_RECORDER_H__
+ 
+-#include <mp4.h>
++#include <mp4v2.h>
+ #include <mp4av.h>
+ #include "media_sink.h"
+ #include "media_stream.h"
+--- mpeg4ip-1.6.1/server/mp4live/file_mp4_recorder.cpp.orig	2007-01-30 22:53:45.000000000 +0100
++++ mpeg4ip-1.6.1/server/mp4live/file_mp4_recorder.cpp	2012-12-08 19:34:35.861642335 +0100
+@@ -149,14 +149,11 @@
+     createFlags |= MP4_CREATE_64BIT_DATA;
+   }
+   debug_message("Creating huge file - %s", hugeFile ? "yes" : "no");
+-  u_int32_t verbosity =
+-    MP4_DETAILS_ERROR  /*DEBUG  | MP4_DETAILS_WRITE_ALL */;
+ 
+   bool create = false;
+   switch (m_pConfig->GetIntegerValue(CONFIG_RECORD_MP4_FILE_STATUS)) {
+   case FILE_MP4_APPEND:
+-    m_mp4File = MP4Modify(filename,
+-                          verbosity);
++    m_mp4File = MP4Modify(filename, 0);
+     break;
+   case FILE_MP4_CREATE_NEW: {
+     struct stat stats;
+@@ -206,7 +203,6 @@
+       static char* p3gppSupportedBrands[2] = {"3gp5", "3gp4"};
+ 
+       m_mp4File = MP4CreateEx(m_mp4FileName,
+-			      verbosity,
+ 			      createFlags,
+ 			      1,
+ 			      0,
+@@ -216,7 +212,7 @@
+ 			      NUM_ELEMENTS_IN_ARRAY(p3gppSupportedBrands));
+     } else {
+       m_mp4File = MP4Create(m_mp4FileName,
+-			    verbosity, createFlags);
++			    createFlags);
+     }
+   }
+     
+@@ -225,10 +221,16 @@
+   }
+   MP4SetTimeScale(m_mp4File, m_movieTimeScale);
+ 
++  {
++  const MP4Tags *tags = MP4TagsAlloc();
++  MP4TagsFetch(tags, m_mp4File);
+   char buffer[80];
+   sprintf(buffer, "mp4live version %s %s", MPEG4IP_VERSION, 
+ 	  get_linux_video_type());
+-  MP4SetMetadataTool(m_mp4File, buffer);
++  MP4TagsSetEncodingTool(tags, buffer);
++  MP4TagsStore(tags, m_mp4File);
++  MP4TagsFree(tags);
++  }
+ 
+   if (m_recordVideo) {
+     m_videoFrameNumber = 1;
+@@ -1228,7 +1230,7 @@
+   // create hint tracks
+   if (m_pConfig->GetBoolValue(CONFIG_RECORD_MP4_HINT_TRACKS)) {
+ 
+-    m_mp4File = MP4Modify(m_mp4FileName, MP4_DETAILS_ERROR);
++    m_mp4File = MP4Modify(m_mp4FileName, 0);
+ 
+     if (m_pConfig->GetBoolValue(CONFIG_RECORD_MP4_OPTIMIZE)) {
+       optimize = true;
+@@ -1276,7 +1278,6 @@
+       if (m_makeIod) {
+ 	MP4MakeIsmaCompliant(
+ 			     m_mp4FileName,
+-			     0,
+ 			     useIsmaTag);
+       }
+     }
+--- mpeg4ip-1.6.1/server/mp4live/sdp_file.cpp.orig	2006-06-08 21:01:58.000000000 +0200
++++ mpeg4ip-1.6.1/server/mp4live/sdp_file.cpp	2012-12-08 20:02:46.621607096 +0100
+@@ -25,7 +25,7 @@
+ #include <netinet/in.h>
+ #include <arpa/inet.h>
+ #include "sdp.h"
+-#include "mp4.h"
++#include <mp4v2.h>
+ #include "mp4av.h"
+ #include "audio_encoder.h"
+ #include "video_encoder.h"
+@@ -400,12 +400,7 @@
+ 			pStream->GetAudioProfile() == NULL ? 0 :
+ 			pStream->GetAudioProfile()->GetIntegerValue(CFG_AUDIO_BIT_RATE),
+ 			pAudioConfig,
+-			audioConfigLength,
+-#ifdef DEBUG_IOD
+-			pGlobal->GetBoolValue(CONFIG_APP_DEBUG) ?
+-			MP4_DETAILS_ISMA : 
+-#endif
+-			0
++			audioConfigLength
+ 			);
+ 
+     if (iod) {
+--- mpeg4ip-1.6.1/server/mp4live/video_encoder_base.h.orig	2006-05-30 21:48:12.000000000 +0200
++++ mpeg4ip-1.6.1/server/mp4live/video_encoder_base.h	2012-12-08 20:08:45.241599620 +0100
+@@ -25,7 +25,7 @@
+ #include "media_codec.h"
+ #include "media_frame.h"
+ #include <sdp.h>
+-#include <mp4.h>
++#include <mp4v2.h>
+ #include "video_encoder.h"
+ 
+ void VideoProfileCheckBase(CVideoProfile *vp);
+--- mpeg4ip-1.6.1/server/mp4live/mp4live.cpp.orig	2006-08-07 20:27:27.000000000 +0200
++++ mpeg4ip-1.6.1/server/mp4live/mp4live.cpp	2012-12-08 20:09:33.324931951 +0100
+@@ -20,7 +20,7 @@
+  *		Bill May 		wmay@cisco.com
+  */
+ #define DECLARE_CONFIG_VARIABLES 1
+-#include <mp4.h>
++#include <mp4v2.h>
+ #include "mp4live.h"
+ #undef DECLARE_CONFIG_VARIABLES
+ #include "media_flow.h"
+--- mpeg4ip-1.6.1/util/mpeg4vol/main.cpp.orig	2005-11-28 23:07:02.000000000 +0100
++++ mpeg4ip-1.6.1/util/mpeg4vol/main.cpp	2012-12-08 20:44:48.468221194 +0100
+@@ -2,7 +2,7 @@
+ 
+ 
+ #include "mpeg4ip.h"
+-#include "mp4v2/mp4.h"
++#include <mp4v2.h>
+ #include "mpeg4ip_bitstream.h"
+ #include "mpeg4ip_getopt.h"
+ 
+@@ -480,15 +480,15 @@
+ 	fprintf(stderr, "No decode of audio from mpeg4 files\n");
+ 	return -1;
+       }
+-      mp4File = MP4Read(*argv, MP4_DETAILS_ERROR);
++      mp4File = MP4Read(*argv);
+       if (MP4_IS_VALID_FILE_HANDLE(mp4File)) {
+ 	MP4TrackId tid;
+ 	uint32_t ix = 0;
+ 	do {
+-	  uint32_t verb = MP4GetVerbosity(mp4File);
+-	  MP4SetVerbosity(mp4File, verb & ~(MP4_DETAILS_ERROR));
++	  MP4LogLevel verb = MP4LogGetLevel();
++	  MP4LogSetLevel(MP4_LOG_NONE);
+ 	  tid = MP4FindTrackId(mp4File, ix, MP4_VIDEO_TRACK_TYPE);
+-	  MP4SetVerbosity(mp4File, verb);
++	  MP4LogSetLevel(verb);
+ 	  if (MP4_IS_VALID_TRACK_ID(tid)) {
+ 	    uint8_t type = MP4GetTrackEsdsObjectTypeId(mp4File, tid);
+ 	    if (type == MP4_MPEG4_VIDEO_TYPE) {
+--- mpeg4ip-1.6.1/player/src/qtime_file.cpp.orig	2005-10-03 23:13:14.000000000 +0200
++++ mpeg4ip-1.6.1/player/src/qtime_file.cpp	2012-12-08 21:14:39.508183868 +0100
+@@ -34,7 +34,7 @@
+ #include "our_config_file.h"
+ #include "codec_plugin.h"
+ #include "codec_plugin_private.h"
+-#include <mp4v2/mp4.h>
++#include <mp4v2.h>
+ 
+ static void close_qt_file (void *data)
+ {
