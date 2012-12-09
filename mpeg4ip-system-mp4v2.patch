@@ -380,7 +380,7 @@ diff -ur mpeg4ip-1.6.1/util/mpeg4vol/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util
  #include "player_util.h"
  #include "media_utils.h"
 -#include <mp4.h>
-+#include <mp4v2.h>
++#include <mp4v2/mp4v2.h>
  #include "mp4_bytestream.h"
  #include "mp4_file.h"
  #include <mp4util/mpeg4_audio_config.h>
@@ -584,7 +584,7 @@ diff -ur mpeg4ip-1.6.1/util/mpeg4vol/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util
  #include "player_session.h"
  #include "our_bytestream.h"
 -#include "mp4.h"
-+#include <mp4v2.h>
++#include <mp4v2/mp4v2.h>
  
  typedef struct video_query_t {
    uint32_t track_id;
@@ -595,7 +595,7 @@ diff -ur mpeg4ip-1.6.1/util/mpeg4vol/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util
  #ifndef __MP4_FILE_H__
  #define __MP4_FILE_H__ 1
 -#include <mp4.h>
-+#include <mp4v2.h>
++#include <mp4v2/mp4v2.h>
  #include "mpeg4ip_sdl_includes.h"
  
  class CPlayerSession;
@@ -607,7 +607,7 @@ diff -ur mpeg4ip-1.6.1/util/mpeg4vol/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util
  
 -#include <mp4.h>
 +#include "mpeg4ip.h"
-+#include <mp4v2.h>
++#include <mp4v2/mp4v2.h>
  
  #ifdef __cplusplus
  /* exploit C++ ability of default values for function parameters */
@@ -618,7 +618,7 @@ diff -ur mpeg4ip-1.6.1/util/mpeg4vol/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util
  #include <mp4util/mpeg4_audio_config.h>
  #include <mp4util/mpeg4_sdp.h>
 -#include <mp4.h>
-+#include <mp4v2.h>
++#include <mp4v2/mp4v2.h>
  #include <mp4av.h>
  
  #define DEBUG_SYNC 2
@@ -640,7 +640,7 @@ diff -ur mpeg4ip-1.6.1/util/mpeg4vol/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util
  #include "mp3if.h"
  #include <mp4av/mp4av.h>
 -#include <mp4v2/mp4.h>
-+#include <mp4v2.h>
++#include <mp4v2/mp4v2.h>
  #include <mpeg2t/mpeg2_transport.h>
  #include <mpeg2ps/mpeg2_ps.h>
  
@@ -662,7 +662,7 @@ diff -ur mpeg4ip-1.6.1/util/mpeg4vol/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util
  #include "mpeg4.h"
  
 -#include <mp4v2/mp4.h>
-+#include <mp4v2.h>
++#include <mp4v2/mp4v2.h>
  #include <mp4av/mp4av.h>
  
  #define iso_message (iso->m_vft->log_msg)
@@ -673,7 +673,7 @@ diff -ur mpeg4ip-1.6.1/util/mpeg4vol/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util
  #ifndef __MP4_BYTESTREAM_H__
  #define __MP4_BYTESTREAM_H__
 -#include <mp4.h>
-+#include <mp4v2.h>
++#include <mp4v2/mp4v2.h>
  #include <ismacryplib.h>
  #include "our_bytestream.h"
  #include "mp4_file.h"
@@ -684,7 +684,7 @@ diff -ur mpeg4ip-1.6.1/util/mpeg4vol/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util
  #include "liblibsrtp.h"
  #include "rtp.h"
 -#include "mp4.h"
-+#include <mp4v2.h>
++#include <mp4v2/mp4v2.h>
  #include <assert.h>
  #include "mutex.h"
  
@@ -706,7 +706,7 @@ diff -ur mpeg4ip-1.6.1/util/mpeg4vol/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util
  #include <mp4util/mpeg4_audio_config.h>
  #include <mp4util/mpeg4_sdp.h>
 -#include <mp4v2/mp4.h>
-+#include <mp4v2.h>
++#include <mp4v2/mp4v2.h>
  #include <mp4av/mp4av.h>
  
  #define DEBUG_SYNC 2
@@ -717,7 +717,7 @@ diff -ur mpeg4ip-1.6.1/util/mpeg4vol/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util
  #include "ourg711.h"
  #include "mp4av.h"
 -#include <mp4v2/mp4.h>
-+#include <mp4v2.h>
++#include <mp4v2/mp4v2.h>
  #define LOGIT g711->m_vft->log_msg
  static int16_t alaw2linear(uint8_t a_val);
  static int16_t ulaw2linear(uint8_t u_val);
@@ -739,7 +739,7 @@ diff -ur mpeg4ip-1.6.1/util/mpeg4vol/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util
   */
  #include "a52dec.h"
 -#include <mp4v2/mp4.h>
-+#include <mp4v2.h>
++#include <mp4v2/mp4v2.h>
  #include <mp4av/mp4av.h>
  #include <mpeg2ps/mpeg2_ps.h>
  #define LOGIT a52dec->m_vft->log_msg
@@ -783,7 +783,7 @@ diff -ur mpeg4ip-1.6.1/util/mpeg4vol/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util
  #include "codec_plugin.h"
  #include <mp4util/mpeg4_sdp.h>
 -#include <mp4v2/mp4.h>
-+#include <mp4v2.h>
++#include <mp4v2/mp4v2.h>
  #include <xvid.h>
  #include <mp4av/mp4av.h>
  
@@ -794,7 +794,7 @@ diff -ur mpeg4ip-1.6.1/util/mpeg4vol/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util
  
  #include "mpeg4ip.h"
 -#include "mp4.h"
-+#include <mp4v2.h>
++#include <mp4v2/mp4v2.h>
  #ifdef __cplusplus
  extern "C" {
  #endif
@@ -816,7 +816,7 @@ diff -ur mpeg4ip-1.6.1/util/mpeg4vol/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util
  
  #include <mpeg4ip.h>
 -#include <mp4.h>
-+#include <mp4v2.h>
++#include <mp4v2/mp4v2.h>
  #include <mp4av.h>
  #include <ismacryplib.h>
  
@@ -1065,7 +1065,7 @@ diff -ur mpeg4ip-1.6.1/util/mpeg4vol/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util
  
  #include <sys/types.h>
 -#include <mp4.h>
-+#include <mp4v2.h>
++#include <mp4v2/mp4v2.h>
  
  #include "mpeg4ip_config_set.h"
  
@@ -1076,7 +1076,7 @@ diff -ur mpeg4ip-1.6.1/util/mpeg4vol/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util
  #include "media_frame.h"
  #include <sdp.h>
 -#include <mp4.h>
-+#include <mp4v2.h>
++#include <mp4v2/mp4v2.h>
  #include "profile_audio.h"
  #include "resampl.h"
  #include "encoder_gui_options.h"
@@ -1087,7 +1087,7 @@ diff -ur mpeg4ip-1.6.1/util/mpeg4vol/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util
  #include "mp4live_gui.h"
  
 -#include <mp4.h>
-+#include <mp4v2.h>
++#include <mp4v2/mp4v2.h>
  #include "mpeg2_ps.h"
  
  GtkWidget* CreateFileCombo(const char* entryText)
@@ -1098,7 +1098,7 @@ diff -ur mpeg4ip-1.6.1/util/mpeg4vol/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util
  #define __PROFILE_VIDEO__ 1
  #include "config_list.h"
 -#include "mp4.h"
-+#include <mp4v2.h>
++#include <mp4v2/mp4v2.h>
  
  #define VIDEO_ENCODER_XVID "xvid"
  #define VIDEO_ENCODING_MPEG4 "MPEG4"
@@ -1109,7 +1109,7 @@ diff -ur mpeg4ip-1.6.1/util/mpeg4vol/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util
  #include "media_frame.h"
  #include <sdp.h>
 -#include <mp4.h>
-+#include <mp4v2.h>
++#include <mp4v2/mp4v2.h>
  #include "profile_video.h"
  #include "media_sink.h"
  #include "media_feeder.h"
@@ -1120,7 +1120,7 @@ diff -ur mpeg4ip-1.6.1/util/mpeg4vol/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util
  #include "media_frame.h"
  #include <sdp.h>
 -#include <mp4.h>
-+#include <mp4v2.h>
++#include <mp4v2/mp4v2.h>
  #include "encoder_gui_options.h"
  #include "profile_text.h"
  
@@ -1142,7 +1142,7 @@ diff -ur mpeg4ip-1.6.1/util/mpeg4vol/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util
  #ifdef HAVE_FAAC
  #include "audio_faac.h"
 -#include "mp4.h"
-+#include <mp4v2.h>
++#include <mp4v2/mp4v2.h>
  #include "mp4av.h"
  
  static const u_int32_t samplingRateAllValues[] = {
@@ -1153,7 +1153,7 @@ diff -ur mpeg4ip-1.6.1/util/mpeg4vol/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util
  #define __FILE_MP4_RECORDER_H__
  
 -#include <mp4.h>
-+#include <mp4v2.h>
++#include <mp4v2/mp4v2.h>
  #include <mp4av.h>
  #include "media_sink.h"
  #include "media_stream.h"
@@ -1234,7 +1234,7 @@ diff -ur mpeg4ip-1.6.1/util/mpeg4vol/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util
  #include <arpa/inet.h>
  #include "sdp.h"
 -#include "mp4.h"
-+#include <mp4v2.h>
++#include <mp4v2/mp4v2.h>
  #include "mp4av.h"
  #include "audio_encoder.h"
  #include "video_encoder.h"
@@ -1259,7 +1259,7 @@ diff -ur mpeg4ip-1.6.1/util/mpeg4vol/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util
  #include "media_frame.h"
  #include <sdp.h>
 -#include <mp4.h>
-+#include <mp4v2.h>
++#include <mp4v2/mp4v2.h>
  #include "video_encoder.h"
  
  void VideoProfileCheckBase(CVideoProfile *vp);
@@ -1270,7 +1270,7 @@ diff -ur mpeg4ip-1.6.1/util/mpeg4vol/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util
   */
  #define DECLARE_CONFIG_VARIABLES 1
 -#include <mp4.h>
-+#include <mp4v2.h>
++#include <mp4v2/mp4v2.h>
  #include "mp4live.h"
  #undef DECLARE_CONFIG_VARIABLES
  #include "media_flow.h"
@@ -1281,7 +1281,7 @@ diff -ur mpeg4ip-1.6.1/util/mpeg4vol/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util
  
  #include "mpeg4ip.h"
 -#include "mp4v2/mp4.h"
-+#include <mp4v2.h>
++#include <mp4v2/mp4v2.h>
  #include "mpeg4ip_bitstream.h"
  #include "mpeg4ip_getopt.h"
  
@@ -1312,7 +1312,7 @@ diff -ur mpeg4ip-1.6.1/util/mpeg4vol/Makefile.am mpeg4ip-1.6.1-system-mp4v2/util
  #include "codec_plugin.h"
  #include "codec_plugin_private.h"
 -#include <mp4v2/mp4.h>
-+#include <mp4v2.h>
++#include <mp4v2/mp4v2.h>
  
  static void close_qt_file (void *data)
  {
