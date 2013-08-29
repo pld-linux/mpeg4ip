@@ -1,0 +1,158 @@
+--- mpeg4ip-1.6.1/player/plugin/audio/ffmpeg/ffmpeg.h~	2013-08-29 18:08:50.230893682 +0200
++++ mpeg4ip-1.6.1/player/plugin/audio/ffmpeg/ffmpeg.h	2013-08-29 18:15:09.531993597 +0200
+@@ -32,6 +32,10 @@
+ #endif
+ }
+ 
++#ifndef AVCODEC_MAX_AUDIO_FRAME_SIZE
++#define AVCODEC_MAX_AUDIO_FRAME_SIZE 192000
++#endif
++
+ DECLARE_CONFIG(CONFIG_USE_FFMPEG_AUDIO);
+ 
+ #define m_vft c.v.audio_vft
+@@ -39,7 +39,7 @@
+ 
+ typedef struct ffmpeg_codec_t {
+   codec_data_t c;
+-  enum CodecID m_codecId;
++  enum AVCodecID m_codecId;
+   AVCodec *m_codec;
+   AVCodecContext *m_c;
+   bool m_audio_initialized;
+--- mpeg4ip-1.6.1/player/plugin/audio/ffmpeg/ffmpeg.cpp.orig	2013-08-29 18:13:23.494087453 +0200
++++ mpeg4ip-1.6.1/player/plugin/audio/ffmpeg/ffmpeg.cpp	2013-08-29 18:13:39.110936660 +0200
+@@ -44,7 +44,7 @@
+ #endif
+ #endif
+ 
+-static enum CodecID ffmpeg_find_codec (const char *stream_type,
++static enum AVCodecID ffmpeg_find_codec (const char *stream_type,
+ 				       const char *compressor, 
+ 				       int type, 
+ 				       int profile, 
+@@ -142,7 +142,7 @@
+ 
+   // must have a codecID - we checked it earlier
+   ffmpeg->m_codec = avcodec_find_decoder(ffmpeg->m_codecId);
+-  ffmpeg->m_c = avcodec_alloc_context();
++  ffmpeg->m_c = avcodec_alloc_context3(ffmpeg->m_codec);
+ 
+   if (ainfo != NULL) {
+     ffmpeg->m_c->channels = ainfo->chans;
+@@ -170,7 +170,7 @@
+     ffmpeg->m_c->extradata_size = ud_size;
+   }
+   ffmpeg_interface_lock();
+-  if (avcodec_open(ffmpeg->m_c, ffmpeg->m_codec) < 0) {
++  if (avcodec_open2(ffmpeg->m_c, ffmpeg->m_codec, NULL) < 0) {
+     ffmpeg_interface_unlock();
+     ffmpeg_message(LOG_CRIT, "ffmpeg", "failed to open codec");
+     return NULL;
+@@ -286,7 +286,7 @@
+ 			     uint32_t userdata_size,
+ 			      CConfigSet *pConfig)
+ {
+-  enum CodecID fcodec;
++  enum AVCodecID fcodec;
+   AVCodec *c;
+   avcodec_register_all();
+ 
+--- mpeg4ip-1.6.1/player/plugin/video/ffmpeg/ffmpeg.cpp.orig	2013-08-29 18:19:30.251708170 +0200
++++ mpeg4ip-1.6.1/player/plugin/video/ffmpeg/ffmpeg.cpp	2013-08-29 18:20:22.708988140 +0200
+@@ -40,7 +40,7 @@
+ 
+ //#define DEBUG_FFMPEG_FRAME 1
+ //#define DEBUG_FFMPEG_PTS 1
+-static enum CodecID ffmpeg_find_codec (const char *stream_type,
++static enum AVCodecID ffmpeg_find_codec (const char *stream_type,
+ 				       const char *compressor, 
+ 				       int type, 
+ 				       int profile, 
+@@ -194,7 +194,7 @@
+ 
+   // must have a codecID - we checked it earlier
+   ffmpeg->m_codec = avcodec_find_decoder(ffmpeg->m_codecId);
+-  ffmpeg->m_c = avcodec_alloc_context();
++  ffmpeg->m_c = avcodec_alloc_context3(ffmpeg->m_codec);
+   ffmpeg->m_picture = avcodec_alloc_frame();
+   bool open_codec = true;
+   bool run_userdata = false;
+@@ -281,7 +281,7 @@
+   }
+   if (open_codec) {
+     ffmpeg_interface_lock();
+-    if (avcodec_open(ffmpeg->m_c, ffmpeg->m_codec) < 0) {
++    if (avcodec_open2(ffmpeg->m_c, ffmpeg->m_codec, NULL) < 0) {
+       ffmpeg_interface_unlock();
+       ffmpeg_message(LOG_CRIT, "ffmpeg", "failed to open codec");
+       return NULL;
+@@ -418,7 +418,7 @@
+     }
+     if (open_codec) {
+       ffmpeg_interface_lock();
+-      if (avcodec_open(ffmpeg->m_c, ffmpeg->m_codec) < 0) {
++      if (avcodec_open2(ffmpeg->m_c, ffmpeg->m_codec, NULL) < 0) {
+ 	ffmpeg_interface_unlock();
+ 	ffmpeg_message(LOG_CRIT, "ffmpeg", "failed to open codec");
+ 	return buflen;
+@@ -632,7 +632,7 @@
+ 			     uint32_t userdata_size,
+ 			      CConfigSet *pConfig)
+ {
+-  enum CodecID fcodec;
++  enum AVCodecID fcodec;
+   AVCodec *c;
+   avcodec_register_all();
+   av_log_set_level(AV_LOG_QUIET);
+--- mpeg4ip-1.6.1/player/plugin/video/ffmpeg/ffmpeg.h~	2013-08-29 18:08:50.250893917 +0200
++++ mpeg4ip-1.6.1/player/plugin/video/ffmpeg/ffmpeg.h	2013-08-29 18:20:38.585840434 +0200
+@@ -42,7 +42,7 @@
+ 
+ typedef struct ffmpeg_codec_t {
+   codec_data_t c;
+-  enum CodecID m_codecId;
++  enum AVCodecID m_codecId;
+   AVCodec *m_codec;
+   AVCodecContext *m_c;
+   AVFrame *m_picture;
+--- mpeg4ip-1.6.1/server/mp4live/audio_ffmpeg.cpp~	2013-08-29 18:08:50.264227405 +0200
++++ mpeg4ip-1.6.1/server/mp4live/audio_ffmpeg.cpp	2013-08-29 18:27:00.990340111 +0200
+@@ -471,7 +471,7 @@
+     error_message("Couldn't find audio codec");
+     return false;
+   }
+-  m_avctx = avcodec_alloc_context();
++  m_avctx = avcodec_alloc_context3(m_codec);
+   m_frame = avcodec_alloc_frame();
+ 
+   m_avctx->codec_type = AVMEDIA_TYPE_AUDIO;
+@@ -510,7 +510,7 @@
+   m_avctx->channels = Profile()->GetIntegerValue(CFG_AUDIO_CHANNELS);
+ 
+   ffmpeg_interface_lock();
+-  if (avcodec_open(m_avctx, m_codec) < 0) {
++  if (avcodec_open2(m_avctx, m_codec, NULL) < 0) {
+     ffmpeg_interface_unlock();
+     error_message("Couldn't open ffmpeg codec");
+     return false;
+--- mpeg4ip-1.6.1/server/mp4live/video_ffmpeg.cpp~	2013-08-29 18:08:50.264227405 +0200
++++ mpeg4ip-1.6.1/server/mp4live/video_ffmpeg.cpp	2013-08-29 18:28:02.507803496 +0200
+@@ -113,7 +113,7 @@
+     return false;
+   }
+   
+-  m_avctx = avcodec_alloc_context();
++  m_avctx = avcodec_alloc_context3(m_codec);
+   m_picture = avcodec_alloc_frame();
+   m_avctx->width = Profile()->m_videoWidth;
+   m_avctx->height = Profile()->m_videoHeight;
+@@ -190,7 +190,7 @@
+   }
+   m_count = 0;
+   ffmpeg_interface_lock();
+-  if (avcodec_open(m_avctx, m_codec) < 0) {
++  if (avcodec_open2(m_avctx, m_codec, NULL) < 0) {
+     ffmpeg_interface_unlock();
+     error_message("Couldn't open codec");
+     return false;

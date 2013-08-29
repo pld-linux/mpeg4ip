@@ -27,6 +27,7 @@ Patch7:		%{name}-srtp.patch
 Patch8:		%{name}-v4l2.patch
 Patch9:		%{name}-system-mp4v2.patch
 Patch10:	%{name}-memset.patch
+Patch11:	%{name}-ffmpeg2.patch
 URL:		http://mpeg4ip.sourceforge.net/
 BuildRequires:	SDL-devel
 BuildRequires:	a52dec-libs-devel
@@ -160,6 +161,7 @@ Ten pakiet zawiera serwer mp4.
 %patch8 -p1
 %{?with_system_mp4v2:%patch9 -p1}
 %patch10 -p1
+%patch11 -p1
 
 %build
 cd lib/SDLAudio
