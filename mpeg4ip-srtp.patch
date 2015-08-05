@@ -9,3 +9,48 @@
    if ( rc != err_status_ok ) {
        fprintf(stdout," - init cipher for session %d FAILED  rc = %d\n", session,
                                       rc );
+@@ -888,7 +888,7 @@
+    if ( sp->sample_count == 1 ) {
+        memset(nonce,0,AES_KEY_LEN);
+        //rc=aes_icm_set_segment(sp->cp->state, 0); // defunct function.
+-       rc=aes_icm_set_iv(sp->cp->state, nonce);
++       rc=aes_icm_set_iv(sp->cp->state, nonce, direction_encrypt);
+    }
+ 
+    // length will not be updated in calling function (obviously) awv.
+@@ -939,7 +939,7 @@
+   if ( sp->sample_count == 1 ) {
+       memset(nonce,0,AES_KEY_LEN);
+       //rc=aes_icm_set_segment(sp->cp->state, 0); // defunct function.
+-      rc=aes_icm_set_iv(sp->cp->state, nonce);
++      rc=aes_icm_set_iv(sp->cp->state, nonce, direction_encrypt);
+   }
+ 
+   // length will not be updated in calling function (obviously) awv.
+@@ -1015,7 +1015,7 @@
+   if ( sp->sample_count == 1 ) {
+       memset(nonce,0,AES_KEY_LEN);
+       //rc=aes_icm_set_segment(sp->cp->state, 0); // defunct function.
+-      rc=aes_icm_set_iv(sp->cp->state, nonce);
++      rc=aes_icm_set_iv(sp->cp->state, nonce, direction_encrypt);
+   }
+ #endif
+ 
+@@ -1076,7 +1076,7 @@
+        memset(nonce,0,AES_KEY_LEN);
+        *((uint32_t *)(&nonce[12])) = htonl(counter);
+ #ifdef HAVE_SRTP
+-       rc=aes_icm_set_iv(sp->cp->state, nonce);
++       rc=aes_icm_set_iv(sp->cp->state, nonce, direction_encrypt);
+        rc=aes_icm_encrypt_ismacryp(sp->cp->state, fakedata, &remainder, 1);
+ #endif
+ 
+@@ -1088,7 +1088,7 @@
+   memset(nonce,0,AES_KEY_LEN);
+   *((uint32_t *)(&nonce[12])) = htonl(counter);
+ #ifdef HAVE_SRTP
+-  rc=aes_icm_set_iv(sp->cp->state, nonce);
++  rc=aes_icm_set_iv(sp->cp->state, nonce, direction_encrypt);
+   // set the number of bytes the previous key should decrypt 
+   ((aes_icm_ctx_t *)(sp->cp->state))->bytes_in_buffer = remainder;
+ #endif

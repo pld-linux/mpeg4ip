@@ -49,7 +49,7 @@ BuildRequires:	libx264-devel
 BuildRequires:	nasm >= 0.98.19
 %endif
 BuildRequires:	pkgconfig
-BuildRequires:	srtp-devel >= 1.4.2
+BuildRequires:	srtp-devel >= 1.5
 BuildRequires:	xvid-devel >= 1:1.0.0
 BuildConflicts:	faad2 < 2.0-3
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
