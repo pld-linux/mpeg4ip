@@ -1,0 +1,42 @@
+--- mpeg4ip-1.6.1/server/mp4live/audio_lame.cpp.orig	2006-08-07 20:27:27.000000000 +0200
++++ mpeg4ip-1.6.1/server/mp4live/audio_lame.cpp	2018-06-16 18:23:58.315727475 +0200
+@@ -36,9 +36,9 @@
+ 
+ static int get_mpeg_type_for_samplerate (int sr)
+ {
+-  for (uint x = 0; x < 3; x++) {
+-    for (uint y = 0; y < 4; y++) {
+-      if (samplerate_table[x][y] == sr) {
++  for (int x = 0; x < 3; x++) {
++    for (int y = 0; y < 4; y++) {
++      if (lame_get_samplerate(x, y) == sr) {
+ 	return x;
+       }
+     }
+@@ -59,9 +59,10 @@
+   uint32_t *ret = (uint32_t *)malloc(16 * sizeof(uint32_t));
+   *ret_size = 0;
+   lame_global_flags *lameParams;
++  int bitrate;
+ 
+   for (iy = 0; iy < 16; iy++) {
+-    if (bitrate_table[ix][iy] > 0) {
++    if ((bitrate = lame_get_bitrate(ix, iy)) > 0) {
+       lameParams = lame_init();
+       lame_set_num_channels(lameParams, chans);
+       lame_set_in_samplerate(lameParams, samplerate);
+@@ -69,12 +70,11 @@
+ 		    (chans == 1 ? MONO : STEREO));		
+       lame_set_quality(lameParams,2);
+       lame_set_bWriteVbrTag(lameParams,0);
+-      lame_set_brate(lameParams,
+-		     bitrate_table[ix][iy]);
++      lame_set_brate(lameParams, bitrate);
+ 
+       if (lame_init_params(lameParams) != -1) {
+ 	if (lame_get_in_samplerate(lameParams) == lame_get_out_samplerate(lameParams)) {
+-	  ret[*ret_size] = bitrate_table[ix][iy] * 1000;
++	  ret[*ret_size] = bitrate * 1000;
+ 	  *ret_size = *ret_size + 1;
+ 	}
+       }

@@ -1,0 +1,723 @@
+--- mpeg4ip-1.6.1/player/plugin/audio/ffmpeg/ffmpeg.h.orig	2018-06-16 09:12:09.156105525 +0200
++++ mpeg4ip-1.6.1/player/plugin/audio/ffmpeg/ffmpeg.h	2018-06-16 10:04:26.826069698 +0200
+@@ -53,7 +53,7 @@
+   uint64_t m_ts;
+   uint32_t m_freq_ts;
+   uint32_t m_samples;
+-  uint8_t *m_outbuf;
++  AVFrame *m_frame;
+ } ffmpeg_codec_t;
+   
+ #endif
+--- mpeg4ip-1.6.1/player/plugin/audio/ffmpeg/ffmpeg.cpp.orig	2018-06-15 21:01:22.063272848 +0200
++++ mpeg4ip-1.6.1/player/plugin/audio/ffmpeg/ffmpeg.cpp	2018-06-16 09:06:27.742776088 +0200
+@@ -55,66 +55,66 @@
+   if (strcasecmp(stream_type, STREAM_TYPE_MP4_FILE) == 0) {
+ #ifdef HAVE_AMR_CODEC
+     if (strcmp(compressor, "sawb") == 0) {
+-      return CODEC_ID_AMR_WB;
++      return AV_CODEC_ID_AMR_WB;
+     }
+     if (strcmp(compressor, "samr") == 0) {
+-      return CODEC_ID_AMR_NB;
++      return AV_CODEC_ID_AMR_NB;
+     }
+ #endif
+     if (strcmp(compressor, "ulaw") == 0) {
+-      return CODEC_ID_PCM_MULAW;
++      return AV_CODEC_ID_PCM_MULAW;
+     }
+     if (strcmp(compressor, "alaw") == 0) {
+-      return CODEC_ID_PCM_ALAW;
++      return AV_CODEC_ID_PCM_ALAW;
+     }
+     if (strcmp(compressor, "mp4a") == 0) {
+       if (type == MP4_ALAW_AUDIO_TYPE) {
+-	return CODEC_ID_PCM_ALAW;
++	return AV_CODEC_ID_PCM_ALAW;
+       } 
+       if (type == MP4_ULAW_AUDIO_TYPE) {
+-	return CODEC_ID_PCM_MULAW;
++	return AV_CODEC_ID_PCM_MULAW;
+       }
+     }
+-    return CODEC_ID_NONE;
++    return AV_CODEC_ID_NONE;
+   }
+   if (strcasecmp(stream_type, STREAM_TYPE_MPEG_FILE) == 0) {
+-    return CODEC_ID_NONE;
++    return AV_CODEC_ID_NONE;
+   }
+ 
+   if (strcasecmp(stream_type, STREAM_TYPE_MPEG2_TRANSPORT_STREAM) == 0) {
+-    return CODEC_ID_NONE;
++    return AV_CODEC_ID_NONE;
+   }
+ 
+   if (strcasecmp(stream_type, STREAM_TYPE_AVI_FILE) == 0) {
+-    return CODEC_ID_NONE;
++    return AV_CODEC_ID_NONE;
+   }
+   if (strcasecmp(stream_type, "QT FILE") == 0) {
+     if (strcmp(compressor, "ulaw") == 0) {
+-      return CODEC_ID_PCM_MULAW;
++      return AV_CODEC_ID_PCM_MULAW;
+     }
+     if (strcmp(compressor, "alaw") == 0) {
+-      return CODEC_ID_PCM_ALAW;
++      return AV_CODEC_ID_PCM_ALAW;
+     }
+-    return CODEC_ID_NONE;
++    return AV_CODEC_ID_NONE;
+   }
+   if ((strcasecmp(stream_type, STREAM_TYPE_RTP) == 0) && fptr != NULL) {
+     if (strcmp(fptr->fmt, "8") == 0) {
+-      return CODEC_ID_PCM_ALAW;
++      return AV_CODEC_ID_PCM_ALAW;
+     }
+     if (strcmp(fptr->fmt, "0") == 0) {
+-      return CODEC_ID_PCM_MULAW;
++      return AV_CODEC_ID_PCM_MULAW;
+     }
+     if (fptr->rtpmap_name != NULL) {
+ #ifdef HAVE_AMR_CODEC
+       if (strcasecmp(fptr->rtpmap_name, "AMR-WB") == 0)
+-	return CODEC_ID_AMR_WB;
++	return AV_CODEC_ID_AMR_WB;
+       if (strcasecmp(fptr->rtpmap_name, "AMR") == 0) 
+-	return CODEC_ID_AMR_NB;
++	return AV_CODEC_ID_AMR_NB;
+ #endif
+     }
+-    return CODEC_ID_NONE;
++    return AV_CODEC_ID_NONE;
+   }
+-  return CODEC_ID_NONE;
++  return AV_CODEC_ID_NONE;
+ }
+ 
+ static codec_data_t *ffmpeg_create (const char *stream_type,
+@@ -150,15 +150,15 @@
+   }
+   switch (ffmpeg->m_codecId) {
+ #ifdef HAVE_AMR_CODEC
+-  case CODEC_ID_AMR_WB:
+-  case CODEC_ID_AMR_NB:
++  case AV_CODEC_ID_AMR_WB:
++  case AV_CODEC_ID_AMR_NB:
+     ffmpeg->m_c->channels = 1;
+-    ffmpeg->m_c->sample_rate = ffmpeg->m_codecId == CODEC_ID_AMR_WB ? 
++    ffmpeg->m_c->sample_rate = ffmpeg->m_codecId == AV_CODEC_ID_AMR_WB ? 
+       16000 : 8000;
+     break;
+ #endif
+-  case CODEC_ID_PCM_ALAW:
+-  case CODEC_ID_PCM_MULAW:
++  case AV_CODEC_ID_PCM_ALAW:
++  case AV_CODEC_ID_PCM_MULAW:
+     ffmpeg->m_c->channels = 1;
+     ffmpeg->m_c->sample_rate = 8000;
+     break;
+@@ -176,7 +176,7 @@
+     return NULL;
+   }
+   ffmpeg_interface_unlock();
+-  ffmpeg->m_outbuf = (uint8_t *)malloc(AVCODEC_MAX_AUDIO_FRAME_SIZE);
++  ffmpeg->m_frame = av_frame_alloc();
+ 
+   return ((codec_data_t *)ffmpeg);
+ }
+@@ -193,7 +193,8 @@
+     ffmpeg_interface_unlock();
+     free(ffmpeg->m_c);
+   }
+-  CHECK_AND_FREE(ffmpeg->m_outbuf);
++  if (ffmpeg->m_frame != NULL)
++    av_frame_free(&ffmpeg->m_frame);
+   free(ffmpeg);
+ }
+ 
+@@ -213,25 +214,25 @@
+   ffmpeg_codec_t *ffmpeg = (ffmpeg_codec_t *)ptr;
+   uint32_t left = buflen;
+   uint32_t used;
+-  int outsize;
+ 
+   uint64_t ts = pts->msec_timestamp;
+   uint32_t freq_ts = pts->audio_freq_timestamp;
+ 
+   do {
+ 	AVPacket pkt;
++	int got_frame = 0;
+ 	av_init_packet(&pkt);
+ 	pkt.data = buffer; 
+ 	pkt.size = left; 
+-	used = avcodec_decode_audio3(ffmpeg->m_c, (int16_t *)ffmpeg->m_outbuf,
+-			&outsize, &pkt);
++	used = avcodec_decode_audio4(ffmpeg->m_c, ffmpeg->m_frame, &got_frame, &pkt);
+ 
+     if (used < 0) {
+       ffmpeg_message(LOG_DEBUG, "ffmpeg", "failed to decode at "U64, 
+ 		     ts);
++      av_frame_unref(ffmpeg->m_frame);
+       return buflen;
+     }
+-    if (outsize > 0) {
++    if (got_frame) {
+       if (ffmpeg->m_audio_initialized == 0) {
+ 	ffmpeg->m_vft->audio_configure(ffmpeg->m_ifptr, 
+ 				       ffmpeg->m_c->sample_rate,
+@@ -243,7 +244,7 @@
+ 	ffmpeg->m_audio_initialized = 1;
+       }
+ #ifdef DEBUG_FFMPEG
+-      ffmpeg_message(LOG_DEBUG, "ffmpeg", "decoded %u bytes %llu", outsize, 
++      ffmpeg_message(LOG_DEBUG, "ffmpeg", "decoded %u samples %llu", ffmpeg->m_frame->nb_samples, 
+ 		     ts);
+ #endif
+       if (pts->audio_freq != ffmpeg->m_freq) {
+@@ -253,24 +254,30 @@
+ 	uint64_t calc;
+ 	freq_ts += ffmpeg->m_samples;
+ 	calc = ffmpeg->m_samples * TO_U64(1000);
+-	calc /= ffmpeg->m_channels;
+-	calc /= 2;
+ 	calc /= ffmpeg->m_freq;
+ 	ts += calc;
+-	ffmpeg->m_samples += outsize;
++	ffmpeg->m_samples += ffmpeg->m_frame->nb_samples;
+       } else {
+-	ffmpeg->m_samples = outsize;
++	ffmpeg->m_samples = ffmpeg->m_frame->nb_samples;
+ 	ffmpeg->m_ts = ts;
+ 	ffmpeg->m_freq_ts = freq_ts;
+       }
+ 
++      {
++        int planes = av_sample_fmt_is_planar(ffmpeg->m_c->sample_fmt) ? ffmpeg->m_c->channels : 1;
++	int plane_size, plane;
++	av_samples_get_buffer_size(&plane_size, ffmpeg->m_c->channels, ffmpeg->m_frame->nb_samples, ffmpeg->m_c->sample_fmt, 1);
++        for (plane = 0; plane < planes; plane++) {
+       ffmpeg->m_vft->audio_load_buffer(ffmpeg->m_ifptr, 
+-				       ffmpeg->m_outbuf, 
+-				       outsize,
++				       ffmpeg->m_frame->extended_data[plane], 
++				       plane_size,
+ 				       freq_ts,
+ 				       ts);
++	}
++      }
+     }
+     left -= used;
++    av_frame_unref(ffmpeg->m_frame);
+   } while (left > 0 && used != 0);
+ 
+   return (buflen);
+@@ -293,7 +300,7 @@
+   fcodec = ffmpeg_find_codec(stream_type, compressor, type, profile, 
+ 			     fptr, userdata, userdata_size);
+ 
+-  if (fcodec == CODEC_ID_NONE)
++  if (fcodec == AV_CODEC_ID_NONE)
+     return -1;
+ 
+   c = avcodec_find_decoder(fcodec);
+--- mpeg4ip-1.6.1/player/plugin/video/ffmpeg/ffmpeg.cpp.orig	2018-06-15 21:01:22.063272848 +0200
++++ mpeg4ip-1.6.1/player/plugin/video/ffmpeg/ffmpeg.cpp	2018-06-16 09:11:02.226106289 +0200
+@@ -52,90 +52,90 @@
+ 
+   if (have_mp4_file) {
+     if (strcasecmp(compressor, "avc1") == 0) {
+-      return CODEC_ID_H264;
++      return AV_CODEC_ID_H264;
+     }
+     if (strcasecmp(compressor, "264b") == 0) {
+-      return CODEC_ID_H264;
++      return AV_CODEC_ID_H264;
+     }
+     if (strcasecmp(compressor, "mp4v") == 0) {
+       if (MP4_IS_MPEG1_VIDEO_TYPE(type) ||
+ 	  MP4_IS_MPEG2_VIDEO_TYPE(type))
+-	return CODEC_ID_MPEG2VIDEO;
++	return AV_CODEC_ID_MPEG2VIDEO;
+       if (MP4_IS_MPEG4_VIDEO_TYPE(type))
+-	return CODEC_ID_MPEG4;
++	return AV_CODEC_ID_MPEG4;
+     }
+   }
+   if (have_mp4_file ||
+       strcasecmp(stream_type, "QT FILE") == 0) {
+     if (strcasecmp(compressor, "h263") == 0 ||
+ 	strcasecmp(compressor, "s263") == 0) {
+-      return CODEC_ID_H263;
++      return AV_CODEC_ID_H263;
+     }
+     if (strcasecmp(compressor, "SVQ3") == 0) {
+-      return CODEC_ID_SVQ3;
++      return AV_CODEC_ID_SVQ3;
+     }
+     if (strcasecmp(compressor, "jpeg") == 0) {
+-      return CODEC_ID_MJPEG;
++      return AV_CODEC_ID_MJPEG;
+     }
+-    return CODEC_ID_NONE;
++    return AV_CODEC_ID_NONE;
+   }
+   if (strcasecmp(stream_type, STREAM_TYPE_MPEG_FILE) == 0) {
+-    if (type == MPEG_VIDEO_H264) return CODEC_ID_H264;
+-    return CODEC_ID_MPEG2VIDEO;
++    if (type == MPEG_VIDEO_H264) return AV_CODEC_ID_H264;
++    return AV_CODEC_ID_MPEG2VIDEO;
+   }
+ 
+   if (strcasecmp(stream_type, STREAM_TYPE_MPEG2_TRANSPORT_STREAM) == 0) {
+     if ((type == MPEG2T_ST_MPEG_VIDEO) ||
+ 	(type == MPEG2T_ST_11172_VIDEO)) 
+-      return CODEC_ID_MPEG2VIDEO;
++      return AV_CODEC_ID_MPEG2VIDEO;
+     if (type == MPEG2T_ST_H264_VIDEO) {
+-      return CODEC_ID_H264;
++      return AV_CODEC_ID_H264;
+     }
+     if (type == MPEG2T_ST_MPEG4_VIDEO) {
+-      return CODEC_ID_MPEG4;
++      return AV_CODEC_ID_MPEG4;
+     }
+-    return CODEC_ID_NONE;
++    return AV_CODEC_ID_NONE;
+   }
+ 
+   if (strcasecmp(stream_type, STREAM_TYPE_AVI_FILE) == 0) {
+     if (strcasecmp(compressor, "vssh") == 0) {
+-      return CODEC_ID_H264;
++      return AV_CODEC_ID_H264;
+     }
+     if (strcasecmp(compressor, "H263") == 0) {
+-      return CODEC_ID_H263;
++      return AV_CODEC_ID_H263;
+     }
+     if (strcasecmp(compressor, "mjpg") == 0) {
+-      return CODEC_ID_MJPEG;
++      return AV_CODEC_ID_MJPEG;
+     }
+-    return CODEC_ID_NONE;
++    return AV_CODEC_ID_NONE;
+   }
+   if (strcasecmp(stream_type, "QT FILE") == 0) {
+     if (strcasecmp(compressor, "h263") == 0 ||
+ 	strcasecmp(compressor, "s263") == 0) {
+-      return CODEC_ID_H263;
++      return AV_CODEC_ID_H263;
+     }
+-    return CODEC_ID_NONE;
++    return AV_CODEC_ID_NONE;
+   }
+   if ((strcasecmp(stream_type, STREAM_TYPE_RTP) == 0) && fptr != NULL) {
+     if (strcmp(fptr->fmt, "32") == 0)
+-      return CODEC_ID_MPEG2VIDEO;
++      return AV_CODEC_ID_MPEG2VIDEO;
+     if (fptr->rtpmap_name != NULL) {
+       if (strcasecmp(fptr->rtpmap_name, "h263-1998") == 0 ||
+ 	  strcasecmp(fptr->rtpmap_name, "h263-2000") == 0) {
+-	return CODEC_ID_H263;
++	return AV_CODEC_ID_H263;
+       }
+       if (strcasecmp(fptr->rtpmap_name, "MP4V-ES") == 0) {
+ 	// may want to check level and profile
+-	return CODEC_ID_MPEG4;
++	return AV_CODEC_ID_MPEG4;
+       }
+       if (strcasecmp(fptr->rtpmap_name, "h264") == 0) {
+ 	// may want to check for sprop-parameters
+-	return CODEC_ID_H264;
++	return AV_CODEC_ID_H264;
+       }
+     }
+-    return CODEC_ID_NONE;
++    return AV_CODEC_ID_NONE;
+   }
+-  return CODEC_ID_NONE;
++  return AV_CODEC_ID_NONE;
+ }
+ 
+ static bool ffmpeg_find_h264_size (ffmpeg_codec_t *ffmpeg, 
+@@ -195,15 +195,15 @@
+   // must have a codecID - we checked it earlier
+   ffmpeg->m_codec = avcodec_find_decoder(ffmpeg->m_codecId);
+   ffmpeg->m_c = avcodec_alloc_context3(ffmpeg->m_codec);
+-  ffmpeg->m_picture = avcodec_alloc_frame();
++  ffmpeg->m_picture = av_frame_alloc();
+   bool open_codec = true;
+   bool run_userdata = false;
+   bool free_userdata = false;
+ 
+   switch (ffmpeg->m_codecId) {
+-  case CODEC_ID_MJPEG:
++  case AV_CODEC_ID_MJPEG:
+     break;
+-  case CODEC_ID_H264:
++  case AV_CODEC_ID_H264:
+     // need to find height and width
+     if (media_fmt != NULL && media_fmt->fmt_param != NULL) {
+       userdata = h264_sdp_parse_sprop_param_sets(media_fmt->fmt_param,
+@@ -221,7 +221,7 @@
+       open_codec = false;
+     }
+     break;
+-  case CODEC_ID_MPEG4: {
++  case AV_CODEC_ID_MPEG4: {
+     fmtp_parse_t *fmtp = NULL;
+     open_codec = false;
+     if (media_fmt != NULL) {
+@@ -268,7 +268,7 @@
+     }
+   }
+     break;
+-  case CODEC_ID_SVQ3:
++  case AV_CODEC_ID_SVQ3:
+     ffmpeg->m_c->extradata = (typeof(ffmpeg->m_c->extradata))userdata;
+     ffmpeg->m_c->extradata_size = ud_size;
+     if (vinfo != NULL) {
+@@ -349,7 +349,7 @@
+   int ftype;
+   ffmpeg_codec_t *ffmpeg = (ffmpeg_codec_t *)ifptr;
+   switch (ffmpeg->m_codecId) {
+-  case CODEC_ID_H264:
++  case AV_CODEC_ID_H264:
+     // look for idr nal
+     // disable to just start right up
+ #if 0
+@@ -370,7 +370,7 @@
+     return 1;
+ #endif
+     break;
+-  case CODEC_ID_MPEG2VIDEO:
++  case AV_CODEC_ID_MPEG2VIDEO:
+     // this would be for mpeg2
+     ret = MP4AV_Mpeg3FindPictHdr(buffer, buflen, &ftype);
+     ffmpeg_message(LOG_ERR, "ffmpeg", "ret %u type %u", ret, ftype);
+@@ -378,7 +378,7 @@
+       return 1;
+     }
+     break;
+-  case CODEC_ID_MPEG4: {
++  case AV_CODEC_ID_MPEG4: {
+     uint8_t *vop = MP4AV_Mpeg4FindVop(buffer, buflen);
+     if (vop == NULL) return 0;
+     if (MP4AV_Mpeg4GetVopType(vop, buflen - (vop - buffer)) == VOP_TYPE_I)
+@@ -410,7 +410,7 @@
+     // look for header, like above, and open it
+     bool open_codec = true;
+     switch (ffmpeg->m_codecId) {
+-    case CODEC_ID_H264:
++    case AV_CODEC_ID_H264:
+       open_codec = ffmpeg_find_h264_size(ffmpeg, buffer, buflen);
+       break;
+     default:
+@@ -457,7 +457,7 @@
+ 
+   if (pts->timestamp_is_pts) {
+     //ffmpeg_message(LOG_ERR, "ffmpeg", "pts timestamp "U64, ts);
+-    if (ffmpeg->m_codecId == CODEC_ID_MPEG2VIDEO) {
++    if (ffmpeg->m_codecId == AV_CODEC_ID_MPEG2VIDEO) {
+       if (ffmpeg->pts_convert.frame_rate == 0.0) {
+ 	int have_mpeg2;
+ 	uint32_t h, w;
+@@ -493,7 +493,7 @@
+ 	ts = ret;
+ 	//	ffmpeg_message(LOG_ERR, "ffmpeg", "type %d ref %u "U64, ftype, temp_ref, ret);
+       }
+-    } else if (ffmpeg->m_codecId == CODEC_ID_MPEG4) {
++    } else if (ffmpeg->m_codecId == AV_CODEC_ID_MPEG4) {
+       uint8_t *vopstart = MP4AV_Mpeg4FindVop(buffer, buflen);
+       if (vopstart) {
+ 	int ftype = MP4AV_Mpeg4GetVopType(vopstart, buflen);
+@@ -515,7 +515,7 @@
+ #endif
+ 	ts = dts;
+       }
+-    } else if (ffmpeg->m_codecId == CODEC_ID_H264) {
++    } else if (ffmpeg->m_codecId == AV_CODEC_ID_H264) {
+       uint8_t *nal_ptr = buffer;
+       uint32_t len = buflen;
+       bool have_b_nal = false;
+@@ -568,7 +568,7 @@
+       ffmpeg->m_video_initialized = true;
+     }
+ 
+-    if (ffmpeg->m_c->pix_fmt != PIX_FMT_YUV420P) {
++    if (ffmpeg->m_c->pix_fmt != AV_PIX_FMT_YUV420P) {
+       // convert the image from whatever it is to YUV 4:2:0
+       AVPicture from, to;
+       int ret;
+@@ -593,7 +593,7 @@
+       pSWSCtx = sws_getContext(ffmpeg->m_c->width, ffmpeg->m_c->height,
+ 			       ffmpeg->m_c->pix_fmt,
+ 			       ffmpeg->m_c->width, ffmpeg->m_c->height,
+-			       PIX_FMT_YUV420P, SWS_BICUBIC, 0, 0, 0);
++			       AV_PIX_FMT_YUV420P, SWS_BICUBIC, 0, 0, 0);
+       sws_scale(pSWSCtx, from.data, from.linesize, 0, ffmpeg->m_c->height,
+ 		to.data, to.linesize);
+       sws_freeContext(pSWSCtx);
+@@ -639,7 +639,7 @@
+   fcodec = ffmpeg_find_codec(stream_type, compressor, type, profile, 
+ 			     fptr, userdata, userdata_size);
+ 
+-  if (fcodec == CODEC_ID_NONE)
++  if (fcodec == AV_CODEC_ID_NONE)
+     return -1;
+ 
+   c = avcodec_find_decoder(fcodec);
+--- mpeg4ip-1.6.1/server/mp4live/video_encoder_class.cpp.orig	2007-07-02 22:26:05.000000000 +0200
++++ mpeg4ip-1.6.1/server/mp4live/video_encoder_class.cpp	2018-06-16 10:38:44.892712865 +0200
+@@ -71,7 +71,7 @@
+   m_videoFilter = VF_NONE;
+   if (strcasecmp(videoFilter, VIDEO_FILTER_DEINTERLACE) == 0) {
+     m_videoFilter = VF_DEINTERLACE;
+-#ifdef HAVE_FFMPEG
++#if defined(HAVE_FFMPEG) && 0 /* TODO */
+   } else if (strcasecmp(videoFilter, VIDEO_FILTER_FFMPEG_DEINTERLACE_INPLACE) == 0) {
+     m_videoFilter = VF_FFMPEG_DEINTERLACE_INPLACE;
+ #endif
+@@ -378,11 +378,11 @@
+       video_filter_interlace((uint8_t *)yImage, 
+ 			     (uint8_t *)yImage + m_videoDstYSize, yStride);
+       break;
+-#ifdef HAVE_FFMPEG
++#if defined(HAVE_FFMPEG) && 0 /* TODO */
+     case VF_FFMPEG_DEINTERLACE_INPLACE: {
+       AVPicture src;
+-      avpicture_fill(&src, (uint8_t *)yImage, PIX_FMT_YUV420P, m_videoDstWidth, m_videoDstHeight);
+-      avpicture_deinterlace(&src, &src, PIX_FMT_YUV420P, 
++      avpicture_fill(&src, (uint8_t *)yImage, AV_PIX_FMT_YUV420P, m_videoDstWidth, m_videoDstHeight);
++      avpicture_deinterlace(&src, &src, AV_PIX_FMT_YUV420P, 
+ 			    m_videoDstWidth, m_videoDstHeight);
+       break;
+     }
+--- mpeg4ip-1.6.1/server/mp4live/audio_ffmpeg.h.orig	2018-06-16 10:04:53.869402721 +0200
++++ mpeg4ip-1.6.1/server/mp4live/audio_ffmpeg.h	2018-06-16 17:28:11.772432359 +0200
+@@ -98,6 +98,7 @@
+ 	u_int32_t			m_FrameBufferLength;
+ 	u_int32_t			m_FrameBufferSize;
+ 	u_int32_t			m_FrameMaxSize;
++	u_int32_t			m_SampleCount;
+ };
+ 
+ void InitFFmpegAudio(void);
+--- mpeg4ip-1.6.1/server/mp4live/audio_ffmpeg.cpp.orig	2018-06-16 10:04:54.896069376 +0200
++++ mpeg4ip-1.6.1/server/mp4live/audio_ffmpeg.cpp	2018-06-16 17:31:05.415763706 +0200
+@@ -445,22 +445,22 @@
+   avcodec_register_all();
+ 
+   if (strcasecmp(encoding,AUDIO_ENCODING_MP3) == 0) {
+-    m_codec = avcodec_find_encoder(CODEC_ID_MP2);
++    m_codec = avcodec_find_encoder(AV_CODEC_ID_MP2);
+     m_media_frame = MP3AUDIOFRAME;
+   } else if (strcasecmp(encoding, AUDIO_ENCODING_ALAW) == 0) {
+-    m_codec = avcodec_find_encoder(CODEC_ID_PCM_ALAW);
++    m_codec = avcodec_find_encoder(AV_CODEC_ID_PCM_ALAW);
+     m_media_frame = ALAWAUDIOFRAME;
+   } else if (strcasecmp(encoding, AUDIO_ENCODING_ULAW) == 0) {
+-    m_codec = avcodec_find_encoder(CODEC_ID_PCM_MULAW);
++    m_codec = avcodec_find_encoder(AV_CODEC_ID_PCM_MULAW);
+     m_media_frame = ULAWAUDIOFRAME;
+   } else if (strcasecmp(encoding, AUDIO_ENCODING_AMR) == 0) {
+ #ifdef MAY_HAVE_AMR_CODEC
+     uint32_t samplingRate = Profile()->GetIntegerValue(CFG_AUDIO_SAMPLE_RATE);
+     if (samplingRate == 8000) {
+-      m_codec = avcodec_find_encoder(CODEC_ID_AMR_NB);
++      m_codec = avcodec_find_encoder(AV_CODEC_ID_AMR_NB);
+       m_media_frame= AMRNBAUDIOFRAME;
+     } else {
+-      m_codec = avcodec_find_encoder(CODEC_ID_AMR_WB);
++      m_codec = avcodec_find_encoder(AV_CODEC_ID_AMR_WB);
+       m_media_frame = AMRWBAUDIOFRAME;
+     }
+ #endif
+@@ -472,34 +472,35 @@
+     return false;
+   }
+   m_avctx = avcodec_alloc_context3(m_codec);
+-  m_frame = avcodec_alloc_frame();
++  m_frame = av_frame_alloc();
++  m_SampleCount = 0;
+ 
+   m_avctx->codec_type = AVMEDIA_TYPE_AUDIO;
+   switch (m_media_frame) {
+   case MP3AUDIOFRAME:
+-    m_avctx->codec_id = CODEC_ID_MP2;
++    m_avctx->codec_id = AV_CODEC_ID_MP2;
+     m_samplesPerFrame = 
+       MP4AV_Mp3GetSamplingWindow(Profile()->GetIntegerValue(CFG_AUDIO_SAMPLE_RATE));
+     m_FrameMaxSize = (u_int)(1.25 * m_samplesPerFrame) + 7200;
+     break;
+   case ALAWAUDIOFRAME:
+-    m_avctx->codec_id = CODEC_ID_PCM_ALAW;
++    m_avctx->codec_id = AV_CODEC_ID_PCM_ALAW;
+     m_samplesPerFrame = 160;
+     m_FrameMaxSize = m_samplesPerFrame / 2;
+     break;
+   case ULAWAUDIOFRAME:
+-    m_avctx->codec_id = CODEC_ID_PCM_MULAW;
++    m_avctx->codec_id = AV_CODEC_ID_PCM_MULAW;
+     m_samplesPerFrame = 160;
+     m_FrameMaxSize = m_samplesPerFrame / 2;
+     break;
+   case AMRNBAUDIOFRAME:
+-    m_avctx->codec_id = CODEC_ID_AMR_NB;
++    m_avctx->codec_id = AV_CODEC_ID_AMR_NB;
+     m_samplesPerFrame = 
+       MP4AV_AmrGetSamplingWindow(8000);
+     m_FrameMaxSize = 64;
+     break;
+   case AMRWBAUDIOFRAME:
+-    m_avctx->codec_id = CODEC_ID_AMR_WB;
++    m_avctx->codec_id = AV_CODEC_ID_AMR_WB;
+     m_samplesPerFrame = 
+       MP4AV_AmrGetSamplingWindow(16000);
+     m_FrameMaxSize = 64;
+@@ -545,23 +546,31 @@
+ 		return false;	// invalid numChannels
+ 	}
+ 
+-	u_int32_t DataLength = 0;
+-
+-	if (pSamples != NULL) { 
+-	  DataLength = 
+-	    avcodec_encode_audio(m_avctx,
+-				 m_FrameBuffer,
+-				 m_FrameBufferSize,
+-				 pSamples);
+-	  //debug_message("ffmpeg encode %u", DataLength);
+-	} else {
+-	  return false;
+-	}
++	if (pSamples == NULL)
++		return false;
++	AVPacket pkt;
++	av_init_packet(&pkt);
++	pkt.data = m_FrameBuffer;
++	pkt.size = m_FrameBufferSize;
++	m_frame->nb_samples = numChannels * numSamplesPerChannel;
++	int samples_size = av_samples_get_buffer_size(NULL, numChannels, m_frame->nb_samples, m_avctx->sample_fmt, 1);
++	if (avcodec_fill_audio_frame(m_frame, numChannels, m_avctx->sample_fmt, (uint8_t*)pSamples, samples_size, 1)) {
++		av_frame_unref(m_frame);
++		return false;
++	}
++	m_frame->pts = av_rescale_q(m_SampleCount, (AVRational){ 1, m_avctx->sample_rate }, m_avctx->time_base);
++	m_SampleCount += m_frame->nb_samples;
++	int got_packet = 0;
++	int ret = avcodec_encode_audio2(m_avctx, &pkt, m_frame, &got_packet);
++	av_packet_unref(&pkt);
+ 
+-	m_FrameBufferLength += DataLength;
+-	//	error_message("audio -return from ffmpeg_encode_buffer is %d %d", mp3DataLength, m_mp3FrameBufferLength);
++	if (m_frame->extended_data != m_frame->data)
++		av_free(m_frame->extended_data);
+ 
+-	return (DataLength >= 0);
++	if (!ret)
++		m_FrameBufferLength += pkt.size;
++	av_frame_unref(m_frame);
++	return !ret;
+ }
+ 
+ bool CFfmpegAudioEncoder::GetEncodedFrame(
+@@ -638,6 +652,8 @@
+   m_avctx = NULL;
+   free(m_FrameBuffer);
+   m_FrameBuffer = NULL;
++  av_frame_unref(m_frame);
++  av_frame_free(&m_frame);
+ }
+ 
+ void InitFFmpegAudio (void)
+@@ -647,8 +663,8 @@
+   AddAudioEncoderTable(&ffmpeg_ulaw_audio_encoder_table);
+ #ifdef MAY_HAVE_AMR_CODEC
+   avcodec_register_all();
+-  bool have_amr_nb = avcodec_find_encoder(CODEC_ID_AMR_NB) != NULL;
+-  bool have_amr_wb = avcodec_find_encoder(CODEC_ID_AMR_WB) != NULL;
++  bool have_amr_nb = avcodec_find_encoder(AV_CODEC_ID_AMR_NB) != NULL;
++  bool have_amr_wb = avcodec_find_encoder(AV_CODEC_ID_AMR_WB) != NULL;
+ 
+   if (have_amr_nb == false && have_amr_wb == false) return;
+ 
+--- mpeg4ip-1.6.1/server/mp4live/video_ffmpeg.cpp.orig	2018-06-16 17:32:26.675762777 +0200
++++ mpeg4ip-1.6.1/server/mp4live/video_ffmpeg.cpp	2018-06-16 18:09:07.249070986 +0200
+@@ -84,7 +84,7 @@
+   if (strcasecmp(Profile()->GetStringValue(CFG_VIDEO_ENCODING),
+ 		 VIDEO_ENCODING_MPEG4) == 0) {
+     m_push = new CTimestampPush(1);
+-    m_codec = avcodec_find_encoder(CODEC_ID_MPEG4);
++    m_codec = avcodec_find_encoder(AV_CODEC_ID_MPEG4);
+     m_media_frame = MPEG4VIDEOFRAME;
+ #ifdef OUTPUT_RAW
+     m_outfile = fopen("raw.m4v", FOPEN_WRITE_BINARY);
+@@ -94,14 +94,14 @@
+   } else if (strcasecmp(Profile()->GetStringValue(CFG_VIDEO_ENCODING),
+ 			VIDEO_ENCODING_H263) == 0) {
+     m_push = new CTimestampPush(1);
+-    m_codec = avcodec_find_encoder(CODEC_ID_H263);
++    m_codec = avcodec_find_encoder(AV_CODEC_ID_H263);
+     m_media_frame = H263VIDEOFRAME;
+ #ifdef OUTPUT_RAW
+     m_outfile = fopen("raw.263", FOPEN_WRITE_BINARY);
+ #endif
+   } else {
+     m_push = new CTimestampPush(3);
+-    m_codec = avcodec_find_encoder(CODEC_ID_MPEG2VIDEO);
++    m_codec = avcodec_find_encoder(AV_CODEC_ID_MPEG2VIDEO);
+     m_media_frame = MPEG2VIDEOFRAME;
+ #ifdef OUTPUT_RAW
+     m_outfile = fopen("raw.m2v", FOPEN_WRITE_BINARY);
+@@ -114,7 +114,7 @@
+   }
+   
+   m_avctx = avcodec_alloc_context3(m_codec);
+-  m_picture = avcodec_alloc_frame();
++  m_picture = av_frame_alloc();
+   m_avctx->width = Profile()->m_videoWidth;
+   m_avctx->height = Profile()->m_videoHeight;
+   m_avctx->bit_rate = 
+@@ -124,7 +124,7 @@
+   m_avctx->frame_rate_base = 1;
+ #else
+   m_avctx->time_base = (AVRational){1, (int)(Profile()->GetFloatValue(CFG_VIDEO_FRAME_RATE) + .5)};
+-  m_avctx->pix_fmt = PIX_FMT_YUV420P;
++  m_avctx->pix_fmt = AV_PIX_FMT_YUV420P;
+   m_avctx->me_method = ME_EPZS;
+ #endif
+   if (Profile()->GetIntegerValue(CFG_VIDEO_MPEG4_PAR_WIDTH) > 0 &&
+@@ -239,17 +239,26 @@
+   }
+ #endif
+ 
+-	
+-  m_vopBufferLength = avcodec_encode_video(m_avctx, 
+-					   m_vopBuffer, 
+-					   Profile()->m_videoMaxVopSize, 
+-					   m_picture);
++
++  AVPacket pkt;
++  av_init_packet(&pkt);
++  pkt.data = m_vopBuffer;
++  pkt.size = Profile()->m_videoMaxVopSize;
++  int got_packet;
++  int ret = avcodec_encode_video2(m_avctx, &pkt, m_picture, &got_packet);
++  if (ret < 0)
++  {
++    av_packet_unref(&pkt);
++    return false;
++  }
++  m_vopBufferLength = pkt.size;
+   //debug_message(U64" ffmpeg len %d", srcFrameTimestamp, m_vopBufferLength);
+ #ifdef OUTPUT_RAW
+   if (m_vopBufferLength) {
+     fwrite(m_vopBuffer, m_vopBufferLength, 1, m_outfile);
+   }
+ #endif
++  av_packet_unref(&pkt);
+   //	m_avctx.frame_number++;
+ 
+   return true;

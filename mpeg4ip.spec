@@ -8,7 +8,7 @@ Summary:	MPEG4IP - system for encoding, streaming and playing MPEG-4 audio/video
 Summary(pl.UTF-8):	MPEG4IP - system kodowania, streamingu i odtwarzania dźwięku i obrazu MPEG-4
 Name:		mpeg4ip
 Version:	1.6.1
-Release:	26
+Release:	27
 Epoch:		1
 License:	MPL v1.1 (original code) and other licenses (included libraries)
 Group:		Applications
@@ -28,6 +28,8 @@ Patch8:		%{name}-v4l2.patch
 Patch9:		%{name}-system-mp4v2.patch
 Patch10:	%{name}-memset.patch
 Patch11:	%{name}-ffmpeg2.patch
+Patch12:	%{name}-ffmpeg3.patch
+Patch13:	%{name}-lame.patch
 URL:		http://mpeg4ip.sourceforge.net/
 BuildRequires:	SDL-devel
 BuildRequires:	a52dec-libs-devel
@@ -162,6 +164,8 @@ Ten pakiet zawiera serwer mp4.
 %{?with_system_mp4v2:%patch9 -p1}
 %patch10 -p1
 %patch11 -p1
+%patch12 -p1
+%patch13 -p1
 
 %build
 cd lib/SDLAudio
