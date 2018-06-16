@@ -1,0 +1,31 @@
+--- mpeg4ip-1.6.1/server/mp4live/audio_oss_source.cpp.orig	2005-09-08 00:28:01.000000000 +0200
++++ mpeg4ip-1.6.1/server/mp4live/audio_oss_source.cpp	2018-06-16 19:32:40.426353294 +0200
+@@ -265,7 +265,7 @@
+ 
+   rc = ioctl(m_audioDevice, SNDCTL_DSP_SPEED, &samplingRate);
+ 
+-  if (rc < 0 || abs(samplingRate - targetSamplingRate) > 1) {
++  if (rc < 0 || abs((int32_t)samplingRate - (int32_t)targetSamplingRate) > 1) {
+     error_message("Couldn't set sampling rate for %s", deviceName);
+     close(m_audioDevice);
+     return false;
+@@ -450,7 +450,7 @@
+     rc = ioctl(audioDevice, SNDCTL_DSP_SPEED, &samplingRate);
+ 
+     // invalid sampling rate, allow deviation of 1 sample/sec
+-    if (rc < 0 || abs(samplingRate - targetRate) > 1) {
++    if (rc < 0 || abs((int32_t)samplingRate - (int32_t)targetRate) > 1) {
+       debug_message("audio device %s doesn't support sampling rate %u",
+                     m_deviceName, targetRate);
+       continue;
+--- mpeg4ip-1.6.1/server/mp4live/audio_oss_source.h.orig	2018-06-16 19:30:52.213950913 +0200
++++ mpeg4ip-1.6.1/server/mp4live/audio_oss_source.h	2018-06-16 19:30:55.410787025 +0200
+@@ -104,7 +104,7 @@
+ 	return rate;
+       }
+       int32_t calc;
+-      calc = abs(m_samplingRates[ix] - rate);
++      calc = abs((int32_t)m_samplingRates[ix] - (int32_t)rate);
+       if (calc < diff) {
+ 	diff = calc;
+ 	ret_rate = m_samplingRates[ix];
